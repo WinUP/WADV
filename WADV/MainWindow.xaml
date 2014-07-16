@@ -1,0 +1,9 @@
+﻿<Window x:Class="MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="MainWindow" Height="511" Width="768" Background="Black" Loaded="Window_Loaded" ResizeMode="NoResize">
+    <Grid x:Name="MainGrid">
+        <Image x:Name="MainBackgroundImage"/>
+        <Grid Height="100" Margin="10,0,10,10" VerticalAlignment="Bottom" Background="#550075D6" MouseLeftButtonUp="Grid_MouseLeftButtonUp_1" />
+    </Grid>
+</Window>
