@@ -26,7 +26,7 @@
         '注册脚本函数
         AppCore.Script.Register.RegisterFunction()
         '调用初始化脚本
-        AppCore.API.ScriptAPI.RunFile("logic/init.lua")
+        AppCore.API.ScriptAPI.RunFile("logic\init.lua")
     End Sub
 
 End Class
