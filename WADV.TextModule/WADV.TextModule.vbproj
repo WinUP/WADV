@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6132D0DA-A5AD-46E8-8952-1445118E3F97}</ProjectGuid>
+    <ProjectGuid>{67F83B68-5996-4AF6-B596-FDA9BEFD9A4C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WADV.ImageModule</RootNamespace>
-    <AssemblyName>WADV.ImageModule</AssemblyName>
+    <RootNamespace>WADV.TextModule</RootNamespace>
+    <AssemblyName>WADV.TextModule</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -18,9 +18,8 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>..\WADV\bin\Debug\plugin\</OutputPath>
-    <DocumentationFile>WADV.ImageModule.xml</DocumentationFile>
+    <DocumentationFile>WADV.TextModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,7 +27,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WADV.ImageModule.xml</DocumentationFile>
+    <DocumentationFile>WADV.TextModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -44,6 +43,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LuaInterface">
+      <HintPath>..\WADV\LuaInterface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -65,10 +68,10 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API.vb" />
     <Compile Include="Config.vb" />
-    <Compile Include="Effect.vb" />
-    <Compile Include="ImageCore.vb" />
-    <Compile Include="Initialise.vb" />
+    <Compile Include="Core.vb" />
+    <Compile Include="PluginInterface.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -84,6 +87,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="TextEffect.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

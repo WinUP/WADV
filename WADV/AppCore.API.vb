@@ -162,6 +162,15 @@ Namespace AppCore.API
             Return Config.WindowConfig.BaseWindow
         End Function
 
+        ''' <summary>
+        ''' 获取主窗口的Grid
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetMainGrid() As Grid
+            Return Config.WindowConfig.BaseGrid
+        End Function
+
     End Class
 
     ''' <summary>
@@ -316,6 +325,15 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
+        ''' 等待一个小型逻辑循环退出
+        ''' </summary>
+        ''' <param name="loopContent">循环体</param>
+        ''' <remarks></remarks>
+        Public Shared Sub WaitCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
+            [Loop].MainLoop.WaitCustomizedLoop(loopContent)
+        End Sub
+
+        ''' <summary>
         ''' 标记逻辑循环为进行状态
         ''' </summary>
         ''' <remarks></remarks>
@@ -464,7 +482,7 @@ Namespace AppCore.API
     ''' 路径API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class URIAPI
+    Public Class URLAPI
 
         ''' <summary>
         ''' 获取程序资源文件的存放路径

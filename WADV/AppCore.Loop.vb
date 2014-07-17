@@ -31,6 +31,24 @@ Namespace AppCore.Loop
             If Not customizedLoopList.Contains(loopContent) Then customizedLoopList.Add(loopContent)
         End Sub
 
+        Protected Friend Shared Sub WaitCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
+            Dim loopThread = New Thread(New ParameterizedThreadStart(AddressOf WaitForExit))
+            loopThread.IsBackground = True
+            loopThread.Start(loopContent)
+            loopThread.Join()
+        End Sub
+
+        Private Shared Sub WaitForExit(loopContent As Plugin.ICustomizedLoop)
+            While (loopStatus)
+                If customizedLoopList.Contains(loopContent) Then
+                    Thread.Sleep(loopTimeSpan)
+                Else
+                    Exit Sub
+                End If
+            End While
+            Exit Sub
+        End Sub
+
         ''' <summary>
         ''' 游戏逻辑循环体
         ''' </summary>

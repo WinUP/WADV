@@ -109,6 +109,12 @@ Namespace AppCore.Config
         ''' <remarks></remarks>
         Protected Friend Shared BaseWindow As Window = Application.Current.MainWindow
 
+        ''' <summary>
+        ''' 游戏主窗口的Grid
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected Friend Shared BaseGrid As Grid
+
     End Class
 
     ''' <summary>

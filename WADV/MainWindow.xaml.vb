@@ -1,9 +1,5 @@
 ﻿Class MainWindow
 
-    Private Sub Grid_MouseLeftButtonUp_1(sender As Object, e As MouseButtonEventArgs)
-
-    End Sub
-
     Protected Overrides Sub OnRender(ByVal dc As DrawingContext)
         For Each tmpPlugin In AppCore.Config.PluginConfig.RenderingList
             tmpPlugin.StartRendering(Me, dc)
@@ -18,9 +14,7 @@
         AppCore.Config.URLConfig.Script = My.Settings.ScriptURL
         AppCore.Config.URLConfig.Skin = My.Settings.SkinURL
         AppCore.Config.URLConfig.UserFile = My.Settings.UserFileURL
-        '设定逻辑循环
-        AppCore.API.LoopAPI.ChangeFrame(25)
-        AppCore.API.LoopAPI.InitialiseLoop()
+        AppCore.Config.WindowConfig.BaseGrid = MainGrid
         '加载插件
         AppCore.Config.PluginConfig.InitialiseAllPlugins()
         '注册脚本函数
