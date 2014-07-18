@@ -1,4 +1,4 @@
-WADV
+WinUP Adventure Game Engine
 ====
 
-For a simple 2D game engine
+Windows上的轻量级2D游戏框架，为开发文字冒险游戏而优化。
