@@ -41,6 +41,18 @@ Namespace API
             Config.UIConfig.TextArea = area
         End Sub
 
+        Public Shared Sub RegisterEvent()
+            AddHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
+            AddHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
+            AddHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
+        End Sub
+
+        Public Shared Sub UnregisterEvent()
+            RemoveHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
+            RemoveHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
+            RemoveHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
+        End Sub
+
     End Class
 
     Public Class TextAPI
@@ -49,12 +61,17 @@ Namespace API
             If Config.UIConfig.TextArea Is Nothing Then Return False
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.TextModule.TextEffect" Select tmpClass
             If classList.Count < 1 Then Return False
-            Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, text)
+            Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {text})
             Config.ModuleConfig.Ellipsis = False
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
             AppCore.API.LoopAPI.AddCustomizedLoop(loopContent)
-            AppCore.API.LoopAPI.WaitCustomizedLoop(loopContent)
             Return True
+        End Function
+
+        Public Shared Function ShowTextByTable(table As LuaInterface.LuaTable, effectName As String) As Boolean
+            Dim text(table.Values.Count - 1) As String
+            table.Values.CopyTo(text, 0)
+            Return ShowText(text, effectName)
         End Function
 
     End Class

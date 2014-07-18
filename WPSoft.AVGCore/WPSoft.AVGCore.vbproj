@@ -20,6 +20,7 @@
     <OutputPath>..\WADV\bin\Debug\plugin\</OutputPath>
     <DocumentationFile>WPSoft.AVGCore.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -106,9 +107,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WADV.ImageModule\WADV.ImageModule.vbproj">
+      <Project>{6132d0da-a5ad-46e8-8952-1445118e3f97}</Project>
+      <Name>WADV.ImageModule</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\WADV.TextModule\WADV.TextModule.vbproj">
       <Project>{67f83b68-5996-4af6-b596-fda9befd9a4c}</Project>
       <Name>WADV.TextModule</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\WADV\WADV.vbproj">
       <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>

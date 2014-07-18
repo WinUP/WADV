@@ -36,6 +36,7 @@
         End Sub
 
         Public Overrides Function GetNextString() As String
+            If NextTextIndex = TextArray.Length Then Return ""
             Dim tmpText = TextArray(NextTextIndex)
             If LastUsedText.Length = tmpText.Length - 1 Then
                 LastUsedText = tmpText
@@ -55,6 +56,5 @@
         End Function
 
     End Class
-
 
 End Namespace

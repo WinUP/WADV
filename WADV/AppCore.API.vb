@@ -253,6 +253,29 @@ Namespace AppCore.API
             Return Config.WindowConfig.BaseWindow.Resources
         End Function
 
+        ''' <summary>
+        ''' 根据名称获取元素的子元素(支持多级查找)
+        ''' </summary>
+        ''' <typeparam name="T">子元素类型</typeparam>
+        ''' <param name="obj">父元素</param>
+        ''' <param name="name">子元素的名称</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetChildByName(Of T As FrameworkElement)(obj As DependencyObject, name As String) As T
+            Dim child As DependencyObject = Nothing
+            Dim grandChild As T = Nothing
+            For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
+                child = VisualTreeHelper.GetChild(obj, i)
+                If (TypeOf child Is T) AndAlso TryCast(child, T).Name = name Then
+                    Return TryCast(child, T)
+                Else
+                    grandChild = GetChildByName(Of T)(child, name)
+                    If grandChild IsNot Nothing Then Return grandChild
+                End If
+            Next
+            Return Nothing
+        End Function
+
     End Class
 
     ''' <summary>

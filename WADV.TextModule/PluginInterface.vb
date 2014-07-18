@@ -10,9 +10,6 @@ Namespace PluginInterface
             Config.ModuleConfig.ReadConfigFile()
             Config.ModuleConfig.Ellipsis = False
             Config.ModuleConfig.Fast = False
-            AddHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
-            AddHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
-            AddHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
             Return True
         End Function
 
@@ -56,6 +53,7 @@ Namespace PluginInterface
             Dim text As String = ""
             '快进状态
             If Config.ModuleConfig.Fast Then
+                text = effect.GetNextString
                 While Not effect.IsSentenceReadOver
                     text = effect.GetNextString
                 End While
@@ -81,6 +79,7 @@ Namespace PluginInterface
             End If
             '手动状态
             If Not Config.ModuleConfig.Ellipsis AndAlso effect.IsSentenceReadOver AndAlso Not effect.IsReadOver Then Return True
+            If effect.IsSentenceReadOver Then Config.ModuleConfig.Ellipsis = False
             text = effect.GetNextString
             If Config.ModuleConfig.Ellipsis Then
                 While Not effect.IsSentenceReadOver

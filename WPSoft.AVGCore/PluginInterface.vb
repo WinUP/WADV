@@ -26,7 +26,12 @@ Namespace PluginInterface
 
         Public Function StartInitialising() As Boolean Implements AppCore.Plugin.IInitialise.StartInitialising
             AppCore.API.WindowAPI.LoadPage(AppCore.API.WindowAPI.GetMainGrid, "main.xaml")
-
+            AppCore.API.WindowAPI.ChangeWindowResizeMod(False)
+            AppCore.API.WindowAPI.ChangeBackgroundColorByHex("#000000")
+            AppCore.API.WindowAPI.ChangeWindowIcon("icon.ico")
+            AppCore.API.LoopAPI.ChangeFrame(30)
+            AppCore.API.LoopAPI.InitialiseLoop()
+            AppCore.API.LoopAPI.StartMainLoop()
             Return True
         End Function
 

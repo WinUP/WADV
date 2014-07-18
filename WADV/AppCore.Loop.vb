@@ -12,6 +12,7 @@ Namespace AppCore.Loop
         Private Shared loopTimeSpan As Integer
         Private Shared loopList As New List(Of Plugin.ILoop)
         Private Shared customizedLoopList As New List(Of Plugin.ICustomizedLoop)
+        Private Shared customizedLoopListCount As Integer
 
         ''' <summary>
         ''' 添加一个逻辑循环
@@ -28,7 +29,9 @@ Namespace AppCore.Loop
         ''' <param name="loopContent">循环函数</param>
         ''' <remarks></remarks>
         Protected Friend Shared Sub AddCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
-            If Not customizedLoopList.Contains(loopContent) Then customizedLoopList.Add(loopContent)
+            If Not customizedLoopList.Contains(loopContent) Then
+                customizedLoopList.Add(loopContent)
+            End If
         End Sub
 
         Protected Friend Shared Sub WaitCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
@@ -58,11 +61,16 @@ Namespace AppCore.Loop
                 For Each tmpPlugin In loopList
                     tmpPlugin.StartLooping()
                 Next
-                For Each tmpLoop In customizedLoopList
-                    If Not tmpLoop.StartLooping() Then
-                        customizedLoopList.Remove(tmpLoop)
+                customizedLoopListCount = customizedLoopList.Count
+                Dim i As Integer = 0
+                While i < customizedLoopListCount
+                    If Not customizedLoopList(i).StartLooping() Then
+                        customizedLoopList.RemoveAt(i)
+                        customizedLoopListCount = customizedLoopList.Count
+                        Continue While
                     End If
-                Next
+                    i += 1
+                End While
                 Thread.Sleep(loopTimeSpan)
             End While
         End Sub
