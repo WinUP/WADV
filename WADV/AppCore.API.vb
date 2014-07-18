@@ -1,6 +1,8 @@
 ﻿Imports System.Xml
 Imports System.Windows.Markup
 Imports System.IO
+Imports System.Threading
+Imports System.Windows.Threading
 
 Namespace AppCore.API
 
@@ -13,10 +15,11 @@ Namespace AppCore.API
         ''' <summary>
         ''' 修改窗口标题
         ''' </summary>
-        ''' <param name="newText">新标题</param>
+        ''' <param name="text">新标题</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeTitle(newText As String)
-            Config.WindowConfig.BaseWindow.Title = newText
+        Public Shared Sub ChangeTitle(text As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Title = text)
         End Sub
 
         ''' <summary>
@@ -24,21 +27,11 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="fileName">子元素所在的文件名(Skin目录下)</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadPage(content As Panel, fileName As String)
-            content.Children.Clear()
-            LoadElement(content, fileName)
-        End Sub
-
-        ''' <summary>
-        ''' 清空指定容器并从内存数据流中加载子元素
-        ''' </summary>
-        ''' <param name="content">目标容器</param>
-        ''' <param name="stream">内存数据流</param>
-        ''' <remarks></remarks>
-        Public Shared Sub LoadPageFromStream(content As Panel, stream As MemoryStream)
-            content.Children.Clear()
-            LoadElementFromStream(content, stream)
+        Public Shared Sub LoadPage(content As Panel, fileName As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() content.Children.Clear())
+            LoadElement(content, fileName, dispatcher)
         End Sub
 
         ''' <summary>
@@ -46,28 +39,20 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="name">子元素所在的文件名(Skin目录下)</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadElement(content As Panel, name As String)
-            content.Children.Add(XamlReader.Load(XmlTextReader.Create(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, name))))
-        End Sub
-
-        ''' <summary>
-        ''' 为指定容器从内存数据流中加载子元素
-        ''' </summary>
-        ''' <param name="content">目标容器</param>
-        ''' <param name="stream">内存数据流</param>
-        ''' <remarks></remarks>
-        Public Shared Sub LoadElementFromStream(content As Panel, stream As MemoryStream)
-            content.Children.Add(XamlReader.Load(XmlTextReader.Create(stream)))
+        Public Shared Sub LoadElement(content As Panel, name As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, name)))))
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
         ''' </summary>
         ''' <param name="color">颜色对象</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByColor(color As Color)
-            Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(color)
+        Public Shared Sub ChangeBackgroundColorByColor(color As Color, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(color))
         End Sub
 
         ''' <summary>
@@ -76,76 +61,84 @@ Namespace AppCore.API
         ''' <param name="r">红色值</param>
         ''' <param name="g">绿色值</param>
         ''' <param name="b">蓝色值</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByRGB(r As Byte, g As Byte, b As Byte)
-            Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b))
+        Public Shared Sub ChangeBackgroundColorByRGB(r As Byte, g As Byte, b As Byte, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b)))
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
         ''' </summary>
         ''' <param name="hex">16进制颜色值</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByHex(hex As String)
-            Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex))
+        Public Shared Sub ChangeBackgroundColorByHex(hex As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex)))
         End Sub
 
         ''' <summary>
         ''' 修改窗口宽度
         ''' </summary>
         ''' <param name="width">新的宽度</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowWidth(width As Double)
-            Config.WindowConfig.BaseWindow.Width = width
+        Public Shared Sub ChangeWindowWidth(width As Double, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Width = width)
         End Sub
 
         ''' <summary>
         ''' 修改窗口高度
         ''' </summary>
         ''' <param name="height">新的高度</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowHeight(height As Double)
-            Config.WindowConfig.BaseWindow.Height = height
+        Public Shared Sub ChangeWindowHeight(height As Double, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Height = height)
         End Sub
 
         ''' <summary>
         ''' 设置窗口调整模式
         ''' </summary>
         ''' <param name="canResize">是否能够调整大小</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowResizeMod(canResize As Boolean)
-            Config.WindowConfig.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize)
+        Public Shared Sub ChangeWindowResizeMod(canResize As Boolean, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
         End Sub
 
         ''' <summary>
         ''' 设置窗口覆盖模式
         ''' </summary>
         ''' <param name="isTopmost">是否保持最前</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowTopmost(isTopmost As Boolean)
-            Config.WindowConfig.BaseWindow.Topmost = isTopmost
+        Public Shared Sub ChangeWindowTopmost(isTopmost As Boolean, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Topmost = isTopmost)
         End Sub
 
         ''' <summary>
         ''' 设置窗口图标
         ''' </summary>
         ''' <param name="fileName">图标文件名称(ICO格式且放置在Skin目录下)</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowIcon(fileName As String)
-            Config.WindowConfig.BaseWindow.Icon = BitmapFrame.Create(New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName)))
+        Public Shared Sub ChangeWindowIcon(fileName As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Icon = BitmapFrame.Create(New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))))
         End Sub
 
         ''' <summary>
         ''' 设置窗口指针
         ''' </summary>
         ''' <param name="fileName">指针文件名称(ANI或CUR格式且放置在Skin目录下)</param>
+        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowCursor(fileName As String)
-            Config.WindowConfig.BaseWindow.Cursor = New Cursor(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))
+        Public Shared Sub ChangeWindowCursor(fileName As String, dispatcher As Dispatcher)
+            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Cursor = New Cursor(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName)))
         End Sub
 
         ''' <summary>
-        ''' 获取窗口渲染线程
+        ''' 获取窗口渲染管线
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -198,7 +191,7 @@ Namespace AppCore.API
         Public Shared Sub LoadResourceToWindow(fileName As String)
             Dim tmpDictionart As New ResourceDictionary
             tmpDictionart.Source = New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))
-            Config.WindowConfig.BaseWindow.Resources.MergedDictionaries.Add(tmpDictionart)
+            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
         End Sub
 
         ''' <summary>
@@ -214,7 +207,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub ClearResourceFromWindow()
-            Config.WindowConfig.BaseWindow.Resources.MergedDictionaries.Clear()
+            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
         End Sub
 
         ''' <summary>
@@ -232,7 +225,7 @@ Namespace AppCore.API
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
         Public Shared Sub RemoveResourceFromWindow(resource As ResourceDictionary)
-            Config.WindowConfig.BaseWindow.Resources.MergedDictionaries.Remove(resource)
+            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
         End Sub
 
         ''' <summary>
@@ -250,7 +243,7 @@ Namespace AppCore.API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetWindowResource() As ResourceDictionary
-            Return Config.WindowConfig.BaseWindow.Resources
+            Return WindowAPI.GetWindowDispatcher.Invoke(Function() WindowAPI.GetWindow.Resources)
         End Function
 
         ''' <summary>
@@ -262,18 +255,20 @@ Namespace AppCore.API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetChildByName(Of T As FrameworkElement)(obj As DependencyObject, name As String) As T
-            Dim child As DependencyObject = Nothing
-            Dim grandChild As T = Nothing
-            For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
-                child = VisualTreeHelper.GetChild(obj, i)
-                If (TypeOf child Is T) AndAlso TryCast(child, T).Name = name Then
-                    Return TryCast(child, T)
-                Else
-                    grandChild = GetChildByName(Of T)(child, name)
-                    If grandChild IsNot Nothing Then Return grandChild
-                End If
-            Next
-            Return Nothing
+            Return obj.Dispatcher.Invoke(Function()
+                                             Dim child As DependencyObject = Nothing
+                                             Dim grandChild As T = Nothing
+                                             For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
+                                                 child = VisualTreeHelper.GetChild(obj, i)
+                                                 If (TypeOf child Is T) AndAlso TryCast(child, T).Name = name Then
+                                                     Return TryCast(child, T)
+                                                 Else
+                                                     grandChild = GetChildByName(Of T)(child, name)
+                                                     If grandChild IsNot Nothing Then Return grandChild
+                                                 End If
+                                             Next
+                                             Return Nothing
+                                         End Function)
         End Function
 
     End Class
@@ -387,6 +382,11 @@ Namespace AppCore.API
         ''' <remarks></remarks>
         Public Shared Sub RunFile(fileName As String)
             Script.Exchanger.RunFile(Config.URLConfig.GetFullURI(Config.URLConfig.Script, fileName))
+        End Sub
+
+        Public Shared Sub RunFileInThread(fileName As String)
+            Dim tmpThread As New Thread(New ParameterizedThreadStart(AddressOf RunFile))
+            tmpThread.Start(fileName)
         End Sub
 
         ''' <summary>

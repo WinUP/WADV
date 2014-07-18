@@ -7,9 +7,16 @@ Namespace API
 
     Public Class GameAPI
 
-        Public Shared Sub Initialise()
+        Public Shared Sub Initialise(frame As Integer)
             TextModule.API.ConfigAPI.SetUITextArea(AppCore.API.ResourceAPI.GetChildByName(Of TextBlock)(AppCore.API.WindowAPI.GetMainGrid, "MainTextArea"))
             TextModule.API.ConfigAPI.RegisterEvent()
+            AppCore.API.LoopAPI.ChangeFrame(frame)
+            AppCore.API.LoopAPI.InitialiseLoop()
+            AppCore.API.LoopAPI.StartMainLoop()
+        End Sub
+
+        Public Shared Sub ExitGame()
+            AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub() WADV.Application.Current.Shutdown())
         End Sub
 
     End Class

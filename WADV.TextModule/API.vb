@@ -65,6 +65,7 @@ Namespace API
             Config.ModuleConfig.Ellipsis = False
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
             AppCore.API.LoopAPI.AddCustomizedLoop(loopContent)
+            AppCore.API.LoopAPI.WaitCustomizedLoop(loopContent)
             Return True
         End Function
 
