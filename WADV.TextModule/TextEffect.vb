@@ -36,7 +36,11 @@
         End Sub
 
         Public Overrides Function GetNextString() As String
-            If NextTextIndex = TextArray.Length Then Return ""
+            If NextTextIndex = TextArray.Length Then
+                ReadOver = True
+                SentenceReadOver = True
+                Return ""
+            End If
             Dim tmpText = TextArray(NextTextIndex)
             If LastUsedText.Length = tmpText.Length - 1 Then
                 LastUsedText = tmpText
@@ -45,6 +49,7 @@
                 SentenceReadOver = False
                 NextTextIndex += 1
                 If NextTextIndex = TextArray.Length Then
+                    SentenceReadOver = True
                     ReadOver = True
                     Return ""
                 End If

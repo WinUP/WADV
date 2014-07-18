@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Windows.Threading
 
 Namespace AppCore.Config
 
@@ -114,6 +115,10 @@ Namespace AppCore.Config
         ''' </summary>
         ''' <remarks></remarks>
         Protected Friend Shared BaseGrid As Grid
+
+        Protected Friend Shared Function GetDispatcher(dispatcher As Dispatcher) As Dispatcher
+            Return If(dispatcher Is Nothing, API.WindowAPI.GetWindowDispatcher, dispatcher)
+        End Function
 
     End Class
 
