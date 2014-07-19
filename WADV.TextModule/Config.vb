@@ -3,6 +3,10 @@ Imports System.Windows.Controls
 
 Namespace Config
 
+    ''' <summary>
+    ''' 模块设置类
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class ModuleConfig
 
         Private Shared framsBetweenWord As Integer
@@ -12,6 +16,12 @@ Namespace Config
         Private Shared ellipsisWord As Boolean
         Private Shared fastSpeed As Boolean
 
+        ''' <summary>
+        ''' 获取或设置快进状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property Fast As Boolean
             Get
                 Return fastSpeed
@@ -21,6 +31,12 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 获取或设置略过效果状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property Ellipsis As Boolean
             Get
                 Return ellipsisWord
@@ -30,6 +46,12 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 获取或设置文字间隔帧
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property WordFrame As Integer
             Get
                 Return framsBetweenWord
@@ -40,6 +62,12 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 获取或设置自动播放状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property Auto As Boolean
             Get
                 Return autoMode
@@ -50,6 +78,12 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 获取或设置句子间隔帧
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property SetenceFrame As Integer
             Get
                 Return framsBetweenSetence
@@ -60,6 +94,12 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 获取或设置略过状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Protected Friend Shared Property Ignore As Boolean
             Get
                 Return ignoreRead
@@ -70,6 +110,10 @@ Namespace Config
             End Set
         End Property
 
+        ''' <summary>
+        ''' 读取配置文件
+        ''' </summary>
+        ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
             configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.TextModule.xml"))
@@ -79,6 +123,10 @@ Namespace Config
             Ignore = If(configFile.SelectSingleNode("/config/ignoreRead").InnerXml = "True", True, False)
         End Sub
 
+        ''' <summary>
+        ''' 保存配置
+        ''' </summary>
+        ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
             configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.TextModule.xml"))
@@ -91,9 +139,21 @@ Namespace Config
 
     End Class
 
+    ''' <summary>
+    ''' 界面显示设置类
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Class UIConfig
 
+        ''' <summary>
+        ''' 对话内容区域
+        ''' </summary>
+        ''' <remarks></remarks>
         Protected Friend Shared TextArea As TextBlock = Nothing
+        ''' <summary>
+        ''' 说话者区域
+        ''' </summary>
+        ''' <remarks></remarks>
         Protected Friend Shared CharacterArea As TextBlock = Nothing
 
     End Class
