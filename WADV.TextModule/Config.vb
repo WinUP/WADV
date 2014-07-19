@@ -94,6 +94,7 @@ Namespace Config
     Public Class UIConfig
 
         Protected Friend Shared TextArea As TextBlock = Nothing
+        Protected Friend Shared CharacterArea As TextBlock = Nothing
 
     End Class
 

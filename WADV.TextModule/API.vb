@@ -41,6 +41,10 @@ Namespace API
             Config.UIConfig.TextArea = area
         End Sub
 
+        Public Shared Sub SetCharacterArea(area As TextBlock)
+            Config.UIConfig.CharacterArea = area
+        End Sub
+
         Public Shared Sub RegisterEvent()
             AddHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
             AddHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
@@ -57,11 +61,11 @@ Namespace API
 
     Public Class TextAPI
 
-        Public Shared Function ShowText(text() As String, effectName As String) As Boolean
+        Public Shared Function ShowText(text() As String, character() As String, effectName As String) As Boolean
             If Config.UIConfig.TextArea Is Nothing Then Return False
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.TextModule.TextEffect" Select tmpClass
             If classList.Count < 1 Then Return False
-            Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {text})
+            Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {text, character})
             Config.ModuleConfig.Ellipsis = False
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
             AppCore.API.LoopAPI.AddCustomizedLoop(loopContent)
@@ -69,10 +73,12 @@ Namespace API
             Return True
         End Function
 
-        Public Shared Function ShowTextByTable(table As LuaInterface.LuaTable, effectName As String) As Boolean
-            Dim text(table.Values.Count - 1) As String
-            table.Values.CopyTo(text, 0)
-            Return ShowText(text, effectName)
+        Public Shared Function ShowTextByTable(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
+            Dim text1(text.Values.Count - 1) As String
+            text.Values.CopyTo(text1, 0)
+            Dim character1(character.Values.Count - 1) As String
+            character.Values.CopyTo(character1, 0)
+            Return ShowText(text1, character1, effectName)
         End Function
 
     End Class

@@ -3,9 +3,15 @@
     Public MustInherit Class StandardEffect
 
         Protected TextArray() As String
+        Protected CharacterArray() As String
         Protected NextTextIndex As Integer = 0
         Protected ReadOver As Boolean = False
         Protected SentenceReadOver As Boolean = False
+
+        Public Structure SentenceInfo
+            Public Character As String
+            Public Content As String
+        End Structure
 
         Public ReadOnly Property IsReadOver As Boolean
             Get
@@ -19,11 +25,12 @@
             End Get
         End Property
 
-        Public Sub New(text() As String)
+        Public Sub New(text() As String, character() As String)
             TextArray = text
+            CharacterArray = character
         End Sub
 
-        Public MustOverride Function GetNextString() As String
+        Public MustOverride Function GetNextString() As SentenceInfo
 
     End Class
 
@@ -31,15 +38,15 @@
 
         Private LastUsedText As String = ""
 
-        Public Sub New(text() As String)
-            MyBase.New(text)
+        Public Sub New(text() As String, character() As String)
+            MyBase.New(text, character)
         End Sub
 
-        Public Overrides Function GetNextString() As String
+        Public Overrides Function GetNextString() As SentenceInfo
             If NextTextIndex = TextArray.Length Then
                 ReadOver = True
                 SentenceReadOver = True
-                Return ""
+                Return New SentenceInfo With {.Character = "", .Content = ""}
             End If
             Dim tmpText = TextArray(NextTextIndex)
             If LastUsedText.Length = tmpText.Length - 1 Then
@@ -51,13 +58,13 @@
                 If NextTextIndex = TextArray.Length Then
                     SentenceReadOver = True
                     ReadOver = True
-                    Return ""
+                    Return New SentenceInfo With {.Character = "", .Content = ""}
                 End If
                 LastUsedText = tmpText(0)
             Else
                 LastUsedText = tmpText.Remove(LastUsedText.Length + 1)
             End If
-            Return LastUsedText
+            Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex), .Content = LastUsedText}
         End Function
 
     End Class
@@ -74,17 +81,17 @@
             TextContent
         End Enum
 
-        Public Sub New(text() As String)
-            MyBase.New(text)
+        Public Sub New(text() As String, character() As String)
+            MyBase.New(text, character)
             charIndex = 0
             nextGenerate = NextGenerateType.FirstCode
         End Sub
 
-        Public Overrides Function GetNextString() As String
+        Public Overrides Function GetNextString() As SentenceInfo
             If NextTextIndex = TextArray.Length Then
                 ReadOver = True
                 SentenceReadOver = True
-                Return ""
+                Return New SentenceInfo With {.Character = "", .Content = ""}
             End If
             Dim tmpText = TextArray(NextTextIndex)
             If charIndex = tmpText.Length - 1 Then
@@ -106,7 +113,7 @@
                 If NextTextIndex = TextArray.Length Then
                     SentenceReadOver = True
                     ReadOver = True
-                    Return ""
+                    Return New SentenceInfo With {.Character = "", .Content = ""}
                 End If
                 LastUsedText = GenerateCode()
                 charIndex = 0
@@ -124,7 +131,7 @@
                     nextGenerate = NextGenerateType.FirstCode
                 End If
             End If
-            Return LastUsedText
+            Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex), .Content = LastUsedText}
         End Function
 
         Private Function GenerateCode() As String

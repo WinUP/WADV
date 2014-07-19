@@ -44,7 +44,7 @@ Namespace PluginInterface
         End Sub
 
         Public Function StartLooping() As Boolean Implements AppCore.Plugin.ICustomizedLoop.StartLooping
-            Dim text As String = ""
+            Dim text As TextEffect.StandardEffect.SentenceInfo
             If waitingCount > 0 Then
                 waitingCount -= 1
                 Return True
@@ -55,7 +55,10 @@ Namespace PluginInterface
                 While Not effect.IsSentenceReadOver
                     text = effect.GetNextString
                 End While
-                AppCore.API.WindowAPI.GetWindowDispatcher.BeginInvoke(Sub() Config.UIConfig.TextArea.Text = text)
+                AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
+                                                                     Config.UIConfig.TextArea.Text = text.Content
+                                                                     Config.UIConfig.CharacterArea.Text = text.Character
+                                                                 End Sub)
                 If effect.IsReadOver Then Return False
                 waitingCount = 10
                 Return True
@@ -63,7 +66,10 @@ Namespace PluginInterface
             '自动状态
             If Config.ModuleConfig.Auto Then
                 text = effect.GetNextString
-                AppCore.API.WindowAPI.GetWindowDispatcher.BeginInvoke(Sub() Config.UIConfig.TextArea.Text = text)
+                AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
+                                                                     Config.UIConfig.TextArea.Text = text.Content
+                                                                     Config.UIConfig.CharacterArea.Text = text.Character
+                                                                 End Sub)
                 If effect.IsReadOver Then Return False
                 If effect.IsSentenceReadOver Then
                     waitingCount = Config.ModuleConfig.SetenceFrame
@@ -82,7 +88,10 @@ Namespace PluginInterface
                 End While
             End If
             Config.ModuleConfig.Ellipsis = False
-            AppCore.API.WindowAPI.GetWindowDispatcher.BeginInvoke(Sub() Config.UIConfig.TextArea.Text = text)
+            AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
+                                                                 Config.UIConfig.TextArea.Text = text.Content
+                                                                 Config.UIConfig.CharacterArea.Text = text.Character
+                                                             End Sub)
             If effect.IsReadOver Then Return False
             waitingCount = Config.ModuleConfig.WordFrame
             Return True
