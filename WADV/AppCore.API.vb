@@ -260,7 +260,7 @@ Namespace AppCore.API
                                              Dim grandChild As T = Nothing
                                              For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
                                                  child = VisualTreeHelper.GetChild(obj, i)
-                                                 If (TypeOf child Is T) AndAlso TryCast(child, T).Name = name Then
+                                                 If (TypeOf child Is T) AndAlso (name = "" OrElse TryCast(child, T).Name = name) Then
                                                      Return TryCast(child, T)
                                                  Else
                                                      grandChild = GetChildByName(Of T)(child, name)

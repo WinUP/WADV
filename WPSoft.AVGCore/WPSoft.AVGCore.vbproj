@@ -107,6 +107,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WADV.ChoiceModule\WADV.ChoiceModule.vbproj">
+      <Project>{eece56f4-f266-4f3e-80ce-79eb7b28fe21}</Project>
+      <Name>WADV.ChoiceModule</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\WADV.ImageModule\WADV.ImageModule.vbproj">
       <Project>{6132d0da-a5ad-46e8-8952-1445118e3f97}</Project>
       <Name>WADV.ImageModule</Name>

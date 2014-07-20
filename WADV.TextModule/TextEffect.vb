@@ -139,7 +139,7 @@
             If NextTextIndex = TextArray.Length Then
                 ReadOver = True
                 SentenceReadOver = True
-                Return New SentenceInfo With {.Character = "", .Content = ""}
+                Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex - 1), .Content = TextArray(NextTextIndex - 1)}
             End If
             Dim tmpText = TextArray(NextTextIndex)
             If charIndex = tmpText.Length - 1 Then
@@ -161,7 +161,7 @@
                 If NextTextIndex = TextArray.Length Then
                     SentenceReadOver = True
                     ReadOver = True
-                    Return New SentenceInfo With {.Character = "", .Content = ""}
+                    Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex - 1), .Content = TextArray(NextTextIndex - 1)}
                 End If
                 LastUsedText = GenerateCode()
                 charIndex = 0
