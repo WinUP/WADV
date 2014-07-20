@@ -23,4 +23,12 @@
         AppCore.API.ScriptAPI.RunFileInThread("logic\init.lua")
     End Sub
 
+    Private Sub Window_Closing(sender As Object, e As ComponentModel.CancelEventArgs)
+        If MessageBox.Show("要退出游戏吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question) = MessageBoxResult.Yes Then
+            AppCore.Loop.MainLoop.StopMainLoop()
+            Application.Current.Shutdown()
+        Else
+            e.Cancel = True
+        End If
+    End Sub
 End Class
