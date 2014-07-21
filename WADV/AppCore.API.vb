@@ -384,6 +384,10 @@ Namespace AppCore.API
             Script.Exchanger.RunFile(Config.URLConfig.GetFullURI(Config.URLConfig.Script, fileName))
         End Sub
 
+        Public Shared Sub Wait(frame As Integer)
+            System.Threading.Thread.Sleep(frame * (1000.0 / Config.LoopConfig.Frame))
+        End Sub
+
         Public Shared Sub RunFileInThread(fileName As String)
             Dim tmpThread As New Thread(New ParameterizedThreadStart(AddressOf RunFile))
             tmpThread.Start(fileName)
