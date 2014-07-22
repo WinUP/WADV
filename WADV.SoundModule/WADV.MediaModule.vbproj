@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9C43548F-6BF1-4423-8BCB-CD6BACDB1F5F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WADV.SoundModule</RootNamespace>
-    <AssemblyName>WADV.SoundModule</AssemblyName>
+    <RootNamespace>WADV.MediaModule</RootNamespace>
+    <AssemblyName>WADV.MediaModule</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -18,7 +18,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>..\WADV\bin\Debug\plugin\</OutputPath>
-    <DocumentationFile>WADV.SoundModule.xml</DocumentationFile>
+    <DocumentationFile>WADV.MediaModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WADV.SoundModule.xml</DocumentationFile>
+    <DocumentationFile>WADV.MediaModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -86,6 +86,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Player.vb" />
     <Compile Include="PluginInterface.vb" />
   </ItemGroup>
   <ItemGroup>

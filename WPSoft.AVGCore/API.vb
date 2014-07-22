@@ -19,7 +19,7 @@ Namespace API
         End Sub
 
         Public Shared Sub ExitGame()
-            AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub() WADV.Application.Current.Shutdown())
+            AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub() AppCore.API.WindowAPI.GetWindow.Close())
         End Sub
 
     End Class

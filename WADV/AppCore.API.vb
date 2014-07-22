@@ -375,6 +375,10 @@ Namespace AppCore.API
     ''' <remarks></remarks>
     Public Class ScriptAPI
 
+        Public Shared Sub ShowMessage(content As String, title As String)
+            MessageBox.Show(content, title, MessageBoxButton.OK, MessageBoxImage.Information)
+        End Sub
+
         ''' <summary>
         ''' 执行脚本文件中的所有代码
         ''' </summary>

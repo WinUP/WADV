@@ -13,7 +13,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.AVGCore", "WPSoft.AV
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.ChoiceModule", "WADV.ChoiceModule\WADV.ChoiceModule.vbproj", "{EECE56F4-F266-4F3E-80CE-79EB7B28FE21}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.SoundModule", "WADV.SoundModule\WADV.SoundModule.vbproj", "{9C43548F-6BF1-4423-8BCB-CD6BACDB1F5F}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.MediaModule", "WADV.SoundModule\WADV.MediaModule.vbproj", "{9C43548F-6BF1-4423-8BCB-CD6BACDB1F5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
