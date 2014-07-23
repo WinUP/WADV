@@ -62,11 +62,10 @@ Namespace ImageCore
         ''' <summary>
         ''' 获得一个带像素矩阵的位图
         ''' </summary>
-        ''' <param name="bitmapURI">图像URI路径</param>
-        ''' <param name="bitmapUriKind">URI类型</param>
+        ''' <param name="fileName">图像文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
-        Public Sub New(bitmapURI As String, bitmapUriKind As UriKind)
-            InitClass(New BitmapImage(New Uri(bitmapURI, bitmapUriKind)))
+        Public Sub New(fileName As String)
+            Me.New(New BitmapImage(New Uri(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetResourceURL, fileName))))
         End Sub
 
         ''' <summary>
@@ -75,10 +74,6 @@ Namespace ImageCore
         ''' <param name="bitmapImageContent">图像的BitmapImage对象</param>
         ''' <remarks></remarks>
         Public Sub New(bitmapImageContent As BitmapSource)
-            InitClass(bitmapImageContent)
-        End Sub
-
-        Private Sub InitClass(bitmapImageContent As BitmapSource)
             bitmapContent = New FormatConvertedBitmap()
             bitmapContent.BeginInit()
             bitmapContent.DestinationPalette = BitmapPalettes.WebPalette
@@ -86,6 +81,11 @@ Namespace ImageCore
             bitmapContent.Source = bitmapImageContent
             bitmapContent.EndInit()
         End Sub
+
+        Public Shared Function ConvertToImage(pixel(,) As Color) As BitmapSource
+
+
+        End Function
 
     End Class
 
