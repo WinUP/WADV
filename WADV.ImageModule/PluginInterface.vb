@@ -1,12 +1,14 @@
 ﻿Imports WADV.AppCore
 Imports System.Reflection
+Imports System.Windows.Controls
+Imports System.Windows.Media
 
 Namespace PluginInterface
 
     Public Class Initialise : Implements Plugin.IInitialise
 
         Public Function StartInitialising() As Boolean Implements Plugin.IInitialise.StartInitialising
-
+            Config.ModuleConfig.ReadConfigFile()
             Return True
         End Function
 
@@ -31,10 +33,20 @@ Namespace PluginInterface
     End Class
 
     Public Class CustomizedLoop : Implements Plugin.ICustomizedLoop
+        Private effect As Effect.ImageEffect
+        Private content As Panel
+
+        Public Sub New(effect As Effect.ImageEffect, content As Panel)
+            Me.effect = effect
+            Me.content = content
+        End Sub
 
         Public Function StartLooping() As Boolean Implements Plugin.ICustomizedLoop.StartLooping
+            content.Dispatcher.Invoke(Sub() content.Background = New ImageBrush(effect.GetNextImageState))
+            If effect.IsEffectComplete Then Return False
             Return True
         End Function
+
     End Class
 
 End Namespace

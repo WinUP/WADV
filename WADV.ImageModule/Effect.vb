@@ -2,6 +2,7 @@
 Imports System.Windows.Media.Imaging
 Imports System.Windows
 Imports System.Windows.Media
+Imports WADV.ImageModule.Config
 
 Namespace Effect
 
@@ -12,8 +13,9 @@ Namespace Effect
 
         Protected bitmapImageContent As ImageCore.BitmapWithPixel
         Protected effectingDuration As Integer
+        Protected complete As Boolean = False
 
-        Public MustOverride Function GetNextImageState() As BitmapSource
+        Protected Friend MustOverride Function GetNextImageState() As BitmapSource
 
         ''' <summary>
         ''' 获得一个图像渐变效果
@@ -29,7 +31,7 @@ Namespace Effect
         ''' <summary>
         ''' 获取图像带像素信息的内容
         ''' </summary>
-        Public ReadOnly Property PixelImageContent As ImageCore.BitmapWithPixel
+        Protected Friend ReadOnly Property PixelImageContent As ImageCore.BitmapWithPixel
             Get
                 Return bitmapImageContent
             End Get
@@ -39,7 +41,7 @@ Namespace Effect
         ''' 获取或设置动画时长
         ''' </summary>
         ''' <value>新的动画时长</value>
-        Public Property Duration As Integer
+        Protected Friend Property Duration As Integer
             Get
                 Return effectingDuration
             End Get
@@ -48,19 +50,37 @@ Namespace Effect
             End Set
         End Property
 
+        Protected Friend ReadOnly Property IsEffectComplete As Boolean
+            Get
+                Return complete
+            End Get
+        End Property
+
     End Class
 
-    Public Class FadeEffect : Inherits ImageEffect
+    Public Class FadeInEffect : Inherits ImageEffect
         Private opacityPerFrame As Double
+        Private pixelArray() As Byte
 
         Public Sub New(fileName As String, duration As Integer)
             MyBase.New(fileName, duration)
             opacityPerFrame = 1.0 / duration
-
+            pixelArray = PixelImageContent.PixelInfomation
+            Dim i = 0
+            While i < pixelArray.Length
+                pixelArray(i) = 0
+                i += 4
+            End While
         End Sub
 
-        Public Overrides Function GetNextImageState() As BitmapSource
-
+        Protected Friend Overrides Function GetNextImageState() As BitmapSource
+            Dim i = 0
+            While i < pixelArray.Length
+                pixelArray(i) += opacityPerFrame
+                i += 4
+            End While
+            If pixelArray(0) = 255 Then complete = True
+            Return ImageCore.BitmapWithPixel.ConvertToImage(PixelImageContent.Width, PixelImageContent.Height, pixelArray)
         End Function
 
     End Class
