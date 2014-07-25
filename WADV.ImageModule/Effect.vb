@@ -64,9 +64,10 @@ Namespace Effect
 
         Public Sub New(fileName As String, duration As Integer)
             MyBase.New(fileName, duration)
-            opacityPerFrame = 1.0 / duration
+            opacityPerFrame = 255 / duration
+            If opacityPerFrame < 1 Then opacityPerFrame = 1
             pixelArray = PixelImageContent.PixelInfomation
-            Dim i = 0
+            Dim i = 3
             While i < pixelArray.Length
                 pixelArray(i) = 0
                 i += 4
@@ -74,13 +75,19 @@ Namespace Effect
         End Sub
 
         Protected Friend Overrides Function GetNextImageState() As BitmapSource
-            Dim i = 0
+            Dim i = 3
             While i < pixelArray.Length
-                pixelArray(i) += opacityPerFrame
+                If pixelArray(i) + opacityPerFrame < 256 Then
+                    pixelArray(i) += opacityPerFrame
+                Else
+                    pixelArray(i) = 255
+                End If
                 i += 4
             End While
-            If pixelArray(0) = 255 Then complete = True
-            Return ImageCore.BitmapWithPixel.ConvertToImage(PixelImageContent.Width, PixelImageContent.Height, pixelArray)
+            If pixelArray(3) = 255 Then complete = True
+            Dim width As Integer = PixelImageContent.ImageContent.Dispatcher.Invoke(Function() PixelImageContent.Width)
+            Dim height As Integer = PixelImageContent.ImageContent.Dispatcher.Invoke(Function() PixelImageContent.Height)
+            Return ImageCore.BitmapWithPixel.ConvertToImage(width, height, pixelArray)
         End Function
 
     End Class

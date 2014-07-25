@@ -14,13 +14,15 @@ Namespace ImageCore
         Private bitmapContent As FormatConvertedBitmap
         Private bitmapPixelContent(,) As Color
         Private bitmapPixel() As Byte
+        Private _width As Integer
+        Private _height As Integer
 
         ''' <summary>
         ''' 获取图像的像素宽度
         ''' </summary>
         Public ReadOnly Property Width As Integer
             Get
-                Return bitmapContent.PixelWidth
+                Return _width
             End Get
         End Property
 
@@ -29,7 +31,7 @@ Namespace ImageCore
         ''' </summary>
         Public ReadOnly Property Height As Integer
             Get
-                Return bitmapContent.PixelHeight
+                Return _height
             End Get
         End Property
 
@@ -57,10 +59,6 @@ Namespace ImageCore
         ''' </summary>
         Public ReadOnly Property PixelInfomation As Byte()
             Get
-                If bitmapPixel Is Nothing Then
-                    ReDim bitmapPixel(Width * Height * ModuleConfig.BytePerPixel - 1)
-                    bitmapContent.CopyPixels(bitmapPixel, Width * ModuleConfig.BytePerPixel, 0)
-                End If
                 Return bitmapPixel
             End Get
         End Property
@@ -95,10 +93,14 @@ Namespace ImageCore
             bitmapContent.DestinationFormat = PixelFormats.Bgra32
             bitmapContent.Source = bitmapImageContent
             bitmapContent.EndInit()
+            _width = bitmapImageContent.PixelWidth
+            _height = bitmapImageContent.PixelHeight
+            ReDim bitmapPixel(Width * Height * ModuleConfig.BytePerPixel - 1)
+            bitmapContent.CopyPixels(bitmapPixel, Width * ModuleConfig.BytePerPixel, 0)
         End Sub
 
         Public Shared Function ConvertToImage(width As Integer, height As Integer, pixel() As Byte) As BitmapSource
-            Return BitmapFrame.Create(width, height, ModuleConfig.DPI, ModuleConfig.DPI, PixelFormats.Bgra32, Imaging.BitmapPalettes.WebPaletteTransparent, pixel, width * ModuleConfig.BytePerPixel)
+            Return BitmapSource.Create(width, height, ModuleConfig.DPI, ModuleConfig.DPI, PixelFormats.Bgra32, Imaging.BitmapPalettes.WebPaletteTransparent, pixel, width * ModuleConfig.BytePerPixel)
         End Function
 
     End Class

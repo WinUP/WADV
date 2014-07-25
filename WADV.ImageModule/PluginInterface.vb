@@ -35,14 +35,21 @@ Namespace PluginInterface
     Public Class CustomizedLoop : Implements Plugin.ICustomizedLoop
         Private effect As Effect.ImageEffect
         Private content As Panel
+        Private brush As ImageBrush
 
         Public Sub New(effect As Effect.ImageEffect, content As Panel)
             Me.effect = effect
             Me.content = content
+            content.Dispatcher.Invoke(Sub()
+                                          brush = New ImageBrush
+                                          content.Background = brush
+                                      End Sub)
         End Sub
 
         Public Function StartLooping() As Boolean Implements Plugin.ICustomizedLoop.StartLooping
-            content.Dispatcher.Invoke(Sub() content.Background = New ImageBrush(effect.GetNextImageState))
+            Dim image = effect.GetNextImageState
+            content.Dispatcher.Invoke(Sub() brush.ImageSource = image)
+            GC.Collect()
             If effect.IsEffectComplete Then Return False
             Return True
         End Function

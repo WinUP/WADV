@@ -13,6 +13,7 @@ Namespace AppCore.Loop
         Private Shared loopList As New List(Of Plugin.ILoop)
         Private Shared customizedLoopList As New List(Of Plugin.ICustomizedLoop)
         Private Shared customizedLoopListCount As Integer
+        Private Shared frame As Integer
 
         ''' <summary>
         ''' 添加一个逻辑循环
@@ -49,7 +50,6 @@ Namespace AppCore.Loop
                     Exit Sub
                 End If
             End While
-            Exit Sub
         End Sub
 
         ''' <summary>
@@ -71,6 +71,10 @@ Namespace AppCore.Loop
                     End If
                     i += 1
                 End While
+#If DEBUG Then
+                frame += 1
+                If frame Mod 10 = 0 Then System.Diagnostics.Debug.Write(frame & Environment.NewLine)
+#End If
                 Thread.Sleep(loopTimeSpan)
             End While
         End Sub

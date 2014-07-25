@@ -23,7 +23,7 @@ Namespace API
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.ImageModule.Effect" Select tmpClass
             If classList.Count < 1 Then Return False
             Dim effect As ImageEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {fileName, duration})
-            Dim content = ResourceAPI.GetChildByName(Of Panel)(WindowAPI.GetMainGrid, contentName)
+            Dim content = ResourceAPI.GetChildByName(Of Panel)(WindowAPI.GetWindow, contentName)
             If content Is Nothing Then Return False
             Dim loopContent As New PluginInterface.CustomizedLoop(effect, content)
             LoopAPI.AddCustomizedLoop(loopContent)
