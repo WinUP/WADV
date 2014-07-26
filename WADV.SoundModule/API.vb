@@ -82,7 +82,7 @@ Namespace API
         ''' <param name="count">循环次数(永久循环为-1)</param>
         ''' <remarks></remarks>
         Public Shared Sub PlaySound(name As String, fileName As String, type As AdvancedPlayer.SoundType, cycle As Boolean, count As Integer)
-            Dim playerContent As AdvancedPlayer = AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Function() New AdvancedPlayer(name, fileName, type, cycle, count))
+            Dim playerContent As AdvancedPlayer = WindowAPI.GetDispatcher.Invoke(Function() New AdvancedPlayer(name, fileName, type, cycle, count))
             SoundList.AddSound(playerContent)
             playerContent.Dispatcher.BeginInvoke(Sub() playerContent.Play())
         End Sub

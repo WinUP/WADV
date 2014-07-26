@@ -2,7 +2,6 @@
 Imports System.Xml
 Imports WADV.MediaModule.Player
 Imports System.Windows.Controls
-Imports WADV.AppCore.API
 
 Namespace Config
 
@@ -62,7 +61,7 @@ Namespace Config
         Protected Friend Shared Sub DeleteSound(content As AdvancedPlayer)
             SoundList.Remove(content)
             content.Dispatcher.BeginInvoke(Sub() content.Close())
-            AppCore.API.WindowAPI.GetMainGrid.Dispatcher.BeginInvoke(Sub() AppCore.API.WindowAPI.GetMainGrid.Children.Remove(content))
+            WindowAPI.GetGrid.Dispatcher.BeginInvoke(Sub() WindowAPI.GetGrid.Children.Remove(content))
         End Sub
 
         ''' <summary>
@@ -84,7 +83,6 @@ Namespace Config
     ''' </summary>
     ''' <remarks></remarks>
     Public Class SoundConfig
-
         Private Shared BackgroundVolume As Double
         Private Shared ReadingVolume As Double
         Private Shared EffectVolume As Double
@@ -146,7 +144,7 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.SoundModule.xml"))
+            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
             BackgroundVolume = CDbl(configFile.SelectSingleNode("/config/background").InnerXml)
             ReadingVolume = CDbl(configFile.SelectSingleNode("/config/reading").InnerXml)
             EffectVolume = CDbl(configFile.SelectSingleNode("/config/effect").InnerXml)
@@ -158,11 +156,11 @@ Namespace Config
         ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.SoundModule.xml"))
+            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
             configFile.SelectSingleNode("/config/background").InnerXml = BackgroundVolume
             configFile.SelectSingleNode("/config/reading").InnerXml = ReadingVolume
             configFile.SelectSingleNode("/config/effect").InnerXml = EffectVolume
-            configFile.Save(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.SoundModule.xml"))
+            configFile.Save(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
         End Sub
 
     End Class
@@ -172,7 +170,6 @@ Namespace Config
     ''' </summary>
     ''' <remarks></remarks>
     Public Class VideoConfig
-
         Protected Friend Shared VideoContent As MediaElement = Nothing
         Protected Friend Shared ClickToSkip As Boolean = False
         Protected Friend Shared IsPlayFinished As Boolean = False
@@ -185,26 +182,26 @@ Namespace Config
         Protected Friend Shared Sub GetNewContent(fileName As String)
             If VideoContent IsNot Nothing Then
                 VideoContent.Dispatcher.Invoke(Sub()
-                                                   WindowAPI.GetMainGrid.Children.Remove(VideoContent)
+                                                   WindowAPI.GetGrid.Children.Remove(VideoContent)
                                                    RemoveHandler VideoContent.MediaEnded, AddressOf Video_Ended
                                                    RemoveHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
                                                    VideoContent.Close()
                                                    VideoContent = Nothing
                                                End Sub)
             End If
-            WindowAPI.GetMainGrid.Dispatcher.Invoke(Sub()
-                                                        VideoContent = New MediaElement
-                                                        VideoContent.SetValue(Panel.ZIndexProperty, 10)
-                                                        VideoContent.LoadedBehavior = MediaState.Manual
-                                                        VideoContent.Source = New Uri(URLAPI.CombineURL(URLAPI.GetResourceURL, fileName))
-                                                        VideoContent.Height = WindowAPI.GetMainGrid.Height
-                                                        VideoContent.Width = WindowAPI.GetMainGrid.Width
-                                                        VideoContent.Margin = New Windows.Thickness(0)
-                                                        AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
-                                                        AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
-                                                        WindowAPI.GetMainGrid.Children.Add(VideoContent)
-                                                        VideoContent.Play()
-                                                    End Sub)
+            WindowAPI.GetGrid.Dispatcher.Invoke(Sub()
+                                                    VideoContent = New MediaElement
+                                                    VideoContent.SetValue(Panel.ZIndexProperty, 10)
+                                                    VideoContent.LoadedBehavior = MediaState.Manual
+                                                    VideoContent.Source = New Uri(PathAPI.GetPath(PathAPI.Resource, fileName))
+                                                    VideoContent.Height = WindowAPI.GetGrid.Height
+                                                    VideoContent.Width = WindowAPI.GetGrid.Width
+                                                    VideoContent.Margin = New Windows.Thickness(0)
+                                                    AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
+                                                    AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
+                                                    WindowAPI.GetGrid.Children.Add(VideoContent)
+                                                    VideoContent.Play()
+                                                End Sub)
             IsPlayFinished = False
         End Sub
 

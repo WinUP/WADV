@@ -3,6 +3,11 @@ Imports System.Windows.Markup
 Imports System.IO
 Imports System.Threading
 Imports System.Windows.Threading
+Imports WADV.AppCore.Looping
+Imports WADV.AppCore.Path
+Imports WADV.AppCore.Plugin
+Imports WADV.AppCore.Script
+Imports WADV.AppCore.UI
 
 Namespace AppCore.API
 
@@ -16,10 +21,9 @@ Namespace AppCore.API
         ''' 修改窗口标题
         ''' </summary>
         ''' <param name="text">新标题</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeTitle(text As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Title = text)
+        Public Shared Sub SetTitle(text As String)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Title = text)
         End Sub
 
         ''' <summary>
@@ -27,11 +31,10 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="fileName">子元素所在的文件名(Skin目录下)</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadPage(content As Panel, fileName As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() content.Children.Clear())
-            LoadElement(content, fileName, dispatcher)
+        Public Shared Sub LoadPage(content As Panel, fileName As String)
+            content.Dispatcher.Invoke(Sub() content.Children.Clear())
+            LoadElement(content, fileName)
         End Sub
 
         ''' <summary>
@@ -39,20 +42,18 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="name">子元素所在的文件名(Skin目录下)</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadElement(content As Panel, name As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, name)))))
+        Public Shared Sub LoadElement(content As Panel, name As String)
+            content.Dispatcher.Invoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathConfig.Skin, name)))))
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
         ''' </summary>
         ''' <param name="color">颜色对象</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByColor(color As Color, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(color))
+        Public Shared Sub SetBackgroundByColor(color As Color)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Background = New SolidColorBrush(color))
         End Sub
 
         ''' <summary>
@@ -61,190 +62,73 @@ Namespace AppCore.API
         ''' <param name="r">红色值</param>
         ''' <param name="g">绿色值</param>
         ''' <param name="b">蓝色值</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByRGB(r As Byte, g As Byte, b As Byte, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b)))
+        Public Shared Sub SetBackgroundByRGB(r As Byte, g As Byte, b As Byte)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b)))
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
         ''' </summary>
         ''' <param name="hex">16进制颜色值</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeBackgroundColorByHex(hex As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex)))
+        Public Shared Sub SetBackgroundByHex(hex As String)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex)))
         End Sub
 
         ''' <summary>
         ''' 修改窗口宽度
         ''' </summary>
         ''' <param name="width">新的宽度</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowWidth(width As Double, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Width = width)
+        Public Shared Sub SetWidth(width As Double)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Width = width)
         End Sub
 
         ''' <summary>
         ''' 修改窗口高度
         ''' </summary>
         ''' <param name="height">新的高度</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowHeight(height As Double, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Height = height)
+        Public Shared Sub SetHeight(height As Double)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Height = height)
         End Sub
 
         ''' <summary>
         ''' 设置窗口调整模式
         ''' </summary>
         ''' <param name="canResize">是否能够调整大小</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowResizeMod(canResize As Boolean, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
+        Public Shared Sub SetResizeMod(canResize As Boolean)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
         End Sub
 
         ''' <summary>
         ''' 设置窗口覆盖模式
         ''' </summary>
         ''' <param name="isTopmost">是否保持最前</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowTopmost(isTopmost As Boolean, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Topmost = isTopmost)
+        Public Shared Sub SetTopmost(isTopmost As Boolean)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Topmost = isTopmost)
         End Sub
 
         ''' <summary>
         ''' 设置窗口图标
         ''' </summary>
         ''' <param name="fileName">图标文件名称(ICO格式且放置在Skin目录下)</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowIcon(fileName As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Icon = BitmapFrame.Create(New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))))
+        Public Shared Sub SetIcon(fileName As String)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Icon = BitmapFrame.Create(New Uri(PathFunction.GetFullPath(PathConfig.Skin, fileName))))
         End Sub
 
         ''' <summary>
         ''' 设置窗口指针
         ''' </summary>
         ''' <param name="fileName">指针文件名称(ANI或CUR格式且放置在Skin目录下)</param>
-        ''' <param name="dispatcher">渲染管线</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWindowCursor(fileName As String, dispatcher As Dispatcher)
-            Config.WindowConfig.GetDispatcher(dispatcher).Invoke(Sub() Config.WindowConfig.BaseWindow.Cursor = New Cursor(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName)))
+        Public Shared Sub SetCursor(fileName As String)
+            WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathConfig.Skin, fileName)))
         End Sub
-
-        ''' <summary>
-        ''' 获取窗口渲染管线
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetWindowDispatcher() As Windows.Threading.Dispatcher
-            Return Config.WindowConfig.BaseWindow.Dispatcher
-        End Function
-
-        ''' <summary>
-        ''' 获取窗口对象
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetWindow() As Window
-            Return Config.WindowConfig.BaseWindow
-        End Function
-
-        ''' <summary>
-        ''' 获取主窗口的Grid
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetMainGrid() As Grid
-            Return Config.WindowConfig.BaseGrid
-        End Function
-
-    End Class
-
-    ''' <summary>
-    ''' 资源API类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class ResourceAPI
-
-        ''' <summary>
-        ''' 加载资源到游戏全局
-        ''' </summary>
-        ''' <param name="fileName">资源文件名(Skin目录下)</param>
-        ''' <remarks></remarks>
-        Public Shared Sub LoadResourceToApplication(fileName As String)
-            Dim tmpDictionart As New ResourceDictionary
-            tmpDictionart.Source = New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))
-            Application.Current.Resources.MergedDictionaries.Add(tmpDictionart)
-        End Sub
-
-        ''' <summary>
-        ''' 加载资源到主窗口
-        ''' </summary>
-        ''' <param name="fileName">资源文件名(Skin目录下)</param>
-        ''' <remarks></remarks>
-        Public Shared Sub LoadResourceToWindow(fileName As String)
-            Dim tmpDictionart As New ResourceDictionary
-            tmpDictionart.Source = New Uri(Config.URLConfig.GetFullURI(Config.URLConfig.Skin, fileName))
-            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
-        End Sub
-
-        ''' <summary>
-        ''' 清空全局资源
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Shared Sub ClearResourceFromApplication()
-            Application.Current.Resources.MergedDictionaries.Clear()
-        End Sub
-
-        ''' <summary>
-        ''' 清空主窗口资源
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Shared Sub ClearResourceFromWindow()
-            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
-        End Sub
-
-        ''' <summary>
-        ''' 清除指定全局资源
-        ''' </summary>
-        ''' <param name="resource">要清除的资源对象</param>
-        ''' <remarks></remarks>
-        Public Shared Sub RemoveResourceFromApplication(resource As ResourceDictionary)
-            Application.Current.Resources.MergedDictionaries.Remove(resource)
-        End Sub
-
-        ''' <summary>
-        ''' 清除指定主窗口资源
-        ''' </summary>
-        ''' <param name="resource">要清除的资源对象</param>
-        ''' <remarks></remarks>
-        Public Shared Sub RemoveResourceFromWindow(resource As ResourceDictionary)
-            WindowAPI.GetWindowDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
-        End Sub
-
-        ''' <summary>
-        ''' 获取全局资源对象
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetApplicationResource() As ResourceDictionary
-            Return Application.Current.Resources
-        End Function
-
-        ''' <summary>
-        ''' 获取主窗口资源对象
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetWindowResource() As ResourceDictionary
-            Return WindowAPI.GetWindowDispatcher.Invoke(Function() WindowAPI.GetWindow.Resources)
-        End Function
 
         ''' <summary>
         ''' 根据名称获取元素的子元素(支持多级查找)
@@ -271,6 +155,115 @@ Namespace AppCore.API
                                          End Function)
         End Function
 
+        ''' <summary>
+        ''' 获取窗口线程工作队列
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetDispatcher() As Windows.Threading.Dispatcher
+            Return WindowConfig.BaseWindow.Dispatcher
+        End Function
+
+        ''' <summary>
+        ''' 获取窗口对象
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetWindow() As Window
+            Return WindowConfig.BaseWindow
+        End Function
+
+        ''' <summary>
+        ''' 获取主窗口的Grid
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetGrid() As Grid
+            Return WindowConfig.BaseGrid
+        End Function
+
+    End Class
+
+    ''' <summary>
+    ''' 资源API类
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class ResourceAPI
+
+        ''' <summary>
+        ''' 加载资源到游戏全局
+        ''' </summary>
+        ''' <param name="fileName">资源文件名(Skin目录下)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub LoadToGame(fileName As String)
+            Dim tmpDictionart As New ResourceDictionary
+            tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathConfig.Skin, fileName))
+            Application.Current.Resources.MergedDictionaries.Add(tmpDictionart)
+        End Sub
+
+        ''' <summary>
+        ''' 加载资源到主窗口
+        ''' </summary>
+        ''' <param name="fileName">资源文件名(Skin目录下)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub LoadToWindow(fileName As String)
+            Dim tmpDictionart As New ResourceDictionary
+            tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathConfig.Skin, fileName))
+            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
+        End Sub
+
+        ''' <summary>
+        ''' 清空全局资源
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub ClearGame()
+            Application.Current.Resources.MergedDictionaries.Clear()
+        End Sub
+
+        ''' <summary>
+        ''' 清空主窗口资源
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub ClearWindow()
+            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
+        End Sub
+
+        ''' <summary>
+        ''' 清除指定全局资源
+        ''' </summary>
+        ''' <param name="resource">要清除的资源对象</param>
+        ''' <remarks></remarks>
+        Public Shared Sub RemoveFromGame(resource As ResourceDictionary)
+            Application.Current.Resources.MergedDictionaries.Remove(resource)
+        End Sub
+
+        ''' <summary>
+        ''' 清除指定主窗口资源
+        ''' </summary>
+        ''' <param name="resource">要清除的资源对象</param>
+        ''' <remarks></remarks>
+        Public Shared Sub RemoveFromWindow(resource As ResourceDictionary)
+            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
+        End Sub
+
+        ''' <summary>
+        ''' 获取全局资源对象
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetFromGame() As ResourceDictionary
+            Return Application.Current.Resources
+        End Function
+
+        ''' <summary>
+        ''' 获取主窗口资源对象
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetFromWindow() As ResourceDictionary
+            Return WindowAPI.GetDispatcher.Invoke(Function() WindowAPI.GetWindow.Resources)
+        End Function
+
     End Class
 
     ''' <summary>
@@ -285,61 +278,44 @@ Namespace AppCore.API
         ''' <param name="fileName">插件文件名(Plugin目录下)</param>
         ''' <returns>是否加载成功</returns>
         ''' <remarks></remarks>
-        Public Shared Function AddPlugin(fileName As String) As Boolean
-            Return Config.PluginConfig.AddPlugin(fileName)
+        Public Shared Function Add(fileName As String) As Boolean
+            Return PluginFunction.AddPlugin(fileName)
         End Function
 
     End Class
 
     ''' <summary>
-    ''' 逻辑循环API类
+    ''' 循环API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class LoopAPI
+    Public Class LoopingAPI
 
         ''' <summary>
-        ''' 初始化或重新初始化逻辑循环
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Shared Sub InitialiseLoop()
-            [Loop].MainLoop.InitialiseLoop()
-        End Sub
-
-        ''' <summary>
-        ''' 改变每秒的循环次数
+        ''' 设置理想帧率
         ''' </summary>
         ''' <param name="frame">新的次数</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeFrame(frame As Integer)
+        Public Shared Sub SetFrame(frame As Integer)
             If frame < 1 Then Throw New Exception("逻辑更新频率不能小于每秒1次")
-            Config.LoopConfig.Frame = frame
+            LoopingFunction.Frame = frame
         End Sub
 
         ''' <summary>
-        ''' 获取每秒的循环次数
+        ''' 获取理想帧率
         ''' </summary>
         ''' <returns>循环次数</returns>
         ''' <remarks></remarks>
         Public Shared Function GetFrame() As Integer
-            Return Config.LoopConfig.Frame
+            Return LoopingFunction.Frame
         End Function
 
         ''' <summary>
-        ''' 添加一个逻辑循环
+        ''' 添加一个循环体
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub AddLoop(loopContent As Plugin.ILoop)
-            [Loop].MainLoop.AddLoop(loopContent)
-        End Sub
-
-        ''' <summary>
-        ''' 添加一个小型逻辑循环
-        ''' </summary>
-        ''' <param name="loopContent">循环体</param>
-        ''' <remarks></remarks>
-        Public Shared Sub AddCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
-            [Loop].MainLoop.AddCustomizedLoop(loopContent)
+        Public Shared Sub AddLoop(loopContent As Plugin.ILooping)
+            MainLooping.GetInstance.Dispatcher.Invoke(Sub() MainLooping.GetInstance.AddLooping(loopContent))
         End Sub
 
         ''' <summary>
@@ -347,8 +323,8 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub WaitCustomizedLoop(loopContent As Plugin.ICustomizedLoop)
-            [Loop].MainLoop.WaitCustomizedLoop(loopContent)
+        Public Shared Sub WaitLoop(loopContent As Plugin.ILooping)
+            MainLooping.GetInstance.WaitLooping(loopContent)
         End Sub
 
         ''' <summary>
@@ -356,7 +332,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StartMainLoop()
-            [Loop].MainLoop.StartMainLoop()
+            LoopingFunction.StartMainLooping()
         End Sub
 
         ''' <summary>
@@ -364,8 +340,17 @@ Namespace AppCore.API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopMainLoop()
-            [Loop].MainLoop.StopMainLoop()
+            LoopingFunction.StopMainLooping()
         End Sub
+
+        ''' <summary>
+        ''' 获取循环线程工作队列
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetDispatcher() As Dispatcher
+            Return MainLooping.GetInstance.Dispatcher
+        End Function
 
     End Class
 
@@ -375,35 +360,56 @@ Namespace AppCore.API
     ''' <remarks></remarks>
     Public Class ScriptAPI
 
+        ''' <summary>
+        ''' 显示提示信息
+        ''' </summary>
+        ''' <param name="content">内容</param>
+        ''' <param name="title">标题</param>
+        ''' <remarks></remarks>
         Public Shared Sub ShowMessage(content As String, title As String)
             MessageBox.Show(content, title, MessageBoxButton.OK, MessageBoxImage.Information)
         End Sub
 
         ''' <summary>
-        ''' 执行脚本文件中的所有代码
+        ''' 执行脚本文件中的所有代码(无等待)
         ''' </summary>
-        ''' <param name="fileName">文件名(Script目录下)</param>
+        ''' <param name="fileName">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFile(fileName As String)
-            Script.Exchanger.RunFile(Config.URLConfig.GetFullURI(Config.URLConfig.Script, fileName))
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then
+                Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, fileName)))
+                tmpThread.Start()
+            End If
         End Sub
 
-        Public Shared Sub Wait(frame As Integer)
-            System.Threading.Thread.Sleep(frame * (1000.0 / Config.LoopConfig.Frame))
+        ''' <summary>
+        ''' 执行脚本文件中的所有代码
+        ''' </summary>
+        ''' <param name="filename">文件路径(Script目录下)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub RunFileAndWait(filename As String)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, filename))
         End Sub
 
-        Public Shared Sub RunFileInThread(fileName As String)
-            Dim tmpThread As New Thread(New ParameterizedThreadStart(AddressOf RunFile))
-            tmpThread.Start(fileName)
+        ''' <summary>
+        ''' 执行一段字符串脚本(无等待)
+        ''' </summary>
+        ''' <param name="content">脚本代码内容</param>
+        ''' <remarks></remarks>
+        Public Shared Sub RunStrng(content As String)
+            If Not script.ScriptCore.GetInstance.BusyStatus Then
+                Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunStrng(content))
+                tmpThread.Start(content)
+            End If
         End Sub
 
         ''' <summary>
         ''' 执行一段字符串脚本
         ''' </summary>
-        ''' <param name="script">脚本代码内容</param>
+        ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
-        Public Shared Sub RunStrng(script As String)
-            AppCore.Script.Exchanger.RunStrng(script)
+        Public Shared Sub RunStringAndWait(content As String)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Script.ScriptCore.GetInstance.RunStrng(content)
         End Sub
 
         ''' <summary>
@@ -414,7 +420,8 @@ Namespace AppCore.API
         ''' <returns>返回值列表</returns>
         ''' <remarks></remarks>
         Public Shared Function RunFunction(functionName As String, params() As Object) As Object()
-            Return Script.Exchanger.RunFunction(functionName, params)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.RunFunction(functionName, params)
+            Return Nothing
         End Function
 
         ''' <summary>
@@ -424,7 +431,7 @@ Namespace AppCore.API
         ''' <param name="value">变量内容(字符串形式)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetGlobalVariable(name As String, value As String)
-            RunStrng(String.Format("{0}={1}", name, value))
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then RunStringAndWait(String.Format("{0}={1}", name, value))
         End Sub
 
         ''' <summary>
@@ -434,7 +441,7 @@ Namespace AppCore.API
         ''' <param name="value">变量内容</param>
         ''' <remarks></remarks>
         Public Shared Sub SetGlobalStringVariable(name As String, value As String)
-            SetGlobalVariable(name, """" & value & """")
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then SetGlobalVariable(name, """" & value & """")
         End Sub
 
         ''' <summary>
@@ -444,7 +451,8 @@ Namespace AppCore.API
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetVariable(name As String) As Object
-            Return Script.Exchanger.GetVariable(name)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetVariable(name)
+            Return Nothing
         End Function
 
         ''' <summary>
@@ -454,7 +462,8 @@ Namespace AppCore.API
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetStringVariable(name As String) As String
-            Return Script.Exchanger.GetStringVariable(name)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetStringVariable(name)
+            Return Nothing
         End Function
 
         ''' <summary>
@@ -464,7 +473,8 @@ Namespace AppCore.API
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetDoubleVariable(name As String) As Double
-            Return Script.Exchanger.GetDoubleVariable(name)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetDoubleVariable(name)
+            Return Nothing
         End Function
 
         ''' <summary>
@@ -474,7 +484,8 @@ Namespace AppCore.API
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetIntegerVariable(name As String) As Integer
-            Return CInt(GetDoubleVariable(name))
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return CInt(GetDoubleVariable(name))
+            Return Nothing
         End Function
 
         ''' <summary>
@@ -484,18 +495,34 @@ Namespace AppCore.API
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetTableVariable(name As String) As LuaInterface.LuaTable
-            Return Script.Exchanger.GetTableVariable(name)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetTableVariable(name)
+            Return Nothing
         End Function
 
         ''' <summary>
-        ''' 获取获取脚本全局变量(Table类型限定)中某个项的值
+        ''' 获取脚本全局变量(Table类型)中某个项的值
         ''' </summary>
         ''' <param name="tableName">表名</param>
         ''' <param name="key">键</param>
         ''' <returns>值</returns>
         ''' <remarks></remarks>
         Public Shared Function GetVariableInTable(tableName As String, key As String) As Object
-            Return Script.Exchanger.GetVariableInTable(tableName, key)
+            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetVariableInTable(tableName, key)
+            Return Nothing
+        End Function
+
+        Public Shared Sub RegisterFunction(types() As Type, belong As String, prefix As String)
+            Register.RegisterFunction(types, belong, prefix)
+        End Sub
+
+
+        ''' <summary>
+        ''' 获取脚本主机空闲状态
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetBusyStatus() As Boolean
+            Return Script.ScriptCore.GetInstance.BusyStatus
         End Function
 
         ''' <summary>
@@ -503,8 +530,17 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>脚本主机</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetScriptVM() As LuaInterface.Lua
-            Return Script.ScriptCore.ScriptVM
+        Public Shared Function GetVM() As LuaInterface.Lua
+            Return Script.ScriptCore.GetInstance.ScriptVM
+        End Function
+
+        ''' <summary>
+        ''' 获取脚本主机线程工作队列
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetDispatcher() As Dispatcher
+            Return ScriptCore.GetInstance.Dispatcher
         End Function
 
     End Class
@@ -513,15 +549,15 @@ Namespace AppCore.API
     ''' 路径API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class URLAPI
+    Public Class PathAPI
 
         ''' <summary>
         ''' 获取程序资源文件的存放路径
         ''' </summary>
         ''' <returns>程序资源文件的存放路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetResourceURL() As String
-            Return Config.URLConfig.Resource
+        Public Shared Function Resource() As String
+            Return PathConfig.Resource
         End Function
 
         ''' <summary>
@@ -529,8 +565,8 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>皮肤文件的存放路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetSkinURL() As String
-            Return Config.URLConfig.Skin
+        Public Shared Function Skin() As String
+            Return PathConfig.Skin
         End Function
 
         ''' <summary>
@@ -538,8 +574,8 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>插件的存放路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetPluginURL() As String
-            Return Config.URLConfig.Plugin
+        Public Shared Function Plugin() As String
+            Return PathConfig.Plugin
         End Function
 
         ''' <summary>
@@ -547,8 +583,8 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>脚本文件的存放路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetScriptURL() As String
-            Return Config.URLConfig.Script
+        Public Shared Function Script() As String
+            Return PathConfig.Script
         End Function
 
         ''' <summary>
@@ -556,19 +592,19 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>用户个人文件的存放路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetUserFileURL() As String
-            Return Config.URLConfig.UserFile
+        Public Shared Function UserFile() As String
+            Return PathConfig.UserFile
         End Function
 
         ''' <summary>
-        ''' 合并路径
+        ''' 获取完整路径
         ''' </summary>
         ''' <param name="urlType">资源路径类型</param>
         ''' <param name="fileURL">从资源目录开始的文件相对路径</param>
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function CombineURL(urlType As String, Optional fileURL As String = "") As String
-            Return Config.URLConfig.GetFullURI(urlType, fileURL)
+        Public Shared Function GetPath(urlType As String, Optional fileURL As String = "") As String
+            Return PathFunction.GetFullPath(urlType, fileURL)
         End Function
 
     End Class

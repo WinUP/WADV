@@ -1,5 +1,7 @@
 ﻿Imports System.Xml
 Imports System.Windows.Controls
+Imports System.Windows.Media.Imaging
+Imports System.Windows.Media
 
 Namespace Config
 
@@ -39,7 +41,7 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.ImageModule.xml"))
+            configFile.Load(PathAPI.GetPath(PathAPI.UserFile, "WADV.ImageModule.xml"))
             _bytePerPixel = CInt(configFile.SelectSingleNode("/config/bytePerPixel").InnerXml)
             _dpi = CInt(configFile.SelectSingleNode("/config/dpi").InnerXml)
         End Sub
@@ -50,11 +52,19 @@ Namespace Config
         ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.ImageModule.xml"))
+            configFile.Load(PathAPI.GetPath(PathAPI.UserFile, "WADV.ImageModule.xml"))
             configFile.SelectSingleNode("/config/bytePerPixel").InnerXml = BytePerPixel
             configFile.SelectSingleNode("/config/dpi").InnerXml = DPI
-            configFile.Save(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetUserFileURL, "WADV.ImageModule.xml"))
+            configFile.Save(PathAPI.GetPath(PathAPI.UserFile, "WADV.ImageModule.xml"))
         End Sub
+
+    End Class
+
+    Public Class ImageConfig
+
+        Public Shared Function ConvertToImage(width As Integer, height As Integer, pixel() As Byte) As BitmapSource
+            Return BitmapSource.Create(width, height, ModuleConfig.DPI, ModuleConfig.DPI, PixelFormats.Bgra32, BitmapPalettes.WebPaletteTransparent, pixel, width * ModuleConfig.BytePerPixel)
+        End Function
 
     End Class
 

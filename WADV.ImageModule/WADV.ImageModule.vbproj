@@ -64,12 +64,12 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Effect.vb" />
-    <Compile Include="ImageCore.vb" />
     <Compile Include="PluginInterface.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Controls
+Imports WADV.MediaModule.API
 
 Namespace Player
 
@@ -8,7 +9,6 @@ Namespace Player
     ''' </summary>
     ''' <remarks></remarks>
     Public Class AdvancedPlayer : Inherits MediaElement
-
         Private _tagName As String
         Private _type As SoundType
         Private _cycle As Boolean
@@ -96,14 +96,14 @@ Namespace Player
             _cycle = cycle
             _cycleCount = count
             If type = SoundType.Background Then
-                Volume = API.ConfigAPI.GetBackgroundVolume
+                Volume = ConfigAPI.GetBackgroundVolume
             ElseIf type = SoundType.Effect Then
-                Volume = API.ConfigAPI.GetEffectVolume
+                Volume = ConfigAPI.GetEffectVolume
             Else
-                Volume = API.ConfigAPI.GetReadingVolume
+                Volume = ConfigAPI.GetReadingVolume
             End If
-            AppCore.API.WindowAPI.GetMainGrid.Children.Add(Me)
-            Source = New Uri(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetResourceURL, fileName))
+            WindowAPI.GetGrid.Children.Add(Me)
+            Source = New Uri(PathAPI.GetPath(PathAPI.Resource, fileName))
         End Sub
 
         Protected Sub Media_Ended(sender As Object, e As EventArgs) Handles Me.MediaEnded

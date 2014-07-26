@@ -50,7 +50,7 @@ Namespace API
         ''' </summary>
         ''' <param name="frame">新的数值</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeWordFrame(frame As Integer)
+        Public Shared Sub SetWordFrame(frame As Integer)
             Config.ModuleConfig.WordFrame = frame
         End Sub
 
@@ -59,7 +59,7 @@ Namespace API
         ''' </summary>
         ''' <param name="frame">新的数值</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeSentenceFrame(frame As Integer)
+        Public Shared Sub SetSentenceFrame(frame As Integer)
             Config.ModuleConfig.SetenceFrame = frame
         End Sub
 
@@ -68,7 +68,7 @@ Namespace API
         ''' </summary>
         ''' <param name="auto">新的状态</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeAutoMode(auto As Boolean)
+        Public Shared Sub SetAutoMode(auto As Boolean)
             Config.ModuleConfig.Auto = auto
         End Sub
 
@@ -77,7 +77,7 @@ Namespace API
         ''' </summary>
         ''' <param name="ignore">新的状态</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChangeIgnoreMode(ignore As Boolean)
+        Public Shared Sub SetIgnoreMode(ignore As Boolean)
             Config.ModuleConfig.Ignore = ignore
         End Sub
 
@@ -104,8 +104,8 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub RegisterEvent()
-            AddHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
-            AddHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
+            AddHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
+            AddHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             AddHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
         End Sub
 
@@ -114,8 +114,8 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub UnregisterEvent()
-            RemoveHandler AppCore.API.WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
-            RemoveHandler AppCore.API.WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
+            RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
+            RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             RemoveHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
         End Sub
 
@@ -135,15 +135,21 @@ Namespace API
         ''' <param name="effectName">效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowText(text() As String, character() As String, effectName As String) As Boolean
+        Public Shared Function ShowTextReular(text() As String, character() As String, effectName As String) As Boolean
+            '检查状态
             If Config.UIConfig.TextArea Is Nothing Then Return False
+            '查找特效
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.TextModule.TextEffect" Select tmpClass
             If classList.Count < 1 Then Return False
+            '生成特效
             Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {text, character})
             Config.ModuleConfig.Ellipsis = False
+            '生成循环体
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
-            AppCore.API.LoopAPI.AddCustomizedLoop(loopContent)
-            AppCore.API.LoopAPI.WaitCustomizedLoop(loopContent)
+            '开始循环
+            AppCore.API.LoopingAPI.AddLoop(loopContent)
+            '等待结束
+            AppCore.API.LoopingAPI.AddLoop(loopContent)
             Return True
         End Function
 
@@ -155,12 +161,12 @@ Namespace API
         ''' <param name="effectName">效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowTextByTable(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
+        Public Shared Function ShowText(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
             Dim text1(text.Values.Count - 1) As String
             text.Values.CopyTo(text1, 0)
             Dim character1(character.Values.Count - 1) As String
             character.Values.CopyTo(character1, 0)
-            Return ShowText(text1, character1, effectName)
+            Return ShowTextReular(text1, character1, effectName)
         End Function
 
     End Class

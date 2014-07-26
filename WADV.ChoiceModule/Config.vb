@@ -5,7 +5,6 @@ Imports System.IO
 Namespace Config
 
     Public Class UIConfig
-
         Protected Friend Shared ChoiceContent As Panel
         Protected Friend Shared ChoiceStyle As String
         Protected Friend Shared ChoiceMargin As Double

@@ -8,7 +8,6 @@ Namespace Effect
     ''' </summary>
     ''' <remarks></remarks>
     Public MustInherit Class StandardEffect
-
         Protected choices() As FrameworkElement
         Protected waitingTime As Integer
         Protected alreadyWaiting As Integer = 0
@@ -18,14 +17,19 @@ Namespace Effect
             waitingTime = wait
         End Sub
 
-        Protected MustOverride Function RenderingUI() As Boolean
+        ''' <summary>
+        ''' 渲染下一个显示状态
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public MustOverride Sub RenderingUI()
 
         ''' <summary>
-        ''' 更新显示样式并获取下一个显示状态
+        ''' 对选择时间计时
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetNextUIStyle() As Boolean
+            If waitingTime = -1 Then Return True
             If alreadyWaiting > 0 Then
                 If alreadyWaiting > waitingTime Then
                     Return False
@@ -34,13 +38,8 @@ Namespace Effect
                     Return True
                 End If
             End If
-            Dim returnState As Boolean = AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Function() RenderingUI())
-            If Not returnState Then
-                alreadyWaiting = 1
-            End If
             Return True
         End Function
-
 
     End Class
 
@@ -48,8 +47,7 @@ Namespace Effect
     ''' 渐显显示效果
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class FadeEffect : Inherits Effect.StandardEffect
-
+    Public Class FadeInEffect : Inherits Effect.StandardEffect
         Private renderingPanelIndex As Integer = 0
 
         Public Sub New(choices() As FrameworkElement, wait As Integer)
@@ -59,18 +57,19 @@ Namespace Effect
             Next
         End Sub
 
-        Protected Overrides Function RenderingUI() As Boolean
-            If renderingPanelIndex = choices.Length Then Return False
+        Public Overrides Sub RenderingUI()
+            If alreadyWaiting > 0 Then Exit Sub
+            If renderingPanelIndex = choices.Length Then
+                alreadyWaiting = 1
+                Exit Sub
+            End If
             Dim renderingPanel = choices(renderingPanelIndex)
-            renderingPanel.Dispatcher.Invoke(Sub()
-                                                 If renderingPanel.Opacity < 1 Then
-                                                     renderingPanel.Opacity += 0.2
-                                                 Else
-                                                     renderingPanelIndex += 1
-                                                 End If
-                                             End Sub)
-            Return True
-        End Function
+            If renderingPanel.Opacity < 1 Then
+                renderingPanel.Opacity += 0.2
+            Else
+                renderingPanelIndex += 1
+            End If
+        End Sub
 
     End Class
 

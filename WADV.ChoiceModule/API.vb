@@ -2,6 +2,7 @@
 Imports System.Xml
 Imports System.Windows.Controls
 Imports System.IO
+Imports WADV.ChoiceModule.Config
 
 Namespace API
 
@@ -16,7 +17,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetChoiceContent() As Panel
+        Public Shared Function GetContent() As Panel
             Return Config.UIConfig.ChoiceContent
         End Function
 
@@ -25,7 +26,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetChoiceStyle() As String
+        Public Shared Function GetStyle() As String
             Return Config.UIConfig.ChoiceStyle
         End Function
 
@@ -34,7 +35,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetChoiceMargin() As Double
+        Public Shared Function GetMargin() As Double
             Return Config.UIConfig.ChoiceMargin
         End Function
 
@@ -43,7 +44,7 @@ Namespace API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetChoiceContent(content As Panel)
+        Public Shared Sub SetContent(content As Panel)
             Config.UIConfig.ChoiceContent = content
         End Sub
 
@@ -52,8 +53,8 @@ Namespace API
         ''' </summary>
         ''' <param name="styleFile">样式文件(放置在Skin目录下)</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetChoiceStyle(styleFile As String)
-            Config.UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(AppCore.API.URLAPI.CombineURL(AppCore.API.URLAPI.GetSkinURL, styleFile), System.Text.Encoding.Default)
+        Public Shared Sub SetStyle(styleFile As String)
+            Config.UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.Skin, styleFile), System.Text.Encoding.Default)
         End Sub
 
         ''' <summary>
@@ -61,7 +62,7 @@ Namespace API
         ''' </summary>
         ''' <param name="margin">新的间隔</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetChoiceMargin(margin As Double)
+        Public Shared Sub SetMargin(margin As Double)
             Config.UIConfig.ChoiceMargin = margin
         End Sub
 
@@ -90,37 +91,47 @@ Namespace API
         ''' <param name="styleName">选项显示效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowChoice(choice() As String, waitingTime As Integer, styleName As String) As Boolean
+        Public Shared Function ShowChoiceRegular(choice() As String, waitingTime As Integer, styleName As String) As Boolean
+            '检查配置
             If Config.UIConfig.ChoiceContent Is Nothing Then Return False
             If Config.UIConfig.ChoiceStyle Is Nothing Then Return False
             Config.DataConfig.Choice = ""
             Dim choicePanel As New List(Of Windows.FrameworkElement)
-            Dim dispatcher = AppCore.API.WindowAPI.GetWindowDispatcher
+            Dim dispatcher = AppCore.API.WindowAPI.GetDispatcher
+            '声明界面元素
             For i = 0 To choice.Length - 1
                 Dim readIndex = i
                 Dim margin = i * Config.UIConfig.ChoiceMargin
                 dispatcher.Invoke(Sub()
+                                      '获取元素
                                       Dim tmpPanel As Windows.FrameworkElement = XamlReader.Parse(Config.UIConfig.ChoiceStyle)
+                                      '设置元素样式
                                       tmpPanel.Margin = New Windows.Thickness(tmpPanel.Margin.Left, margin, tmpPanel.Margin.Right, tmpPanel.Margin.Bottom)
-                                      Dim tmpText = AppCore.API.ResourceAPI.GetChildByName(Of TextBlock)(tmpPanel, "")
+                                      Dim tmpText = WindowAPI.GetChildByName(Of TextBlock)(tmpPanel, "")
                                       tmpText.Text = choice(readIndex)
-                                      AddHandler tmpText.MouseLeftButtonDown, AddressOf Config.UIConfig.TextBlock_Click
+                                      '绑定事件
+                                      AddHandler tmpText.MouseLeftButtonDown, Sub() DataConfig.Choice = tmpText.Text
+                                      '添加到窗口
                                       choicePanel.Add(tmpPanel)
                                       Config.UIConfig.ChoiceContent.Children.Add(tmpPanel)
                                   End Sub)
             Next
+            '查找特效
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = styleName AndAlso tmpClass.Namespace = "WADV.ChoiceModule.Effect" Select tmpClass
             If classList.Count < 1 Then Return False
             Dim effect As Effect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {choicePanel.ToArray, waitingTime})
-            Dim loopContent As New PluginInterface.CustomizedLoop(effect)
-            Config.UIConfig.ChoiceContent.Dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Visibility = Windows.Visibility.Visible)
-            AppCore.API.LoopAPI.AddCustomizedLoop(loopContent)
-            AppCore.API.LoopAPI.WaitCustomizedLoop(loopContent)
+            Dim loopContent As New PluginInterface.Looping(effect)
+            dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Visibility = Windows.Visibility.Visible)
+            '开始渲染
+            AppCore.API.LoopingAPI.AddLoop(loopContent)
+            AppCore.API.LoopingAPI.WaitLoop(loopContent)
+            '注销事件
             For Each tmpPanel In choicePanel
                 RemoveHandler tmpPanel.MouseLeftButtonDown, AddressOf Config.UIConfig.TextBlock_Click
-                Config.UIConfig.ChoiceContent.Dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Children.Remove(tmpPanel))
+                dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Children.Remove(tmpPanel))
             Next
-            Config.UIConfig.ChoiceContent.Dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Visibility = Windows.Visibility.Collapsed)
+            '隐藏界面元素
+            dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Visibility = Windows.Visibility.Collapsed)
             Return True
         End Function
 
@@ -132,10 +143,10 @@ Namespace API
         ''' <param name="styleName">选项显示效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowChoiceByTable(choice As LuaInterface.LuaTable, waitingTime As Integer, styleName As String) As Boolean
+        Public Shared Function ShowChoice(choice As LuaInterface.LuaTable, waitingTime As Integer, styleName As String) As Boolean
             Dim choice1(choice.Values.Count - 1) As String
             choice.Values.CopyTo(choice1, 0)
-            Return ShowChoice(choice1, waitingTime, styleName)
+            Return ShowChoiceRegular(choice1, waitingTime, styleName)
         End Function
 
     End Class

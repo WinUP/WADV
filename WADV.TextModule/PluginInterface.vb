@@ -18,32 +18,21 @@ Namespace PluginInterface
     Public Class Script : Implements Plugin.IScriptFunction
 
         Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements Plugin.IScriptFunction.StartRegisting
-            Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.IsClass AndAlso tmpClass.Namespace = "WADV.TextModule.API" Select tmpClass
-            Dim functionList() As MethodInfo
-            Dim apiBase As Object
-            Dim apiBaseName As String
-            For Each tmpClass In classList
-                apiBaseName = tmpClass.Name
-                apiBase = tmpClass.Assembly.CreateInstance("WADV.TextModule.API." & apiBaseName)
-                functionList = tmpClass.GetMethods
-                For Each tmpMethod In functionList
-                    ScriptVM.RegisterFunction(String.Format("TM_{0}_{1}", apiBaseName.Remove(apiBaseName.Length - 3), tmpMethod.Name), apiBase, tmpMethod)
-                Next
-            Next
+            ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.TextModule.API", "TM")
         End Sub
 
     End Class
 
-    Public Class CustomizedLoop : Implements Plugin.ICustomizedLoop
-
+    Public Class CustomizedLoop : Implements Plugin.ILooping
         Private effect As TextEffect.StandardEffect
         Private waitingCount As Integer = 0
+        Private renderingText As TextEffect.StandardEffect.SentenceInfo
 
         Public Sub New(effect As TextEffect.StandardEffect)
             Me.effect = effect
         End Sub
 
-        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ICustomizedLoop.StartLooping
+        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
             Dim text As TextEffect.StandardEffect.SentenceInfo
             If waitingCount > 0 Then
                 waitingCount -= 1
@@ -55,10 +44,6 @@ Namespace PluginInterface
                 While Not effect.IsSentenceReadOver
                     text = effect.GetNextString
                 End While
-                AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
-                                                                     Config.UIConfig.TextArea.Text = text.Content
-                                                                     Config.UIConfig.CharacterArea.Text = text.Character
-                                                                 End Sub)
                 If effect.IsReadOver Then Return False
                 waitingCount = 10
                 Return True
@@ -66,10 +51,6 @@ Namespace PluginInterface
             '自动状态
             If Config.ModuleConfig.Auto Then
                 text = effect.GetNextString
-                AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
-                                                                     Config.UIConfig.TextArea.Text = text.Content
-                                                                     Config.UIConfig.CharacterArea.Text = text.Character
-                                                                 End Sub)
                 If effect.IsReadOver Then Return False
                 If effect.IsSentenceReadOver Then
                     waitingCount = Config.ModuleConfig.SetenceFrame
@@ -88,14 +69,15 @@ Namespace PluginInterface
                 End While
             End If
             Config.ModuleConfig.Ellipsis = False
-            AppCore.API.WindowAPI.GetWindowDispatcher.Invoke(Sub()
-                                                                 Config.UIConfig.TextArea.Text = text.Content
-                                                                 Config.UIConfig.CharacterArea.Text = text.Character
-                                                             End Sub)
             If effect.IsReadOver Then Return False
             waitingCount = Config.ModuleConfig.WordFrame
             Return True
         End Function
+
+        Public Sub StartRendering(window As Window) Implements AppCore.Plugin.ILooping.StartRendering
+            Config.UIConfig.TextArea.Text = renderingText.Content
+            Config.UIConfig.CharacterArea.Text = renderingText.Character
+        End Sub
 
     End Class
 

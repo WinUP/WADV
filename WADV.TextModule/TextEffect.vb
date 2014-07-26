@@ -5,7 +5,6 @@
     ''' </summary>
     ''' <remarks></remarks>
     Public MustInherit Class StandardEffect
-
         Protected TextArray() As String
         Protected CharacterArray() As String
         Protected NextTextIndex As Integer = 0
@@ -64,7 +63,6 @@
     ''' </summary>
     ''' <remarks></remarks>
     Public Class PerWordEffect : Inherits StandardEffect
-
         Private LastUsedText As String = ""
 
         Public Sub New(text() As String, character() As String)

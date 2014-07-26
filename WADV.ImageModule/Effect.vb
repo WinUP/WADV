@@ -3,6 +3,7 @@ Imports System.Windows.Media.Imaging
 Imports System.Windows
 Imports System.Windows.Media
 Imports WADV.ImageModule.Config
+Imports WADV.AppCore.API
 
 Namespace Effect
 
@@ -11,8 +12,10 @@ Namespace Effect
     ''' </summary>
     Public MustInherit Class ImageEffect
 
-        Protected bitmapImageContent As ImageCore.BitmapWithPixel
-        Protected effectingDuration As Integer
+        Private effectingDuration As Integer
+        Private imageWidth As Integer
+        Private imageHeight As Integer
+        Protected pixelArray() As Byte
         Protected complete As Boolean = False
 
         Protected Friend MustOverride Function GetNextImageState() As BitmapSource
@@ -24,32 +27,58 @@ Namespace Effect
         ''' <param name="duration">动画时长(单位为帧)</param>
         ''' <remarks></remarks>
         Public Sub New(filename As String, duration As Integer)
-            bitmapImageContent = New ImageCore.BitmapWithPixel(filename)
+            Dim bitmapContent As New FormatConvertedBitmap
+            bitmapContent.BeginInit()
+            bitmapContent.DestinationPalette = BitmapPalettes.WebPaletteTransparent
+            bitmapContent.DestinationFormat = PixelFormats.Bgra32
+            bitmapContent.Source = New BitmapImage(New Uri(PathAPI.GetPath(PathAPI.Resource, filename)))
+            bitmapContent.EndInit()
+            imageWidth = bitmapContent.PixelWidth
+            imageHeight = bitmapContent.PixelHeight
+            ReDim pixelArray(imageWidth * imageHeight * ModuleConfig.BytePerPixel - 1)
+            bitmapContent.CopyPixels(pixelArray, imageWidth * ModuleConfig.BytePerPixel, 0)
             effectingDuration = duration
         End Sub
 
         ''' <summary>
-        ''' 获取图像带像素信息的内容
+        ''' 获取图像的像素信息
         ''' </summary>
-        Protected Friend ReadOnly Property PixelImageContent As ImageCore.BitmapWithPixel
+        Protected Friend ReadOnly Property Pixels As Byte()
             Get
-                Return bitmapImageContent
+                Return pixelArray
             End Get
         End Property
 
         ''' <summary>
-        ''' 获取或设置动画时长
+        ''' 获取图像的宽度
         ''' </summary>
-        ''' <value>新的动画时长</value>
-        Protected Friend Property Duration As Integer
+        Protected Friend ReadOnly Property Width As Integer
+            Get
+                Return imageWidth
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' 获取图像的高度
+        ''' </summary>
+        Protected Friend ReadOnly Property Height As Integer
+            Get
+                Return imageHeight
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' 获取动画时长
+        ''' </summary>
+        Protected Friend ReadOnly Property Duration As Integer
             Get
                 Return effectingDuration
             End Get
-            Set(value As Integer)
-                effectingDuration = value
-            End Set
         End Property
 
+        ''' <summary>
+        ''' 获取效果播放状态
+        ''' </summary>
         Protected Friend ReadOnly Property IsEffectComplete As Boolean
             Get
                 Return complete
@@ -60,13 +89,11 @@ Namespace Effect
 
     Public Class FadeInEffect : Inherits ImageEffect
         Private opacityPerFrame As Double
-        Private pixelArray() As Byte
 
         Public Sub New(fileName As String, duration As Integer)
             MyBase.New(fileName, duration)
             opacityPerFrame = 255 / duration
             If opacityPerFrame < 1 Then opacityPerFrame = 1
-            pixelArray = PixelImageContent.PixelInfomation
             Dim i = 3
             While i < pixelArray.Length
                 pixelArray(i) = 0
@@ -75,6 +102,7 @@ Namespace Effect
         End Sub
 
         Protected Friend Overrides Function GetNextImageState() As BitmapSource
+            'BGRA32
             Dim i = 3
             While i < pixelArray.Length
                 If pixelArray(i) + opacityPerFrame < 256 Then
@@ -85,9 +113,7 @@ Namespace Effect
                 i += 4
             End While
             If pixelArray(3) = 255 Then complete = True
-            Dim width As Integer = PixelImageContent.ImageContent.Dispatcher.Invoke(Function() PixelImageContent.Width)
-            Dim height As Integer = PixelImageContent.ImageContent.Dispatcher.Invoke(Function() PixelImageContent.Height)
-            Return ImageCore.BitmapWithPixel.ConvertToImage(width, height, pixelArray)
+            Return ImageConfig.ConvertToImage(Width, Height, pixelArray)
         End Function
 
     End Class
