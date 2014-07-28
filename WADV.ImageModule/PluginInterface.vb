@@ -33,6 +33,7 @@ Namespace PluginInterface
             Me.content = content
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                brush = New ImageBrush
+                                               brush.ImageSource = Me.effect.GetNextImageState
                                                content.Background = brush
                                            End Sub)
 

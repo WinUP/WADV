@@ -16,6 +16,7 @@ Namespace Effect
         Private imageWidth As Integer
         Private imageHeight As Integer
         Protected pixelArray() As Byte
+        Protected arrayLength As Integer
         Protected complete As Boolean = False
 
         Protected Friend MustOverride Function GetNextImageState() As BitmapSource
@@ -37,6 +38,7 @@ Namespace Effect
             imageHeight = bitmapContent.PixelHeight
             ReDim pixelArray(imageWidth * imageHeight * ModuleConfig.BytePerPixel - 1)
             bitmapContent.CopyPixels(pixelArray, imageWidth * ModuleConfig.BytePerPixel, 0)
+            arrayLength = pixelArray.Length
             effectingDuration = duration
         End Sub
 
@@ -87,8 +89,21 @@ Namespace Effect
 
     End Class
 
+    Public Class NoEffect : Inherits ImageEffect
+
+        Public Sub New(fileName As String, duration As Integer)
+            MyBase.New(fileName, duration)
+        End Sub
+
+        Protected Friend Overrides Function GetNextImageState() As BitmapSource
+            complete = True
+            Return WindowAPI.GetDispatcher.Invoke(Function() ImageConfig.ConvertToImage(Width, Height, pixelArray))
+        End Function
+
+    End Class
+
     Public Class FadeInEffect : Inherits ImageEffect
-        Private opacityPerFrame As Double
+        Private opacityPerFrame As Integer
 
         Public Sub New(fileName As String, duration As Integer)
             MyBase.New(fileName, duration)
@@ -103,16 +118,89 @@ Namespace Effect
 
         Protected Friend Overrides Function GetNextImageState() As BitmapSource
             'BGRA32
+            Dim blockNumber = arrayLength \ Config.ModuleConfig.BytePerPixel
+            Dim threadMaximite As Integer = (blockNumber \ 2) * Config.ModuleConfig.BytePerPixel - 1
+            Dim thread1 As New System.Threading.Thread(Sub()
+                                                           Dim i = 3
+                                                           While i < threadMaximite
+                                                               If pixelArray(i) + opacityPerFrame < 256 Then
+                                                                   pixelArray(i) += opacityPerFrame
+                                                               Else
+                                                                   pixelArray(i) = 255
+                                                               End If
+                                                               i += 4
+                                                           End While
+                                                       End Sub)
+            Dim thread2 As New System.Threading.Thread(Sub()
+                                                           Dim i = threadMaximite + 4
+                                                           While i < arrayLength
+                                                               If pixelArray(i) + opacityPerFrame < 256 Then
+                                                                   pixelArray(i) += opacityPerFrame
+                                                               Else
+                                                                   pixelArray(i) = 255
+                                                               End If
+                                                               i += 4
+                                                           End While
+                                                       End Sub)
+            thread1.IsBackground = True
+            thread2.IsBackground = True
+            thread1.Start()
+            thread2.Start()
+            thread1.Join()
+            thread2.Join()
+            If pixelArray(3) = 255 Then complete = True
+            Return WindowAPI.GetDispatcher.Invoke(Function() ImageConfig.ConvertToImage(Width, Height, pixelArray))
+        End Function
+
+    End Class
+
+    Public Class FadeOutEffect : Inherits ImageEffect
+        Private opacityPerFrame As Integer
+
+        Public Sub New(fileName As String, duration As Integer)
+            MyBase.New(fileName, duration)
+            opacityPerFrame = 255 / duration
+            If opacityPerFrame < 1 Then opacityPerFrame = 1
             Dim i = 3
             While i < pixelArray.Length
-                If pixelArray(i) + opacityPerFrame < 256 Then
-                    pixelArray(i) += opacityPerFrame
-                Else
-                    pixelArray(i) = 255
-                End If
+                pixelArray(i) = 255
                 i += 4
             End While
-            If pixelArray(3) = 255 Then complete = True
+        End Sub
+
+        Protected Friend Overrides Function GetNextImageState() As BitmapSource
+            'BGRA32
+            Dim blockNumber = arrayLength \ Config.ModuleConfig.BytePerPixel
+            Dim threadMaximite As Integer = (blockNumber \ 2) * Config.ModuleConfig.BytePerPixel - 1
+            Dim thread1 As New System.Threading.Thread(Sub()
+                                                           Dim i = 3
+                                                           While i < threadMaximite
+                                                               If pixelArray(i) - opacityPerFrame > -1 Then
+                                                                   pixelArray(i) -= opacityPerFrame
+                                                               Else
+                                                                   pixelArray(i) = 0
+                                                               End If
+                                                               i += 4
+                                                           End While
+                                                       End Sub)
+            Dim thread2 As New System.Threading.Thread(Sub()
+                                                           Dim i = threadMaximite + 4
+                                                           While i < arrayLength
+                                                               If pixelArray(i) - opacityPerFrame > -1 Then
+                                                                   pixelArray(i) -= opacityPerFrame
+                                                               Else
+                                                                   pixelArray(i) = 0
+                                                               End If
+                                                               i += 4
+                                                           End While
+                                                       End Sub)
+            thread1.IsBackground = True
+            thread2.IsBackground = True
+            thread1.Start()
+            thread2.Start()
+            thread1.Join()
+            thread2.Join()
+            If pixelArray(3) = 0 Then complete = True
             Return WindowAPI.GetDispatcher.Invoke(Function() ImageConfig.ConvertToImage(Width, Height, pixelArray))
         End Function
 
