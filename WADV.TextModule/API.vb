@@ -149,7 +149,7 @@ Namespace API
             '开始循环
             AppCore.API.LoopingAPI.AddLoop(loopContent)
             '等待结束
-            AppCore.API.LoopingAPI.AddLoop(loopContent)
+            AppCore.API.LoopingAPI.WaitLoop(loopContent)
             Return True
         End Function
 

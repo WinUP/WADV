@@ -19,6 +19,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口标题
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="text">新标题</param>
         ''' <remarks></remarks>
@@ -28,17 +30,19 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 清空指定容器并加载子元素
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="content">目标容器</param>
-        ''' <param name="fileName">子元素所在的文件名(Skin目录下)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadPage(content As Panel, fileName As String)
+        Public Shared Sub ClearContent(content As Panel)
             content.Dispatcher.Invoke(Sub() content.Children.Clear())
-            LoadElement(content, fileName)
         End Sub
 
         ''' <summary>
         ''' 为指定容器加载子元素
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="name">子元素所在的文件名(Skin目录下)</param>
@@ -48,7 +52,21 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
+        ''' 为指定容器加载子元素
+        ''' 该方法会立即返回
+        ''' 该方法在UI线程中执行
+        ''' </summary>
+        ''' <param name="content">目标容器</param>
+        ''' <param name="name">子元素所在的文件名(Skin目录下)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub LoadElementNow(content As Panel, name As String)
+            content.Dispatcher.BeginInvoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathConfig.Skin, name)))))
+        End Sub
+
+        ''' <summary>
         ''' 修改窗口背景色
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="color">颜色对象</param>
         ''' <remarks></remarks>
@@ -58,6 +76,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口背景色
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="r">红色值</param>
         ''' <param name="g">绿色值</param>
@@ -69,6 +89,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口背景色
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="hex">16进制颜色值</param>
         ''' <remarks></remarks>
@@ -78,6 +100,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口宽度
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="width">新的宽度</param>
         ''' <remarks></remarks>
@@ -87,6 +111,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口高度
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="height">新的高度</param>
         ''' <remarks></remarks>
@@ -96,15 +122,19 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置窗口调整模式
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="canResize">是否能够调整大小</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetResizeMod(canResize As Boolean)
+        Public Shared Sub SetResizeMode(canResize As Boolean)
             WindowConfig.BaseWindow.Dispatcher.Invoke(Sub() WindowConfig.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
         End Sub
 
         ''' <summary>
         ''' 设置窗口覆盖模式
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="isTopmost">是否保持最前</param>
         ''' <remarks></remarks>
@@ -114,6 +144,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置窗口图标
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="fileName">图标文件名称(ICO格式且放置在Skin目录下)</param>
         ''' <remarks></remarks>
@@ -123,6 +155,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置窗口指针
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="fileName">指针文件名称(ANI或CUR格式且放置在Skin目录下)</param>
         ''' <remarks></remarks>
@@ -132,6 +166,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 根据名称获取元素的子元素(支持多级查找)
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <typeparam name="T">子元素类型</typeparam>
         ''' <param name="obj">父元素</param>
@@ -157,6 +192,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取窗口线程工作队列
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -166,6 +202,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取窗口对象
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -175,6 +212,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取主窗口的Grid
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -192,6 +230,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 加载资源到游戏全局
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="fileName">资源文件名(Skin目录下)</param>
         ''' <remarks></remarks>
@@ -203,6 +243,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 加载资源到主窗口
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="fileName">资源文件名(Skin目录下)</param>
         ''' <remarks></remarks>
@@ -214,6 +256,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 清空全局资源
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub ClearGame()
@@ -222,6 +266,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 清空主窗口资源
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub ClearWindow()
@@ -230,6 +276,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 清除指定全局资源
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
@@ -239,6 +287,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 清除指定主窗口资源
+        ''' 该方法不会立即返回
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
@@ -248,6 +298,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取全局资源对象
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -257,6 +308,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取主窗口资源对象
+        ''' 该方法在UI线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -274,6 +326,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 加载一个插件
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="fileName">插件文件名(Plugin目录下)</param>
         ''' <returns>是否加载成功</returns>
@@ -292,6 +345,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置理想帧率
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="frame">新的次数</param>
         ''' <remarks></remarks>
@@ -302,6 +357,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取理想帧率
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>循环次数</returns>
         ''' <remarks></remarks>
@@ -311,15 +367,19 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 添加一个循环体
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Public Shared Sub AddLoop(loopContent As Plugin.ILooping)
-            MainLooping.GetInstance.Dispatcher.Invoke(Sub() MainLooping.GetInstance.AddLooping(loopContent))
+            MainLooping.GetInstance.AddLooping(loopContent)
         End Sub
 
         ''' <summary>
         ''' 等待一个小型逻辑循环退出
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
@@ -329,6 +389,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 标记逻辑循环为进行状态
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StartMainLoop()
@@ -337,20 +399,13 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 标记逻辑循环为停止状态
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopMainLoop()
             LoopingFunction.StopMainLooping()
         End Sub
-
-        ''' <summary>
-        ''' 获取循环线程工作队列
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetDispatcher() As Dispatcher
-            Return MainLooping.GetInstance.Dispatcher
-        End Function
 
     End Class
 
@@ -362,6 +417,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 显示提示信息
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="content">内容</param>
         ''' <param name="title">标题</param>
@@ -371,19 +428,28 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
-        ''' 执行脚本文件中的所有代码(无等待)
+        ''' 执行脚本文件中的所有代码
+        ''' 该方法会立即返回
+        ''' 该方法在新的线程中执行
+        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="fileName">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFile(fileName As String)
             If Not Script.ScriptCore.GetInstance.BusyStatus Then
                 Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, fileName)))
+                tmpThread.Name = "ScriptThread_RunFile"
+                tmpThread.IsBackground = True
+                tmpThread.Priority = ThreadPriority.Normal
                 tmpThread.Start()
             End If
         End Sub
 
         ''' <summary>
         ''' 执行脚本文件中的所有代码
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
+        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="filename">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
@@ -392,19 +458,27 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
-        ''' 执行一段字符串脚本(无等待)
+        ''' 执行一段字符串脚本
+        ''' 该方法会立即返回
+        ''' 该方法在新的线程中执行
+        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
         Public Shared Sub RunStrng(content As String)
             If Not script.ScriptCore.GetInstance.BusyStatus Then
                 Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunStrng(content))
+                tmpThread.IsBackground = True
+                tmpThread.Priority = ThreadPriority.Normal
                 tmpThread.Start(content)
             End If
         End Sub
 
         ''' <summary>
         ''' 执行一段字符串脚本
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
+        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
@@ -414,6 +488,8 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 执行一个存在的脚本函数
+        ''' 该方法在调用线程中执行
+        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="functionName">函数名</param>
         ''' <param name="params">参数列表</param>
@@ -425,90 +501,94 @@ Namespace AppCore.API
         End Function
 
         ''' <summary>
-        ''' 设置脚本全局变量的值
+        ''' 设置脚本全局变量的值(该变量内容不是字符串)
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <param name="value">变量内容(字符串形式)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetGlobalVariable(name As String, value As String)
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then RunStringAndWait(String.Format("{0}={1}", name, value))
+            RunStringAndWait(String.Format("{0}={1}", name, value))
         End Sub
 
         ''' <summary>
-        ''' 设置脚本全局变量的值(字符串限定)
+        ''' 设置脚本全局变量的值(该变量内容是字符串)
+        ''' 该方法不会立即返回
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <param name="value">变量内容</param>
         ''' <remarks></remarks>
         Public Shared Sub SetGlobalStringVariable(name As String, value As String)
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then SetGlobalVariable(name, """" & value & """")
+            SetGlobalVariable(name, """" & value & """")
         End Sub
 
         ''' <summary>
         ''' 获取脚本全局变量的值
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetVariable(name As String) As Object
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetVariable(name)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.GetVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的字符串形式
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetStringVariable(name As String) As String
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetStringVariable(name)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.GetStringVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的浮点数形式
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetDoubleVariable(name As String) As Double
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetDoubleVariable(name)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.GetDoubleVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的整数形式
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetIntegerVariable(name As String) As Integer
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return CInt(GetDoubleVariable(name))
-            Return Nothing
+            Return CInt(GetDoubleVariable(name))
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的LUA表的形式
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Shared Function GetTableVariable(name As String) As LuaInterface.LuaTable
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetTableVariable(name)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.GetTableVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量(Table类型)中某个项的值
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="tableName">表名</param>
         ''' <param name="key">键</param>
         ''' <returns>值</returns>
         ''' <remarks></remarks>
         Public Shared Function GetVariableInTable(tableName As String, key As String) As Object
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.GetVariableInTable(tableName, key)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.GetVariableInTable(tableName, key)
         End Function
 
         Public Shared Sub RegisterFunction(types() As Type, belong As String, prefix As String)
@@ -518,29 +598,22 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取脚本主机空闲状态
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetBusyStatus() As Boolean
+        Public Shared Function GetStatus() As Boolean
             Return Script.ScriptCore.GetInstance.BusyStatus
         End Function
 
         ''' <summary>
         ''' 获取游戏脚本主机对象
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>脚本主机</returns>
         ''' <remarks></remarks>
         Public Shared Function GetVM() As LuaInterface.Lua
             Return Script.ScriptCore.GetInstance.ScriptVM
-        End Function
-
-        ''' <summary>
-        ''' 获取脚本主机线程工作队列
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetDispatcher() As Dispatcher
-            Return ScriptCore.GetInstance.Dispatcher
         End Function
 
     End Class
@@ -553,6 +626,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序资源文件的存放路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>程序资源文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -562,6 +636,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序皮肤文件的存放路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>皮肤文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -571,6 +646,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序插件的存放路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>插件的存放路径</returns>
         ''' <remarks></remarks>
@@ -580,6 +656,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序脚本文件的存放路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>脚本文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -589,6 +666,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序用户个人文件的存放路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <returns>用户个人文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -598,6 +676,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取完整路径
+        ''' 该方法在调用线程中执行
         ''' </summary>
         ''' <param name="urlType">资源路径类型</param>
         ''' <param name="fileURL">从资源目录开始的文件相对路径</param>

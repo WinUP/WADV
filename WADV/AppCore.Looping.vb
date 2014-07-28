@@ -6,10 +6,11 @@ Namespace AppCore.Looping
     ''' 游戏循环
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class MainLooping : Inherits Windows.Threading.DispatcherObject
+    Public Class MainLooping
         Private Shared self As MainLooping
         Private loopList As New List(Of Plugin.ILooping)
         Private loopListCount As Integer
+        Protected Friend loopThread As Thread
 
         ''' <summary>
         ''' 添加一个循环
@@ -17,7 +18,6 @@ Namespace AppCore.Looping
         ''' <param name="loopContent">循环函数</param>
         ''' <remarks></remarks>
         Protected Friend Sub AddLooping(loopContent As Plugin.ILooping)
-            VerifyAccess()
             If Not loopList.Contains(loopContent) Then loopList.Add(loopContent)
         End Sub
 
@@ -37,6 +37,7 @@ Namespace AppCore.Looping
                                                                          End While
                                                                      End Sub))
             loopThread.IsBackground = True
+            loopThread.Priority = ThreadPriority.BelowNormal
             loopThread.Start(loopContent)
             loopThread.Join()
         End Sub
@@ -44,6 +45,10 @@ Namespace AppCore.Looping
         Private Sub New()
             Status = False
             Span = 17
+            loopThread = New Thread(AddressOf LoopingContent)
+            loopThread.IsBackground = True
+            loopThread.Name = "LoopingThread"
+            loopThread.Priority = ThreadPriority.AboveNormal
         End Sub
 
         ''' <summary>
@@ -76,8 +81,7 @@ Namespace AppCore.Looping
         ''' 逻辑循环体
         ''' </summary>
         ''' <remarks></remarks>
-        Protected Friend Sub LoopingContent()
-            loopListCount = loopList.Count
+        Private Sub LoopingContent()
             Dim i As Integer
             Dim loopContent As Plugin.ILooping
             Dim timeNow = DateTime.Now.Ticks
@@ -85,6 +89,7 @@ Namespace AppCore.Looping
             Dim sleepTime = 0
             While (Status)
                 i = 0
+                loopListCount = loopList.Count
                 While i < loopListCount
                     loopContent = loopList(i)
                     If Not loopContent.StartLooping Then
@@ -109,7 +114,7 @@ Namespace AppCore.Looping
     End Class
 
     Public Class LoopingFunction
-        Private Shared _frame As Integer
+        Private Shared _frame As Integer = 60
 
         ''' <summary>
         ''' 获取或设置逻辑循环每秒的理想执行次数
@@ -132,6 +137,7 @@ Namespace AppCore.Looping
         ''' <remarks></remarks>
         Protected Friend Shared Sub StopMainLooping()
             MainLooping.GetInstance.Status = False
+            MainLooping.GetInstance.loopThread.Abort()
         End Sub
 
         ''' <summary>
@@ -140,10 +146,8 @@ Namespace AppCore.Looping
         ''' <remarks></remarks>
         Protected Friend Shared Sub StartMainLooping()
             If Not MainLooping.GetInstance.Status Then
-                Dim loopThread = New Thread(AddressOf MainLooping.GetInstance.LoopingContent)
-                loopThread.IsBackground = True
                 MainLooping.GetInstance.Status = True
-                loopThread.Start()
+                MainLooping.GetInstance.loopThread.Start()
             End If
         End Sub
 

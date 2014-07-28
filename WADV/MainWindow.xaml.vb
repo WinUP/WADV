@@ -18,7 +18,7 @@
 
     Private Sub Window_Closing(sender As Object, e As ComponentModel.CancelEventArgs)
         If MessageBox.Show("要退出游戏吗？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question) = MessageBoxResult.Yes Then
-            AppCore.Looping.LoopingFunction.StopMainLooping()
+            AppCore.API.LoopingAPI.StopMainLoop()
             Application.Current.Shutdown()
         Else
             e.Cancel = True

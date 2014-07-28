@@ -81,9 +81,6 @@ Namespace AppCore.Plugin
             Dim pluginTypes = System.Reflection.Assembly.LoadFrom(Path.PathFunction.GetFullPath(Path.PathConfig.Plugin, fileName)).GetTypes
             Dim returnData As Boolean = True
             For Each tmpTypeName In pluginTypes
-                If tmpTypeName.GetInterface("ILooping") <> Nothing Then
-                    Looping.MainLooping.GetInstance.Dispatcher.Invoke(Sub() Looping.MainLooping.GetInstance.AddLooping(Activator.CreateInstance(tmpTypeName)))
-                End If
                 If tmpTypeName.GetInterface("IInitialise") <> Nothing Then
                     returnData = TryCast(Activator.CreateInstance(tmpTypeName), Plugin.IInitialise).StartInitialising()
                 End If

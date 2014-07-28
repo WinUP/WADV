@@ -44,6 +44,8 @@ Namespace PluginInterface
                 While Not effect.IsSentenceReadOver
                     text = effect.GetNextString
                 End While
+                renderingText.Character = text.Character
+                renderingText.Content = text.Content
                 If effect.IsReadOver Then Return False
                 waitingCount = 10
                 Return True
@@ -51,6 +53,8 @@ Namespace PluginInterface
             '自动状态
             If Config.ModuleConfig.Auto Then
                 text = effect.GetNextString
+                renderingText.Character = text.Character
+                renderingText.Content = text.Content
                 If effect.IsReadOver Then Return False
                 If effect.IsSentenceReadOver Then
                     waitingCount = Config.ModuleConfig.SetenceFrame
@@ -68,6 +72,8 @@ Namespace PluginInterface
                     text = effect.GetNextString
                 End While
             End If
+            renderingText.Character = text.Character
+            renderingText.Content = text.Content
             Config.ModuleConfig.Ellipsis = False
             If effect.IsReadOver Then Return False
             waitingCount = Config.ModuleConfig.WordFrame

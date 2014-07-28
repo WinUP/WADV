@@ -16,7 +16,7 @@ Namespace PluginInterface
         Public Function StartInitialising() As Boolean Implements AppCore.Plugin.IInitialise.StartInitialising
             WindowAPI.LoadElement(WindowAPI.GetGrid, "main1.xaml")
             WindowAPI.LoadElement(WindowAPI.GetGrid, "main2.xaml")
-            WindowAPI.SetResizeMod(False)
+            WindowAPI.SetResizeMode(False)
             WindowAPI.SetBackgroundByHex("#000000")
             WindowAPI.SetIcon("icon.ico")
             Return True

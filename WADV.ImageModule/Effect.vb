@@ -113,7 +113,7 @@ Namespace Effect
                 i += 4
             End While
             If pixelArray(3) = 255 Then complete = True
-            Return ImageConfig.ConvertToImage(Width, Height, pixelArray)
+            Return WindowAPI.GetDispatcher.Invoke(Function() ImageConfig.ConvertToImage(Width, Height, pixelArray))
         End Function
 
     End Class
