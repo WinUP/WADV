@@ -14,10 +14,8 @@ Namespace API
             Dim content = WindowAPI.GetChildByName(Of Panel)(WindowAPI.GetWindow, contentName)
             If content Is Nothing Then Return False
             Dim loopContent As New PluginInterface.CustomizedLoop(effect, content)
-            System.Diagnostics.Debug.WriteLine(DateTime.Now.Second)
             LoopingAPI.AddLoop(loopContent)
             LoopingAPI.WaitLoop(loopContent)
-            System.Diagnostics.Debug.WriteLine(DateTime.Now.Second)
             Return True
         End Function
 
