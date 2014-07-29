@@ -5,13 +5,12 @@ Imports System.Windows.Media
 Imports WADV.ImageModule.Config
 Imports WADV.AppCore.API
 
-Namespace Effect
+Namespace ImageEffect
 
     ''' <summary>
     ''' 图像渐变效果的基类
     ''' </summary>
-    Public MustInherit Class ImageEffect
-
+    Public MustInherit Class BaseEffect
         Private effectingDuration As Integer
         Private imageWidth As Integer
         Private imageHeight As Integer
@@ -89,10 +88,10 @@ Namespace Effect
 
     End Class
 
-    Public Class NoEffect : Inherits ImageEffect
+    Public Class NoEffect : Inherits BaseEffect
 
-        Public Sub New(fileName As String, duration As Integer)
-            MyBase.New(fileName, duration)
+        Public Sub New(fileName As String)
+            MyBase.New(fileName, 0)
         End Sub
 
         Protected Friend Overrides Function GetNextImageState() As BitmapSource
@@ -102,7 +101,7 @@ Namespace Effect
 
     End Class
 
-    Public Class FadeInEffect : Inherits ImageEffect
+    Public Class FadeInEffect : Inherits BaseEffect
         Private opacityPerFrame As Integer
 
         Public Sub New(fileName As String, duration As Integer)
@@ -154,7 +153,7 @@ Namespace Effect
 
     End Class
 
-    Public Class FadeOutEffect : Inherits ImageEffect
+    Public Class FadeOutEffect : Inherits BaseEffect
         Private opacityPerFrame As Integer
 
         Public Sub New(fileName As String, duration As Integer)

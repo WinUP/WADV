@@ -22,13 +22,13 @@ Namespace PluginInterface
         End Sub
     End Class
 
-    Public Class CustomizedLoop : Implements Plugin.ILooping
-        Private effect As Effect.ImageEffect
+    Public Class ImageLoop : Implements Plugin.ILooping
+        Private effect As ImageEffect.BaseEffect
         Private content As Panel
         Private brush As ImageBrush
         Private image As ImageSource
 
-        Public Sub New(effect As Effect.ImageEffect, content As Panel)
+        Public Sub New(effect As ImageEffect.BaseEffect, content As Panel)
             Me.effect = effect
             Me.content = content
             WindowAPI.GetDispatcher.Invoke(Sub()
@@ -48,6 +48,24 @@ Namespace PluginInterface
         Public Sub StartRendering(window As Window) Implements AppCore.Plugin.ILooping.StartRendering
             brush.ImageSource = image
             GC.Collect()
+        End Sub
+
+    End Class
+
+    Public Class TachieLoop : Implements Plugin.ILooping
+        Private effect As TachieEffect.BaseEffect
+
+        Public Sub New(effect As TachieEffect.BaseEffect)
+            Me.effect = effect
+        End Sub
+
+        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+            If effect.IsComplete Then Return False
+            Return True
+        End Function
+
+        Public Sub StartRendering(window As Windows.Window) Implements AppCore.Plugin.ILooping.StartRendering
+            effect.RenderingUI()
         End Sub
 
     End Class
