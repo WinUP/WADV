@@ -79,7 +79,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetChoice() As String
+        Public Shared Function Answer() As String
             Return Config.DataConfig.Choice
         End Function
 
@@ -91,7 +91,7 @@ Namespace API
         ''' <param name="styleName">选项显示效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowChoiceRegular(choice() As String, waitingTime As Integer, styleName As String) As Boolean
+        Public Shared Function ShowRegular(choice() As String, waitingTime As Integer, styleName As String) As Boolean
             '检查配置
             If Config.UIConfig.ChoiceContent Is Nothing Then Return False
             If Config.UIConfig.ChoiceStyle Is Nothing Then Return False
@@ -143,10 +143,10 @@ Namespace API
         ''' <param name="styleName">选项显示效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowChoice(choice As LuaInterface.LuaTable, waitingTime As Integer, styleName As String) As Boolean
+        Public Shared Function Show(choice As LuaInterface.LuaTable, waitingTime As Integer, styleName As String) As Boolean
             Dim choice1(choice.Values.Count - 1) As String
             choice.Values.CopyTo(choice1, 0)
-            Return ShowChoiceRegular(choice1, waitingTime, styleName)
+            Return ShowRegular(choice1, waitingTime, styleName)
         End Function
 
     End Class

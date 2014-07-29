@@ -1,5 +1,6 @@
 ﻿Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
+Imports System.Windows.Media
 
 Namespace TachieEffect
 
@@ -46,8 +47,8 @@ Namespace TachieEffect
 
     Public Class NoEffect : Inherits BaseEffect
 
-        Public Sub New(image As Image, duration As Integer)
-            MyBase.New(image, duration, False)
+        Public Sub New(image As Image, duration As Integer, Optional ease As Boolean = False, Optional params() As Object = Nothing)
+            MyBase.New(image, duration, ease)
         End Sub
 
         Protected Friend Overrides Sub RenderingUI()
@@ -60,7 +61,7 @@ Namespace TachieEffect
 
     Public Class FadeInEffect : Inherits BaseEffect
 
-        Public Sub New(image As Image, duration As Integer, ease As Boolean)
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, Optional params() As Object = Nothing)
             MyBase.New(image, duration, ease)
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                image.Opacity = 0
@@ -70,7 +71,7 @@ Namespace TachieEffect
 
         Protected Friend Overrides Sub RenderingUI()
             If running Then Exit Sub
-            Dim animation As New DoubleAnimation(1.0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration * 150)))
+            Dim animation As New DoubleAnimation(1.0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
             Image.BeginAnimation(Windows.Controls.Image.OpacityProperty, animation)
@@ -81,7 +82,7 @@ Namespace TachieEffect
 
     Public Class FadeOutEffect : Inherits BaseEffect
 
-        Public Sub New(image As Image, duration As Integer, ease As Boolean)
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, Optional params() As Object = Nothing)
             MyBase.New(image, duration, ease)
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                image.Opacity = 1.0
@@ -91,7 +92,7 @@ Namespace TachieEffect
 
         Protected Friend Overrides Sub RenderingUI()
             If running Then Exit Sub
-            Dim animation As New DoubleAnimation(0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration * 150)))
+            Dim animation As New DoubleAnimation(0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
             Image.BeginAnimation(Windows.Controls.Image.OpacityProperty, animation)
@@ -103,11 +104,11 @@ Namespace TachieEffect
     Public Class MoveFromEffect : Inherits BaseEffect
         Private target As Windows.Thickness
 
-        Public Sub New(image As Image, duration As Integer, ease As Boolean, fromX As Double, fromY As Double)
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, params() As Object)
             MyBase.New(image, duration, ease)
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                target = New Windows.Thickness(image.Margin.Left, image.Margin.Top, 0, 0)
-                                               image.Margin = New Windows.Thickness(fromX, fromY, 0, 0)
+                                               image.Margin = New Windows.Thickness(params(0), params(1), 0, 0)
                                                image.Opacity = 1.0
                                                image.Visibility = Windows.Visibility.Visible
                                            End Sub)
@@ -115,7 +116,7 @@ Namespace TachieEffect
 
         Protected Friend Overrides Sub RenderingUI()
             If running Then Exit Sub
-            Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration * 150)))
+            Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
             Image.BeginAnimation(Windows.Controls.Image.MarginProperty, animation)
@@ -127,10 +128,10 @@ Namespace TachieEffect
     Public Class MoveToEffect : Inherits BaseEffect
         Private target As Windows.Thickness
 
-        Public Sub New(image As Image, duration As Integer, ease As Boolean, fromX As Double, fromY As Double)
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, params() As Object)
             MyBase.New(image, duration, ease)
             WindowAPI.GetDispatcher.Invoke(Sub()
-                                               target = New Windows.Thickness(fromX, fromY, 0, 0)
+                                               target = New Windows.Thickness(params(0), params(1), 0, 0)
                                                image.Opacity = 1.0
                                                image.Visibility = Windows.Visibility.Visible
                                            End Sub)
@@ -138,10 +139,33 @@ Namespace TachieEffect
 
         Protected Friend Overrides Sub RenderingUI()
             If running Then Exit Sub
-            Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration * 150)))
+            Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
             Image.BeginAnimation(Windows.Controls.Image.MarginProperty, animation)
+            running = True
+        End Sub
+
+    End Class
+
+    Public Class RotateEffect : Inherits BaseEffect
+        Private transform As RotateTransform
+        Private angel As Double
+
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, params() As Object)
+            MyBase.New(image, duration, ease)
+            Me.angel = params(0)
+            WindowAPI.GetDispatcher.Invoke(Sub()
+                                               transform = New RotateTransform(0, params(1), params(2))
+                                               image.RenderTransform = transform
+                                           End Sub)
+        End Sub
+
+        Protected Friend Overrides Sub RenderingUI()
+            Dim animation As New DoubleAnimation(angel, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+            If ease Then animation.EasingFunction = New QuadraticEase
+            AddHandler animation.Completed, Sub() complete = True
+            transform.BeginAnimation(RotateTransform.AngleProperty, animation)
             running = True
         End Sub
 

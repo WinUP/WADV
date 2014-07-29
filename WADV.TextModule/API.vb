@@ -135,7 +135,7 @@ Namespace API
         ''' <param name="effectName">效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowTextReular(text() As String, character() As String, effectName As String) As Boolean
+        Public Shared Function ShowReular(text() As String, character() As String, effectName As String) As Boolean
             '检查状态
             If Config.UIConfig.TextArea Is Nothing Then Return False
             '查找特效
@@ -161,12 +161,12 @@ Namespace API
         ''' <param name="effectName">效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowText(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
+        Public Shared Function Show(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
             Dim text1(text.Values.Count - 1) As String
             text.Values.CopyTo(text1, 0)
             Dim character1(character.Values.Count - 1) As String
             character.Values.CopyTo(character1, 0)
-            Return ShowTextReular(text1, character1, effectName)
+            Return ShowReular(text1, character1, effectName)
         End Function
 
     End Class
