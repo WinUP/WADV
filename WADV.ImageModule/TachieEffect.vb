@@ -150,23 +150,141 @@ Namespace TachieEffect
 
     Public Class RotateEffect : Inherits BaseEffect
         Private transform As RotateTransform
-        Private angel As Double
+        Private angel, cx, cy As Double
+        Private completeCount As Integer = 0
+        Private needAngel, needCX, needCY As Boolean
 
         Public Sub New(image As Image, duration As Integer, ease As Boolean, params() As Object)
             MyBase.New(image, duration, ease)
-            Me.angel = params(0)
+            angel = params(0)
+            cx = params(1)
+            cy = params(2)
             WindowAPI.GetDispatcher.Invoke(Sub()
-                                               transform = New RotateTransform(0, params(1), params(2))
-                                               image.RenderTransform = transform
+                                               If TypeOf image.RenderTransform Is RotateTransform Then
+                                                   transform = image.RenderTransform
+                                                   If transform.Angle <> angel Then needAngel = True
+                                                   If transform.CenterX <> cx Then needCX = True
+                                                   If transform.CenterY <> cy Then needCY = True
+                                               Else
+                                                   transform = New RotateTransform(0, image.Width * cx, image.Height * cy)
+                                                   needAngel = True
+                                                   image.RenderTransform = transform
+                                               End If
                                            End Sub)
         End Sub
 
         Protected Friend Overrides Sub RenderingUI()
-            Dim animation As New DoubleAnimation(angel, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
-            If ease Then animation.EasingFunction = New QuadraticEase
-            AddHandler animation.Completed, Sub() complete = True
-            transform.BeginAnimation(RotateTransform.AngleProperty, animation)
+            Dim board As New Storyboard
+            If needAngel Then
+                Dim animationAngel As New DoubleAnimation(angel, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationAngel.EasingFunction = New QuadraticEase
+                AddHandler animationAngel.Completed, AddressOf SetComplete
+                board.Children.Add(animationAngel)
+                Storyboard.SetTargetName(animationAngel, Image.Name)
+                Storyboard.SetTargetProperty(animationAngel, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, RotateTransform.AngleProperty}))
+            End If
+            If needCX Then
+                Dim animationCX As New DoubleAnimation(cx, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationCX.EasingFunction = New QuadraticEase
+                AddHandler animationCX.Completed, AddressOf SetComplete
+                board.Children.Add(animationCX)
+                Storyboard.SetTargetName(animationCX, Image.Name)
+                Storyboard.SetTargetProperty(animationCX, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, RotateTransform.CenterXProperty}))
+            End If
+            If needCY Then
+                Dim animationCY As New DoubleAnimation(cy, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationCY.EasingFunction = New QuadraticEase
+                AddHandler animationCY.Completed, AddressOf SetComplete
+                board.Children.Add(animationCY)
+                Storyboard.SetTargetName(animationCY, Image.Name)
+                Storyboard.SetTargetProperty(animationCY, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, RotateTransform.CenterYProperty}))
+            End If
+            board.Begin(WindowAPI.GetWindow)
             running = True
+        End Sub
+
+        Private Sub SetComplete()
+            completeCount += 1
+            If completeCount = 3 Then
+                running = False
+                complete = True
+            End If
+        End Sub
+
+    End Class
+
+    Public Class ScaleEffect : Inherits BaseEffect
+        Private transform As ScaleTransform
+        Private x, y, cx, cy As Double
+        Private completeCount As Integer = 0
+        Private needX, needY, needCX, needCY As Boolean
+
+        Public Sub New(image As Image, duration As Integer, ease As Boolean, params() As Object)
+            MyBase.New(image, duration, ease)
+            x = params(0)
+            y = params(1)
+            cx = params(2)
+            cy = params(3)
+            WindowAPI.GetDispatcher.Invoke(Sub()
+                                               If TypeOf image.RenderTransform Is ScaleTransform Then
+                                                   transform = image.RenderTransform
+                                                   If transform.CenterX <> cx Then needCX = True
+                                                   If transform.CenterY <> cy Then needCY = True
+                                                   If transform.ScaleX <> x Then needX = True
+                                                   If transform.ScaleY <> y Then needY = True
+                                               Else
+                                                   transform = New ScaleTransform(1, 1, image.Width * cx, image.Height * cy)
+                                                   needX = True
+                                                   needY = True
+                                                   image.RenderTransform = transform
+                                               End If
+                                           End Sub)
+        End Sub
+
+        Protected Friend Overrides Sub RenderingUI()
+            Dim board As New Storyboard
+            If needX Then
+                Dim animationX As New DoubleAnimation(x, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationX.EasingFunction = New QuadraticEase
+                AddHandler animationX.Completed, AddressOf SetComplete
+                board.Children.Add(animationX)
+                Storyboard.SetTargetName(animationX, Image.Name)
+                Storyboard.SetTargetProperty(animationX, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, ScaleTransform.ScaleXProperty}))
+            End If
+            If needY Then
+                Dim animationY As New DoubleAnimation(y, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationY.EasingFunction = New QuadraticEase
+                AddHandler animationY.Completed, AddressOf SetComplete
+                board.Children.Add(animationY)
+                Storyboard.SetTargetName(animationY, Image.Name)
+                Storyboard.SetTargetProperty(animationY, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, ScaleTransform.ScaleYProperty}))
+            End If
+            If needCX Then
+                Dim animationCX As New DoubleAnimation(cx, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationCX.EasingFunction = New QuadraticEase
+                AddHandler animationCX.Completed, AddressOf SetComplete
+                board.Children.Add(animationCX)
+                Storyboard.SetTargetName(animationCX, Image.Name)
+                Storyboard.SetTargetProperty(animationCX, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, ScaleTransform.CenterXProperty}))
+            End If
+            If needCY Then
+                Dim animationCY As New DoubleAnimation(cy, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
+                If ease Then animationCY.EasingFunction = New QuadraticEase
+                AddHandler animationCY.Completed, AddressOf SetComplete
+                board.Children.Add(animationCY)
+                Storyboard.SetTargetName(animationCY, Image.Name)
+                Storyboard.SetTargetProperty(animationCY, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, ScaleTransform.CenterYProperty}))
+            End If
+            board.Begin(WindowAPI.GetWindow)
+            running = True
+        End Sub
+
+        Private Sub SetComplete()
+            completeCount += 1
+            If completeCount = 4 Then
+                running = False
+                complete = True
+            End If
         End Sub
 
     End Class

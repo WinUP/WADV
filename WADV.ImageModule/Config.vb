@@ -76,6 +76,8 @@ Namespace Config
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                Dim tmpImage As New Image
                                                tmpImage.BeginInit()
+                                               tmpImage.Name = "TachieImage_" & egaID
+                                               WindowAPI.GetWindow.RegisterName(tmpImage.Name, tmpImage)
                                                tmpImage.Height = height
                                                tmpImage.HorizontalAlignment = Windows.HorizontalAlignment.Left
                                                tmpImage.VerticalAlignment = Windows.VerticalAlignment.Top
@@ -105,7 +107,10 @@ Namespace Config
         Protected Friend Shared Sub DeleteTachie(id As Integer)
             If Not egaList.ContainsKey(id) Then Exit Sub
             Dim tmpImage = egaList(id)
-            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetGrid.Children.Remove(tmpImage))
+            WindowAPI.GetDispatcher.Invoke(Sub()
+                                               WindowAPI.GetGrid.Children.Remove(tmpImage)
+                                               WindowAPI.GetWindow.UnregisterName(tmpImage.Name)
+                                           End Sub)
             egaList.Remove(id)
             GC.Collect()
         End Sub
