@@ -58,12 +58,30 @@ Namespace API
             LoopingAPI.WaitLoop(loopContent)
         End Sub
 
+        Public Shared Sub EffectNowRegular(id As Integer, effectName As String, duration As Integer, ease As Boolean, effectParam() As Object)
+            Dim image = Config.TachieConfig.GetTachie(id)
+            If image Is Nothing Then Exit Sub
+            Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.ImageModule.TachieEffect" Select tmpClass
+            If classList.Count < 1 Then Exit Sub
+            Dim effect As TachieEffect.BaseEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {image, duration, ease, effectParam})
+            Dim loopContent As New PluginInterface.TachieLoop(effect)
+            LoopingAPI.AddLoop(loopContent)
+        End Sub
+
         Public Shared Sub Effect(id As Integer, effectName As String, duration As Integer, ease As Boolean, effectParam As LuaInterface.LuaTable)
             Dim params As New List(Of Object)
             For Each tmpItem In effectParam.Values
                 params.Add(tmpItem)
             Next
             EffectRegular(id, effectName, duration, ease, params.ToArray)
+        End Sub
+
+        Public Shared Sub EffectNow(id As Integer, effectName As String, duration As Integer, ease As Boolean, effectParam As LuaInterface.LuaTable)
+            Dim params As New List(Of Object)
+            For Each tmpItem In effectParam.Values
+                params.Add(tmpItem)
+            Next
+            EffectNowRegular(id, effectName, duration, ease, params.ToArray)
         End Sub
 
         Public Shared Sub Delete(id As Integer)

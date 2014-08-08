@@ -48,6 +48,10 @@
       <HintPath>..\WADV\LuaInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.DirectX.AudioVideoPlayback, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.AudioVideoPlayback.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -68,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.vb" />
+    <Compile Include="AudioCore.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -84,7 +89,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Player.vb" />
     <Compile Include="PluginInterface.vb" />
   </ItemGroup>
   <ItemGroup>

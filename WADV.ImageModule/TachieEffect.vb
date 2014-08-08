@@ -74,6 +74,7 @@ Namespace TachieEffect
             Dim animation As New DoubleAnimation(1.0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.Linear)
             Image.BeginAnimation(Windows.Controls.Image.OpacityProperty, animation)
             running = True
         End Sub
@@ -95,6 +96,7 @@ Namespace TachieEffect
             Dim animation As New DoubleAnimation(0, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.Linear)
             Image.BeginAnimation(Windows.Controls.Image.OpacityProperty, animation)
             running = True
         End Sub
@@ -119,6 +121,7 @@ Namespace TachieEffect
             Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.Linear)
             Image.BeginAnimation(Windows.Controls.Image.MarginProperty, animation)
             running = True
         End Sub
@@ -142,6 +145,7 @@ Namespace TachieEffect
             Dim animation As New ThicknessAnimation(target, New Windows.Duration(New TimeSpan(0, 0, 0, 0, Duration / LoopingAPI.GetFrame * 1000)))
             If ease Then animation.EasingFunction = New QuadraticEase
             AddHandler animation.Completed, Sub() complete = True
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.Linear)
             Image.BeginAnimation(Windows.Controls.Image.MarginProperty, animation)
             running = True
         End Sub
@@ -163,8 +167,8 @@ Namespace TachieEffect
                                                If TypeOf image.RenderTransform Is RotateTransform Then
                                                    transform = image.RenderTransform
                                                    If transform.Angle <> angel Then needAngel = True
-                                                   If transform.CenterX <> cx Then needCX = True
-                                                   If transform.CenterY <> cy Then needCY = True
+                                                   If transform.CenterX <> image.Width * cx Then needCX = True
+                                                   If transform.CenterY <> image.Height * cy Then needCY = True
                                                Else
                                                    transform = New RotateTransform(0, image.Width * cx, image.Height * cy)
                                                    needAngel = True
@@ -199,6 +203,7 @@ Namespace TachieEffect
                 Storyboard.SetTargetName(animationCY, Image.Name)
                 Storyboard.SetTargetProperty(animationCY, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, RotateTransform.CenterYProperty}))
             End If
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.NearestNeighbor)
             board.Begin(WindowAPI.GetWindow)
             running = True
         End Sub
@@ -228,8 +233,8 @@ Namespace TachieEffect
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                If TypeOf image.RenderTransform Is ScaleTransform Then
                                                    transform = image.RenderTransform
-                                                   If transform.CenterX <> cx Then needCX = True
-                                                   If transform.CenterY <> cy Then needCY = True
+                                                   If transform.CenterX <> image.Width * cx Then needCX = True
+                                                   If transform.CenterY <> image.Height * cy Then needCY = True
                                                    If transform.ScaleX <> x Then needX = True
                                                    If transform.ScaleY <> y Then needY = True
                                                Else
@@ -275,6 +280,7 @@ Namespace TachieEffect
                 Storyboard.SetTargetName(animationCY, Image.Name)
                 Storyboard.SetTargetProperty(animationCY, New Windows.PropertyPath("(0).(1)", New Windows.DependencyProperty() {Windows.Controls.Image.RenderTransformProperty, ScaleTransform.CenterYProperty}))
             End If
+            RenderOptions.SetBitmapScalingMode(Image, BitmapScalingMode.NearestNeighbor)
             board.Begin(WindowAPI.GetWindow)
             running = True
         End Sub

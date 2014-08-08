@@ -23,4 +23,12 @@ Namespace API
 
     End Class
 
+    Public Class TextAPI
+
+        Public Sub Show()
+
+        End Sub
+
+    End Class
+
 End Namespace

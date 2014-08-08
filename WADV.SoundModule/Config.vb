@@ -1,91 +1,18 @@
 ﻿Imports System.Windows.Media
 Imports System.Xml
-Imports WADV.MediaModule.Player
+Imports WADV.MediaModule.AudioCore
 Imports System.Windows.Controls
 
 Namespace Config
-
-    ''' <summary>
-    ''' 声音列表
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class SoundList
-        Private Shared SoundList As New List(Of AdvancedPlayer)
-
-        ''' <summary>
-        ''' 获取声音列表
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Protected Friend Shared Function GetList() As List(Of AdvancedPlayer)
-            Return SoundList
-        End Function
-
-        ''' <summary>
-        ''' 添加声音
-        ''' </summary>
-        ''' <param name="sound">声音</param>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub AddSound(sound As AdvancedPlayer)
-            SoundList.Add(sound)
-        End Sub
-
-        ''' <summary>
-        ''' 查找声音
-        ''' </summary>
-        ''' <param name="name">声音标识名</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Protected Friend Shared Function FindSound(name As String) As AdvancedPlayer
-            Dim sound = From tmpSound In SoundList Where tmpSound.TagName = name Select tmpSound
-            If sound.Count < 1 Then Return Nothing
-            Return sound.FirstOrDefault
-        End Function
-
-        ''' <summary>
-        ''' 删除声音
-        ''' </summary>
-        ''' <param name="name">声音标识名</param>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub DeleteSound(name As String)
-            Dim soundContent = FindSound(name)
-            If soundContent Is Nothing Then Exit Sub
-            DeleteSound(soundContent)
-        End Sub
-
-        ''' <summary>
-        ''' 删除声音
-        ''' </summary>
-        ''' <param name="content">声音</param>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub DeleteSound(content As AdvancedPlayer)
-            SoundList.Remove(content)
-            content.Dispatcher.BeginInvoke(Sub() content.Close())
-            WindowAPI.GetGrid.Dispatcher.BeginInvoke(Sub() WindowAPI.GetGrid.Children.Remove(content))
-        End Sub
-
-        ''' <summary>
-        ''' 改变一类声音的音量
-        ''' </summary>
-        ''' <param name="type">声音类型</param>
-        ''' <param name="volume">音量</param>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub ChangeVolume(type As AdvancedPlayer.SoundType, volume As Double)
-            For Each tmpSound In SoundList
-                If tmpSound.Type = type Then tmpSound.Dispatcher.BeginInvoke(Sub() tmpSound.Volume = volume)
-            Next
-        End Sub
-
-    End Class
 
     ''' <summary>
     ''' 声音设置类
     ''' </summary>
     ''' <remarks></remarks>
     Public Class SoundConfig
-        Private Shared BackgroundVolume As Double
-        Private Shared ReadingVolume As Double
-        Private Shared EffectVolume As Double
+        Private Shared BackgroundVolume As Integer
+        Private Shared ReadingVolume As Integer
+        Private Shared EffectVolume As Integer
 
         ''' <summary>
         ''' 获取或设置背景音量
@@ -93,13 +20,13 @@ Namespace Config
         ''' <value>音量</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Friend Shared Property Background As Double
+        Protected Friend Shared Property Background As Integer
             Get
                 Return BackgroundVolume
             End Get
-            Set(value As Double)
+            Set(value As Integer)
                 BackgroundVolume = value
-                SoundList.ChangeVolume(AdvancedPlayer.SoundType.Background, value)
+                PlayerList.ChangeVolume(SoundType.Background, value)
                 WriteConfig()
             End Set
         End Property
@@ -110,13 +37,13 @@ Namespace Config
         ''' <value>音量</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Friend Shared Property Reading As Double
+        Protected Friend Shared Property Reading As Integer
             Get
                 Return ReadingVolume
             End Get
-            Set(value As Double)
+            Set(value As Integer)
                 ReadingVolume = value
-                SoundList.ChangeVolume(AdvancedPlayer.SoundType.Reading, value)
+                PlayerList.ChangeVolume(SoundType.Reading, value)
                 WriteConfig()
             End Set
         End Property
@@ -127,13 +54,13 @@ Namespace Config
         ''' <value>音量</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Friend Shared Property Effect As Double
+        Protected Friend Shared Property Effect As Integer
             Get
                 Return EffectVolume
             End Get
-            Set(value As Double)
+            Set(value As Integer)
                 EffectVolume = value
-                SoundList.ChangeVolume(AdvancedPlayer.SoundType.Effect, value)
+                PlayerList.ChangeVolume(SoundType.Effect, value)
                 WriteConfig()
             End Set
         End Property
@@ -144,7 +71,7 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
+            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
             BackgroundVolume = CDbl(configFile.SelectSingleNode("/config/background").InnerXml)
             ReadingVolume = CDbl(configFile.SelectSingleNode("/config/reading").InnerXml)
             EffectVolume = CDbl(configFile.SelectSingleNode("/config/effect").InnerXml)
@@ -156,11 +83,11 @@ Namespace Config
         ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
+            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
             configFile.SelectSingleNode("/config/background").InnerXml = BackgroundVolume
             configFile.SelectSingleNode("/config/reading").InnerXml = ReadingVolume
             configFile.SelectSingleNode("/config/effect").InnerXml = EffectVolume
-            configFile.Save(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.SoundModule.xml"))
+            configFile.Save(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
         End Sub
 
     End Class
