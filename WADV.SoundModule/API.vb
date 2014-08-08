@@ -118,6 +118,11 @@ Namespace API
             Return PlaySound(fileName, SoundType.Effect, False, 0)
         End Function
 
+        ''' <summary>
+        ''' 播放效果音，并在播放完成后再返回
+        ''' </summary>
+        ''' <param name="fileName">文件路径(Resource目录下)</param>
+        ''' <remarks></remarks>
         Public Shared Sub PlayEffectAndWait(fileName As String)
             Dim id = PlayEffect(fileName)
             While True
