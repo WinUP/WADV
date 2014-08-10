@@ -53,7 +53,8 @@ Namespace API
         End Sub
 
         Public Shared Sub LoadGameScreen(sender As Object, e As EventArgs)
-
+            WindowAPI.ClearContent(WindowAPI.GetGrid)
+            WindowAPI.LoadElement(WindowAPI.GetGrid, "load.xaml")
         End Sub
 
         Public Shared Sub LoadGame(sender As Object, e As EventArgs)
@@ -61,11 +62,13 @@ Namespace API
         End Sub
 
         Public Shared Sub GameGallery(sender As Object, e As EventArgs)
-
+            WindowAPI.ClearContent(WindowAPI.GetGrid)
+            WindowAPI.LoadElement(WindowAPI.GetGrid, "gallery.xaml")
         End Sub
 
         Public Shared Sub GameSetting(sender As Object, e As EventArgs)
-
+            WindowAPI.ClearContent(WindowAPI.GetGrid)
+            WindowAPI.LoadElement(WindowAPI.GetGrid, "setting.xaml")
         End Sub
 
         Public Shared Sub ExitGame()

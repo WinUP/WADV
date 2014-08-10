@@ -220,6 +220,33 @@ Namespace AppCore.API
             Return WindowConfig.BaseGrid
         End Function
 
+        ''' <summary>
+        ''' 获取主窗口的截图
+        ''' </summary>
+        ''' <returns>截图的编码器</returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetImage() As JpegBitmapEncoder
+            Dim targetImage As New RenderTargetBitmap(GetWindow.Width, GetWindow.Height, 96, 96, PixelFormats.Bgr32)
+            targetImage.Render(GetWindow)
+            Dim encoder As New JpegBitmapEncoder
+            encoder.Metadata.ApplicationName = "WADV"
+            encoder.Metadata.Copyright = "WinUP Software"
+            encoder.Frames.Add(BitmapFrame.Create(targetImage))
+            encoder.QualityLevel = 100
+            Return encoder
+        End Function
+
+        ''' <summary>
+        ''' 将主窗口的截图保存到文件中
+        ''' </summary>
+        ''' <param name="fileName">要保存的路径(UserFile目录下)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub SaveImage(fileName As String)
+            Dim image = GetImage()
+            Dim stream As New FileStream(PathAPI.GetPath(PathAPI.UserFile, fileName), FileMode.Create)
+            image.Save(stream)
+        End Sub
+
     End Class
 
     ''' <summary>
