@@ -205,25 +205,4 @@ Namespace ImageEffect
 
     End Class
 
-    Public Class LtREffect : Inherits BaseEffect
-        Private showLinePerFrame As Integer
-        Private lineNow As Integer
-
-        Public Sub New(fileName As String, duration As Integer)
-            MyBase.New(fileName, duration)
-            showLinePerFrame = Width / duration
-            If showLinePerFrame = 0 Then showLinePerFrame = 1
-            Dim i = 3
-            While i < pixelArray.Length
-                pixelArray(i) = 255
-                i += 4
-            End While
-        End Sub
-
-        Protected Friend Overrides Function GetNextImageState() As Windows.Media.Imaging.BitmapSource
-
-        End Function
-
-    End Class
-
 End Namespace

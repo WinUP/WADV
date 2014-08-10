@@ -151,8 +151,7 @@ Namespace AudioCore
 
         Protected Friend Shared Sub DeletePlayer(id As Integer)
             If Not soundList.ContainsKey(id) Then Exit Sub
-            Dim tmpPlayer = soundList(id)
-            deleteList.Add(id)
+            If Not deleteList.Contains(id) Then deleteList.Add(id)
         End Sub
 
         Protected Friend Shared Function GetPlayer(id As Integer) As Player

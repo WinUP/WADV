@@ -7,7 +7,7 @@ Namespace API
 
     Public Class ImageAPI
 
-        Public Function Show(fileName As String, effectName As String, duration As Integer, contentName As String) As Boolean
+        Public Shared Function Show(fileName As String, effectName As String, duration As Integer, contentName As String) As Boolean
             Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.ImageModule.ImageEffect" Select tmpClass
             If classList.Count < 1 Then Return False
             Dim effect As ImageEffect.BaseEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {fileName, duration})

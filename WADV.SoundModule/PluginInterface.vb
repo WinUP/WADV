@@ -24,33 +24,25 @@ Namespace PluginInterface
         Protected Friend Shared isLooping As Boolean = False
 
         Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
-            For Each tmpID In PlayerList.deleteList
-                PlayerList.soundList.Remove(tmpID)
+            For Each item In PlayerList.deleteList
+                PlayerList.soundList(item).Dispose()
+                PlayerList.soundList.Remove(item)
             Next
-            Dim i As Integer
-            Dim loopContent = PlayerList.soundList
-            Dim loopCount = loopContent.Count
-            Dim player As Player
-            While i < loopCount
-                player = loopContent(i)
-                If player.Duration = player.Position Then
-                    If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then
-                        PlayerList.soundList.Remove(player.ID)
-                        player.Finish()
-                        player.Dispose()
-                        loopCount = loopContent.Count
-                        Continue While
-                    End If
-                    If Not (player.Cycle AndAlso player.CycleCount = -1) Then player.CycleCount -= 1
-                    player.Position = 0
-                    player.Play()
-                End If
-                i += 1
-            End While
+            PlayerList.deleteList.Clear()
             If PlayerList.soundList.Count = 0 Then
                 isLooping = False
                 Return False
             End If
+            Dim player As Player
+            For Each item In PlayerList.soundList
+                player = item.Value
+                If player.Duration = player.Position Then
+                    If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then PlayerList.DeletePlayer(item.Key)
+                    If Not (player.Cycle AndAlso player.CycleCount = -1) Then player.CycleCount -= 1
+                    player.Position = 0
+                    player.Play()
+                End If
+            Next
             Return True
         End Function
 

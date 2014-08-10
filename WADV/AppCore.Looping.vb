@@ -47,7 +47,7 @@ Namespace AppCore.Looping
             Span = 17
             loopThread = New Thread(AddressOf LoopingContent)
             loopThread.IsBackground = True
-            loopThread.Name = "LoopingThread"
+            loopThread.Name = "游戏循环线程"
             loopThread.Priority = ThreadPriority.AboveNormal
         End Sub
 

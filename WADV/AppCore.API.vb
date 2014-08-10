@@ -438,7 +438,7 @@ Namespace AppCore.API
         Public Shared Sub RunFile(fileName As String)
             If Not Script.ScriptCore.GetInstance.BusyStatus Then
                 Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, fileName)))
-                tmpThread.Name = "ScriptThread_RunFile"
+                tmpThread.Name = "脚本文件执行线程"
                 tmpThread.IsBackground = True
                 tmpThread.Priority = ThreadPriority.Normal
                 tmpThread.Start()
