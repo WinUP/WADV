@@ -41,14 +41,19 @@ Namespace API
         End Sub
 
         Public Shared Sub StartGame(sender As Object, e As EventArgs)
+            Executer.Executer.canSave = True
+            Executer.Executer.canLoad = True
             WindowAPI.ClearContent(WindowAPI.GetGrid)
             WindowAPI.LoadElement(WindowAPI.GetGrid, "text_area.xaml")
             WindowAPI.LoadElement(WindowAPI.GetGrid, "choice_area.xaml")
-            TextModule.API.ConfigAPI.SetUITextArea(WindowAPI.GetChildByName(Of TextBlock)(WindowAPI.GetGrid, "MainTextArea"))
+            TextModule.API.ConfigAPI.SetTextArea(WindowAPI.GetChildByName(Of TextBlock)(WindowAPI.GetGrid, "MainTextArea"))
             TextModule.API.ConfigAPI.SetCharacterArea(WindowAPI.GetChildByName(Of TextBlock)(WindowAPI.GetGrid, "MainCharacter"))
+            TextModule.API.ConfigAPI.SetFrameArea(WindowAPI.GetChildByName(Of FrameworkElement)(WindowAPI.GetGrid, "ConversationArea"))
+            TextModule.API.ConfigAPI.SetUIVisibility(False)
             TextModule.API.ConfigAPI.RegisterEvent()
             ChoiceModule.API.UIAPI.SetContent(WindowAPI.GetChildByName(Of Panel)(WindowAPI.GetGrid, "MainChoiceArea"))
             ChoiceModule.API.UIAPI.SetStyle("choice.xaml")
+            ChoiceModule.API.UIAPI.SetMargin(50)
             ScriptAPI.RunFile("logic\game.lua")
         End Sub
 
@@ -75,23 +80,27 @@ Namespace API
             WindowAPI.GetDispatcher.Invoke(Sub() AppCore.API.WindowAPI.GetWindow.Close())
         End Sub
 
-    End Class
-
-    Public Class ImageAPI
-
-        Public Sub ShowABG(fileName() As String, rectangle(,) As Integer, effectName() As String, duration() As Integer, ease() As Boolean)
-
+        Public Shared Sub Execute(fileName As String, startLine As Integer, endLine As Integer)
+            Executer.Executer.ExecuteData(fileName, startLine, endLine)
         End Sub
 
+        Public Shared Sub SetLoad(value As Boolean)
+            SaveLoad.Load.CanLoad = value
+            Executer.Executer.canLoad = value
+        End Sub
 
-    End Class
+        Public Shared Sub SetSave(value As Boolean)
+            SaveLoad.Save.CanSave = value
+            Executer.Executer.canSave = value
+        End Sub
 
-    Public Class TextAPI
-
-        Public Sub Show()
-
+        Public Shared Sub Jump(name As String)
+            Executer.Executer.JumpToMark(name)
         End Sub
 
     End Class
+
+
+
 
 End Namespace

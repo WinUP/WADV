@@ -156,6 +156,12 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared CharacterArea As TextBlock = Nothing
 
+        ''' <summary>
+        ''' 主显示区域
+        ''' </summary>
+        ''' <remarks></remarks>
+        Protected Friend Shared FrameArea As Windows.FrameworkElement = Nothing
+
     End Class
 
 End Namespace

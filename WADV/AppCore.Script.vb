@@ -9,12 +9,10 @@ Namespace AppCore.Script
     ''' <remarks></remarks>
     Public Class ScriptCore
         Private Shared self As ScriptCore
-        Private isBusy As Boolean
         Private vm As LuaInterface.Lua
 
         Private Sub New()
             vm = New LuaInterface.Lua
-            isBusy = False
         End Sub
 
         ''' <summary>
@@ -35,32 +33,12 @@ Namespace AppCore.Script
         End Property
 
         ''' <summary>
-        ''' 获取脚本主机当前的状态
-        ''' </summary>
-        Protected Friend ReadOnly Property BusyStatus As Boolean
-            Get
-                Return isBusy
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' 检查脚本主机空闲状态
-        ''' </summary>
-        ''' <remarks></remarks>
-        Private Sub CheckStatus()
-            If isBusy Then Throw New InvalidOperationException("脚本主机当前正忙，这一般是由于之前的调用还没有执行完成")
-        End Sub
-
-        ''' <summary>
         ''' 执行脚本文件
         ''' </summary>
         ''' <param name="fileName">文件名(包括script之后的路径)</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunFile(fileName As String)
-            CheckStatus()
-            isBusy = True
             vm.DoFile(Path.PathFunction.GetFullPath(Path.PathConfig.Script, fileName))
-            isBusy = False
         End Sub
 
         ''' <summary>
@@ -69,10 +47,7 @@ Namespace AppCore.Script
         ''' <param name="script">要执行的脚本</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunStrng(script As String)
-            CheckStatus()
-            isBusy = True
             vm.DoString(script)
-            isBusy = False
         End Sub
 
         ''' <summary>
@@ -83,12 +58,9 @@ Namespace AppCore.Script
         ''' <returns>函数返回值列表</returns>
         ''' <remarks></remarks>
         Protected Friend Function RunFunction(functionName As String, params() As Object) As Object()
-            CheckStatus()
-            isBusy = True
             Dim tmpFunction = vm.GetFunction(functionName)
             If tmpFunction Is Nothing Then Throw New Exception("找不到函数")
             Dim returnData() As Object = tmpFunction.Call(params)
-            isBusy = False
             Return returnData
         End Function
 

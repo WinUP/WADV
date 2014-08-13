@@ -86,7 +86,7 @@ Namespace API
         ''' </summary>
         ''' <param name="area">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetUITextArea(area As TextBlock)
+        Public Shared Sub SetTextArea(area As TextBlock)
             Config.UIConfig.TextArea = area
         End Sub
 
@@ -97,6 +97,24 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetCharacterArea(area As TextBlock)
             Config.UIConfig.CharacterArea = area
+        End Sub
+
+        ''' <summary>
+        ''' 设置主显示区域
+        ''' </summary>
+        ''' <param name="area">目标面板区域</param>
+        ''' <remarks></remarks>
+        Public Shared Sub SetFrameArea(area As Windows.FrameworkElement)
+            Config.UIConfig.FrameArea = area
+        End Sub
+
+        ''' <summary>
+        ''' 设置对话区域的可见性
+        ''' </summary>
+        ''' <param name="visible">是否可见</param>
+        ''' <remarks></remarks>
+        Public Shared Sub SetUIVisibility(visible As Boolean)
+            WindowAPI.GetDispatcher.Invoke(Sub() Config.UIConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
         End Sub
 
         ''' <summary>

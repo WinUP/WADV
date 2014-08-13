@@ -458,73 +458,63 @@ Namespace AppCore.API
         ''' 执行脚本文件中的所有代码
         ''' 该方法会立即返回
         ''' 该方法在新的线程中执行
-        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="fileName">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFile(fileName As String)
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then
-                Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, fileName)))
-                tmpThread.Name = "脚本文件执行线程"
-                tmpThread.IsBackground = True
-                tmpThread.Priority = ThreadPriority.Normal
-                tmpThread.Start()
-            End If
+            Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, fileName)))
+            tmpThread.Name = "脚本文件执行线程"
+            tmpThread.IsBackground = True
+            tmpThread.Priority = ThreadPriority.Normal
+            tmpThread.Start()
         End Sub
 
         ''' <summary>
         ''' 执行脚本文件中的所有代码
         ''' 该方法不会立即返回
         ''' 该方法在调用线程中执行
-        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="filename">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFileAndWait(filename As String)
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, filename))
+            Script.ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, filename))
         End Sub
 
         ''' <summary>
         ''' 执行一段字符串脚本
         ''' 该方法会立即返回
         ''' 该方法在新的线程中执行
-        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
         Public Shared Sub RunStrng(content As String)
-            If Not script.ScriptCore.GetInstance.BusyStatus Then
-                Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunStrng(content))
-                tmpThread.IsBackground = True
-                tmpThread.Priority = ThreadPriority.Normal
-                tmpThread.Start(content)
-            End If
+            Dim tmpThread As New Thread(Sub() Script.ScriptCore.GetInstance.RunStrng(content))
+            tmpThread.IsBackground = True
+            tmpThread.Priority = ThreadPriority.Normal
+            tmpThread.Start(content)
         End Sub
 
         ''' <summary>
         ''' 执行一段字符串脚本
         ''' 该方法不会立即返回
         ''' 该方法在调用线程中执行
-        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
         Public Shared Sub RunStringAndWait(content As String)
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Script.ScriptCore.GetInstance.RunStrng(content)
+            Script.ScriptCore.GetInstance.RunStrng(content)
         End Sub
 
         ''' <summary>
         ''' 执行一个存在的脚本函数
         ''' 该方法在调用线程中执行
-        ''' 注意：当脚本主机正忙时方法将不执行任何操作，调用前请使用GetStatus()方法确认脚本主机状态
         ''' </summary>
         ''' <param name="functionName">函数名</param>
         ''' <param name="params">参数列表</param>
         ''' <returns>返回值列表</returns>
         ''' <remarks></remarks>
         Public Shared Function RunFunction(functionName As String, params() As Object) As Object()
-            If Not Script.ScriptCore.GetInstance.BusyStatus Then Return Script.ScriptCore.GetInstance.RunFunction(functionName, params)
-            Return Nothing
+            Return Script.ScriptCore.GetInstance.RunFunction(functionName, params)
         End Function
 
         ''' <summary>
@@ -621,17 +611,6 @@ Namespace AppCore.API
         Public Shared Sub RegisterFunction(types() As Type, belong As String, prefix As String)
             Register.RegisterFunction(types, belong, prefix)
         End Sub
-
-
-        ''' <summary>
-        ''' 获取脚本主机空闲状态
-        ''' 该方法在调用线程中执行
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetStatus() As Boolean
-            Return Script.ScriptCore.GetInstance.BusyStatus
-        End Function
 
         ''' <summary>
         ''' 获取游戏脚本主机对象
