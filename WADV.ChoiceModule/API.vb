@@ -97,7 +97,7 @@ Namespace API
             If Config.UIConfig.ChoiceStyle Is Nothing Then Return False
             Config.DataConfig.Choice = ""
             Dim choicePanel As New List(Of Windows.FrameworkElement)
-            Dim dispatcher = AppCore.API.WindowAPI.GetDispatcher
+            Dim dispatcher = WindowAPI.GetDispatcher
             '声明界面元素
             For i = 0 To choice.Length - 1
                 Dim readIndex = i

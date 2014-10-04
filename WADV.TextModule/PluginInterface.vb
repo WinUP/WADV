@@ -15,9 +15,9 @@ Namespace PluginInterface
 
     End Class
 
-    Public Class Script : Implements Plugin.IScriptFunction
+    Public Class Script : Implements Plugin.IScript
 
-        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements Plugin.IScriptFunction.StartRegisting
+        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements Plugin.IScript.StartRegisting
             ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.TextModule.API", "TM")
         End Sub
 
@@ -32,7 +32,7 @@ Namespace PluginInterface
             Me.effect = effect
         End Sub
 
-        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILooping.StartLooping
             Dim text As TextEffect.StandardEffect.SentenceInfo
             If waitingCount > 0 Then
                 waitingCount -= 1

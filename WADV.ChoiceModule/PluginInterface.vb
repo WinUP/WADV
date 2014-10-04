@@ -3,9 +3,9 @@ Imports System.Windows
 
 Namespace PluginInterface
 
-    Public Class Script : Implements AppCore.Plugin.IScriptFunction
+    Public Class Script : Implements AppCore.Plugin.IScript
 
-        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScriptFunction.StartRegisting
+        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScript.StartRegisting
             ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.ChoiceModule.API", "CM")
         End Sub
 
@@ -18,7 +18,7 @@ Namespace PluginInterface
             Me.Style = style
         End Sub
 
-        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILooping.StartLooping
             Dim returnData = Style.GetNextUIStyle
             If Config.DataConfig.Choice <> "" Then Return False
             If Not returnData AndAlso Config.DataConfig.Choice = "" Then Return False

@@ -116,7 +116,7 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.TextModule.xml"))
+            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.TextModule.xml"))
             WordFrame = CInt(configFile.SelectSingleNode("/config/framsBetweenWord").InnerXml)
             SetenceFrame = CInt(configFile.SelectSingleNode("/config/framsBetweenSetence").InnerXml)
             Auto = If(configFile.SelectSingleNode("/config/autoMode").InnerXml = "True", True, False)
@@ -129,12 +129,12 @@ Namespace Config
         ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.TextModule.xml"))
+            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.TextModule.xml"))
             configFile.SelectSingleNode("/config/framsBetweenWord").InnerXml = WordFrame
             configFile.SelectSingleNode("/config/framsBetweenSetence").InnerXml = SetenceFrame
             configFile.SelectSingleNode("/config/autoMode").InnerXml = If(Auto, "True", "False")
             configFile.SelectSingleNode("/config/ignoreRead").InnerXml = If(Ignore, "True", "False")
-            configFile.Save(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.TextModule.xml"))
+            configFile.Save(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.TextModule.xml"))
         End Sub
 
     End Class

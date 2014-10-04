@@ -49,17 +49,38 @@
     ''' <remarks></remarks>
     Public Class PathFunction
 
+        Public Enum PathType
+            Plugin
+            Resource
+            Skin
+            Script
+            UserFile
+            Other
+        End Enum
+
         ''' <summary>
         ''' 获取文件的绝对路径
         ''' </summary>
         ''' <param name="type">路径类型</param>
-        ''' <param name="fileURL">类型路径下的相对路径</param>
+        ''' <param name="filePath">从类型后开始的文件路径</param>
         ''' <returns>文件的绝对路径</returns>
-        Protected Friend Shared Function GetFullPath(type As String, Optional fileURL As String = "") As String
-            Return System.IO.Path.Combine(My.Application.Info.DirectoryPath, type, fileURL)
+        Protected Friend Shared Function GetFullPath(type As PathType, Optional filePath As String = "") As String
+            Dim typePath As String = ""
+            Select Case type
+                Case PathType.Plugin
+                    typePath = PathConfig.Plugin
+                Case PathType.Resource
+                    typePath = PathConfig.Resource
+                Case PathType.Script
+                    typePath = PathConfig.Script
+                Case PathType.Skin
+                    typePath = PathConfig.Skin
+                Case PathType.UserFile
+                    typePath = PathConfig.UserFile
+            End Select
+            Return System.IO.Path.Combine(My.Application.Info.DirectoryPath, typePath, filePath)
         End Function
 
     End Class
-
 
 End Namespace

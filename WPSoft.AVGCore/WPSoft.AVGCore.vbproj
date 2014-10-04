@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\WADV\bin\Debug\plugin\</OutputPath>
+    <OutputPath>..\WADV\bin\Debug\plugin\WPSoft.AVGCore\</OutputPath>
     <DocumentationFile>WPSoft.AVGCore.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
@@ -51,11 +51,13 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WADV.CGModule">
+      <HintPath>..\WADV\bin\Debug\plugin\WADV.CGModule\WADV.CGModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +65,6 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
@@ -71,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.vb" />
-    <Compile Include="Executer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -88,7 +88,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PluginInterface.vb" />
-    <Compile Include="SaveLoad.vb" />
+    <Compile Include="Serializer.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -113,11 +113,6 @@
     <ProjectReference Include="..\WADV.ChoiceModule\WADV.ChoiceModule.vbproj">
       <Project>{eece56f4-f266-4f3e-80ce-79eb7b28fe21}</Project>
       <Name>WADV.ChoiceModule</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\WADV.ImageModule\WADV.ImageModule.vbproj">
-      <Project>{6132d0da-a5ad-46e8-8952-1445118e3f97}</Project>
-      <Name>WADV.ImageModule</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\WADV.SoundModule\WADV.MediaModule.vbproj">

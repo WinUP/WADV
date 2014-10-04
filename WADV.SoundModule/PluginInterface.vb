@@ -12,10 +12,10 @@ Namespace PluginInterface
 
     End Class
 
-    Public Class Script : Implements AppCore.Plugin.IScriptFunction
+    Public Class Script : Implements AppCore.Plugin.IScript
 
-        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScriptFunction.StartRegisting
-            ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.MediaModule.API", "MM")
+        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScript.StartRegisting
+            ScriptAPI.RegisterFunction(Assembly.GetExecutingAssembly.GetTypes, "WADV.MediaModule.API", "MM")
         End Sub
 
     End Class
@@ -23,7 +23,7 @@ Namespace PluginInterface
     Public Class Looping : Implements AppCore.Plugin.ILooping
         Protected Friend Shared isLooping As Boolean = False
 
-        Public Function StartLooping() As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILooping.StartLooping
             For Each item In PlayerList.deleteList
                 PlayerList.soundList(item).Dispose()
                 PlayerList.soundList.Remove(item)

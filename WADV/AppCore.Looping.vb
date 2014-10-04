@@ -1,4 +1,5 @@
 ﻿Imports System.Threading
+Imports WADV.AppCore.API
 
 Namespace AppCore.Looping
 
@@ -11,6 +12,7 @@ Namespace AppCore.Looping
         Private loopList As New List(Of Plugin.ILooping)
         Private loopListCount As Integer
         Protected Friend loopThread As Thread
+        Private frameCount As Integer
 
         ''' <summary>
         ''' 添加一个循环
@@ -18,7 +20,10 @@ Namespace AppCore.Looping
         ''' <param name="loopContent">循环函数</param>
         ''' <remarks></remarks>
         Protected Friend Sub AddLooping(loopContent As Plugin.ILooping)
-            If Not loopList.Contains(loopContent) Then loopList.Add(loopContent)
+            If Not loopList.Contains(loopContent) Then
+                loopList.Add(loopContent)
+                MessageAPI.Send("LOOP_CONTENT_ADD")
+            End If
         End Sub
 
         ''' <summary>
@@ -27,18 +32,18 @@ Namespace AppCore.Looping
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Protected Friend Sub WaitLooping(loopContent As Plugin.ILooping)
-            Dim loopThread = New Thread(New ParameterizedThreadStart(Sub()
-                                                                         While (Status)
-                                                                             If loopList.Contains(loopContent) Then
-                                                                                 Thread.Sleep(Span)
-                                                                             Else
-                                                                                 Exit Sub
-                                                                             End If
-                                                                         End While
-                                                                     End Sub))
+            Dim loopThread = New Thread(New ThreadStart(Sub()
+                                                            While (Status)
+                                                                If loopList.Contains(loopContent) Then
+                                                                    Thread.Sleep(Span)
+                                                                Else
+                                                                    Exit Sub
+                                                                End If
+                                                            End While
+                                                        End Sub))
             loopThread.IsBackground = True
             loopThread.Priority = ThreadPriority.BelowNormal
-            loopThread.Start(loopContent)
+            loopThread.Start()
             loopThread.Join()
         End Sub
 
@@ -49,6 +54,8 @@ Namespace AppCore.Looping
             loopThread.IsBackground = True
             loopThread.Name = "游戏循环线程"
             loopThread.Priority = ThreadPriority.AboveNormal
+            frameCount = 0
+            MessageAPI.Send("LOOP_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -68,6 +75,16 @@ Namespace AppCore.Looping
         Protected Friend Property Span As Integer
 
         ''' <summary>
+        ''' 获取当前的帧计数
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Friend ReadOnly Property CurrentFrame As Integer
+            Get
+                Return frameCount
+            End Get
+        End Property
+
+        ''' <summary>
         ''' 获取逻辑循环的唯一实例
         ''' </summary>
         ''' <returns></returns>
@@ -78,36 +95,34 @@ Namespace AppCore.Looping
         End Function
 
         ''' <summary>
-        ''' 逻辑循环体
+        ''' 游戏循环体
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub LoopingContent()
             Dim i As Integer
             Dim loopContent As Plugin.ILooping
-            Dim timeNow = DateTime.Now.Ticks
+            Dim timeNow As Long
             Dim nextStartTime = timeNow
             Dim sleepTime = 0
+            Dim gameWindow = WindowAPI.GetWindow
+            Dim gameDispatcher = WindowAPI.GetDispatcher
             While (Status)
+                timeNow = Now.Ticks
                 i = 0
                 loopListCount = loopList.Count
                 While i < loopListCount
                     loopContent = loopList(i)
-                    If Not loopContent.StartLooping Then
+                    If loopContent.StartLooping(frameCount) Then
+                        i += 1
+                    Else
                         loopList.Remove(loopContent)
                         loopListCount -= 1
-                    Else
-                        i += 1
                     End If
-                    API.WindowAPI.GetDispatcher.Invoke(Sub() loopContent.StartRendering(API.WindowAPI.GetWindow))
+                    gameDispatcher.Invoke(Sub() loopContent.StartRendering(gameWindow))
                 End While
-                timeNow = DateTime.Now.Ticks
-                nextStartTime += Span
-                sleepTime = nextStartTime - timeNow
-                If sleepTime > 0 Then
-                    Thread.Sleep(sleepTime)
-                Else
-                    nextStartTime = timeNow
-                End If
+                sleepTime = timeNow + Span - Now.Ticks
+                If sleepTime > 10 Then Thread.Sleep(sleepTime)
+                frameCount += 1
             End While
         End Sub
 
@@ -128,6 +143,7 @@ Namespace AppCore.Looping
             Set(value As Integer)
                 _frame = value
                 MainLooping.GetInstance.Span = 1000 / Frame
+                MessageAPI.Send("LOOP_FRAME_CHANGE")
             End Set
         End Property
 
@@ -138,6 +154,7 @@ Namespace AppCore.Looping
         Protected Friend Shared Sub StopMainLooping()
             MainLooping.GetInstance.Status = False
             MainLooping.GetInstance.loopThread.Abort()
+            MessageAPI.Send("LOOP_CONTENT_ABORT")
         End Sub
 
         ''' <summary>
@@ -148,6 +165,7 @@ Namespace AppCore.Looping
             If Not MainLooping.GetInstance.Status Then
                 MainLooping.GetInstance.Status = True
                 MainLooping.GetInstance.loopThread.Start()
+                MessageAPI.Send("LOOP_CONTENT_START")
             End If
         End Sub
 

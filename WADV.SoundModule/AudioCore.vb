@@ -106,7 +106,7 @@ Namespace AudioCore
         ''' <param name="count">循环次数</param>
         ''' <remarks></remarks>
         Public Sub New(fileName As String, type As SoundType, cycle As Boolean, count As Integer, id As Integer)
-            _player = New Audio(PathAPI.GetPath(PathAPI.Resource, fileName), False)
+            _player = New Audio(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, fileName), False)
             If type = SoundType.Background Then
                 Volume = ConfigAPI.GetBackgroundVolume
             ElseIf type = SoundType.Effect Then

@@ -1,6 +1,4 @@
 ﻿Imports System.Windows.Controls
-Imports System.Xml
-Imports System.IO
 
 Namespace Config
 

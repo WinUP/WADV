@@ -71,7 +71,7 @@ Namespace Config
         ''' <remarks></remarks>
         Protected Friend Shared Sub ReadConfigFile()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
+            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
             BackgroundVolume = CDbl(configFile.SelectSingleNode("/config/background").InnerXml)
             ReadingVolume = CDbl(configFile.SelectSingleNode("/config/reading").InnerXml)
             EffectVolume = CDbl(configFile.SelectSingleNode("/config/effect").InnerXml)
@@ -83,11 +83,11 @@ Namespace Config
         ''' <remarks></remarks>
         Private Shared Sub WriteConfig()
             Dim configFile As New XmlDocument
-            configFile.Load(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
+            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
             configFile.SelectSingleNode("/config/background").InnerXml = BackgroundVolume
             configFile.SelectSingleNode("/config/reading").InnerXml = ReadingVolume
             configFile.SelectSingleNode("/config/effect").InnerXml = EffectVolume
-            configFile.Save(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.UserFile, "WADV.MediaModule.xml"))
+            configFile.Save(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
         End Sub
 
     End Class
@@ -109,26 +109,27 @@ Namespace Config
         Protected Friend Shared Sub GetNewContent(fileName As String)
             If VideoContent IsNot Nothing Then
                 VideoContent.Dispatcher.Invoke(Sub()
-                                                   WindowAPI.GetGrid.Children.Remove(VideoContent)
+                                                   WindowAPI.GetRoot(Of Grid).Children.Remove(VideoContent)
                                                    RemoveHandler VideoContent.MediaEnded, AddressOf Video_Ended
                                                    RemoveHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
                                                    VideoContent.Close()
                                                    VideoContent = Nothing
                                                End Sub)
             End If
-            WindowAPI.GetGrid.Dispatcher.Invoke(Sub()
-                                                    VideoContent = New MediaElement
-                                                    VideoContent.SetValue(Panel.ZIndexProperty, 10)
-                                                    VideoContent.LoadedBehavior = MediaState.Manual
-                                                    VideoContent.Source = New Uri(PathAPI.GetPath(PathAPI.Resource, fileName))
-                                                    VideoContent.Height = WindowAPI.GetGrid.Height
-                                                    VideoContent.Width = WindowAPI.GetGrid.Width
-                                                    VideoContent.Margin = New Windows.Thickness(0)
-                                                    AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
-                                                    AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
-                                                    WindowAPI.GetGrid.Children.Add(VideoContent)
-                                                    VideoContent.Play()
-                                                End Sub)
+            WindowAPI.GetWindow.Dispatcher.Invoke(Sub()
+                                                      Dim content = WindowAPI.GetRoot(Of Grid)()
+                                                      VideoContent = New MediaElement
+                                                      VideoContent.SetValue(Panel.ZIndexProperty, 10)
+                                                      VideoContent.LoadedBehavior = MediaState.Manual
+                                                      VideoContent.Source = New Uri(PathAPI.GetPath(PathAPI.Resource, fileName))
+                                                      VideoContent.Height = content.Height
+                                                      VideoContent.Width = content.Width
+                                                      VideoContent.Margin = New Windows.Thickness(0)
+                                                      AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
+                                                      AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
+                                                      content.Children.Add(VideoContent)
+                                                      VideoContent.Play()
+                                                  End Sub)
             IsPlayFinished = False
         End Sub
 

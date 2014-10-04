@@ -1,5 +1,6 @@
 ﻿Imports System.Reflection
 Imports System.Threading
+Imports WADV.AppCore.API
 
 Namespace AppCore.Script
 
@@ -13,6 +14,7 @@ Namespace AppCore.Script
 
         Private Sub New()
             vm = New LuaInterface.Lua
+            MessageAPI.Send("SCRIPT_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -35,10 +37,12 @@ Namespace AppCore.Script
         ''' <summary>
         ''' 执行脚本文件
         ''' </summary>
-        ''' <param name="fileName">文件名(包括script之后的路径)</param>
+        ''' <param name="fileName">文件路径</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunFile(fileName As String)
-            vm.DoFile(Path.PathFunction.GetFullPath(Path.PathConfig.Script, fileName))
+            MessageAPI.Send("SCRIPT_FILE_BEFOREDO")
+            vm.DoFile(fileName)
+            MessageAPI.Send("SCRIPT_FILE_AFTERDO")
         End Sub
 
         ''' <summary>
@@ -47,7 +51,9 @@ Namespace AppCore.Script
         ''' <param name="script">要执行的脚本</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunStrng(script As String)
+            MessageAPI.Send("SCRIPT_STRING_BEFOREDO")
             vm.DoString(script)
+            MessageAPI.Send("SCRIPT_STRING_AFTERDO")
         End Sub
 
         ''' <summary>
@@ -59,8 +65,10 @@ Namespace AppCore.Script
         ''' <remarks></remarks>
         Protected Friend Function RunFunction(functionName As String, params() As Object) As Object()
             Dim tmpFunction = vm.GetFunction(functionName)
-            If tmpFunction Is Nothing Then Throw New Exception("找不到函数")
+            If tmpFunction Is Nothing Then Throw New MissingMethodException("当前脚本主机中不存在函数" & functionName & "，是否忘记执行包含它的文件？")
+            MessageAPI.Send("SCRIPT_METHOD_BEFOREDO")
             Dim returnData() As Object = tmpFunction.Call(params)
+            MessageAPI.Send("SCRIPT_METHOD_AFTERDO")
             Return returnData
         End Function
 
@@ -105,7 +113,7 @@ Namespace AppCore.Script
         End Function
 
         ''' <summary>
-        ''' 获取LUA表形式的脚本变量
+        ''' 获取LUA TABLE形式的脚本变量
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
@@ -115,11 +123,11 @@ Namespace AppCore.Script
         End Function
 
         ''' <summary>
-        ''' 获取LUA表中指定元素的内容
+        ''' 获取LUA TABLE中指定元素的值
         ''' </summary>
         ''' <param name="tableName">表名</param>
         ''' <param name="key">键名</param>
-        ''' <returns>元素内容</returns>
+        ''' <returns>元素的值</returns>
         ''' <remarks></remarks>
         Protected Friend Function GetVariableInTable(tableName As String, key As String) As Object
             Dim tmpTable = GetTableVariable(tableName)
@@ -134,16 +142,18 @@ Namespace AppCore.Script
     ''' </summary>
     ''' <remarks></remarks>
     Public Class Register
-
-        Private Shared registingFunctionList As New List(Of Plugin.IScriptFunction)
+        Private Shared registingFunctionList As New List(Of Plugin.IScript)
 
         ''' <summary>
         ''' 添加一个脚本接口函数
         ''' </summary>
         ''' <param name="functionContent">要添加的函数</param>
         ''' <remarks></remarks>
-        Protected Friend Shared Sub AddFunction(functionContent As Plugin.IScriptFunction)
-            If Not registingFunctionList.Contains(functionContent) Then registingFunctionList.Add(functionContent)
+        Protected Friend Shared Sub AddFunction(functionContent As Plugin.IScript)
+            If Not registingFunctionList.Contains(functionContent) Then
+                registingFunctionList.Add(functionContent)
+                MessageAPI.Send("SCRIPT_CONTENT_ADD")
+            End If
         End Sub
 
         ''' <summary>
@@ -151,10 +161,11 @@ Namespace AppCore.Script
         ''' </summary>
         ''' <remarks></remarks>
         Protected Friend Shared Sub RegisterFunction()
-            RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.AppCore.API", "SYS")
+            RegisterFunction(Assembly.GetExecutingAssembly.GetTypes, "WADV.AppCore.API", "SYS")
             For Each tmpFunction In registingFunctionList
                 tmpFunction.StartRegisting(ScriptCore.GetInstance.ScriptVM)
             Next
+            MessageAPI.Send("SCRIPT_CONTENT_INITFINISH")
         End Sub
 
         ''' <summary>
@@ -175,6 +186,7 @@ Namespace AppCore.Script
                     ScriptCore.GetInstance.ScriptVM.RegisterFunction(String.Format(prefix & "_{0}_{1}", apiBaseName.Remove(apiBaseName.Length - 3), tmpMethod.Name), apiBase, tmpMethod)
                 Next
             Next
+            MessageAPI.Send("SCRIPT_CONTENT_ADD")
         End Sub
 
     End Class

@@ -1,5 +1,4 @@
 ﻿Imports WADV
-Imports System.Windows.Media
 Imports System.Windows
 Imports System.Windows.Controls
 
@@ -20,46 +19,44 @@ Namespace API
         End Sub
 
         Public Shared Sub ShowLogo(sender As Object, e As EventArgs)
-            ImageModule.API.ImageAPI.Show("image\logo.png", "FadeInEffect", 30, "MainGrid")
+            WindowAPI.LoadPage("logo.xaml")
+            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            CGModule.API.ImageAPI.Show("image\logo.png", "FadeIn", 30, "LogoMainGrid")
             System.Threading.Thread.Sleep(1500)
-            ImageModule.API.ImageAPI.Show("image\logo.png", "FadeOutEffect", 30, "MainGrid")
+            CGModule.API.ImageAPI.Show("image\logo.png", "FadeOut", 30, "LogoMainGrid")
         End Sub
 
         Public Shared Sub ShowMenu(sender As Object, e As EventArgs)
-            WindowAPI.ClearContent(WindowAPI.GetGrid)
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "menu.xaml")
-            ImageModule.API.ImageAPI.Show("image\menu.png", "FadeInEffect", 20, "MainGrid")
+            WindowAPI.LoadPage("menu.xaml")
+            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            CGModule.API.ImageAPI.Show("image\menu.png", "FadeIn", 60, "MenuMainGrid")
             Dim tmpButton As Button
-            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetGrid, "StartGame")
+            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetWindow, "StartGame")
             AddHandler tmpButton.Click, AddressOf StartGame
-            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetGrid, "LoadGame")
+            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetWindow, "LoadGame")
             AddHandler tmpButton.Click, AddressOf LoadGameScreen
-            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetGrid, "GameGallery")
+            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetWindow, "GameGallery")
             AddHandler tmpButton.Click, AddressOf GameGallery
-            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetGrid, "GameSetting")
+            tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetWindow, "GameSetting")
             AddHandler tmpButton.Click, AddressOf GameSetting
         End Sub
 
         Public Shared Sub StartGame(sender As Object, e As EventArgs)
-            Executer.Executer.canSave = True
-            Executer.Executer.canLoad = True
-            WindowAPI.ClearContent(WindowAPI.GetGrid)
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "text_area.xaml")
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "choice_area.xaml")
-            TextModule.API.ConfigAPI.SetTextArea(WindowAPI.GetChildByName(Of TextBlock)(WindowAPI.GetGrid, "MainTextArea"))
-            TextModule.API.ConfigAPI.SetCharacterArea(WindowAPI.GetChildByName(Of TextBlock)(WindowAPI.GetGrid, "MainCharacter"))
-            TextModule.API.ConfigAPI.SetFrameArea(WindowAPI.GetChildByName(Of FrameworkElement)(WindowAPI.GetGrid, "ConversationArea"))
+            WindowAPI.LoadPage("game.xaml")
+            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            TextModule.API.ConfigAPI.SetTextArea(WindowAPI.SearchObject(Of TextBlock)("MainTextArea"))
+            TextModule.API.ConfigAPI.SetCharacterArea(WindowAPI.SearchObject(Of TextBlock)("MainCharacter"))
+            TextModule.API.ConfigAPI.SetFrameArea(WindowAPI.SearchObject(Of FrameworkElement)("ConversationArea"))
             TextModule.API.ConfigAPI.SetUIVisibility(False)
             TextModule.API.ConfigAPI.RegisterEvent()
-            ChoiceModule.API.UIAPI.SetContent(WindowAPI.GetChildByName(Of Panel)(WindowAPI.GetGrid, "MainChoiceArea"))
+            ChoiceModule.API.UIAPI.SetContent(WindowAPI.SearchObject(Of Panel)("MainChoiceArea"))
             ChoiceModule.API.UIAPI.SetStyle("choice.xaml")
             ChoiceModule.API.UIAPI.SetMargin(50)
             ScriptAPI.RunFile("logic\game.lua")
         End Sub
 
         Public Shared Sub LoadGameScreen(sender As Object, e As EventArgs)
-            WindowAPI.ClearContent(WindowAPI.GetGrid)
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "load.xaml")
+            WindowAPI.LoadPage("load.xaml")
         End Sub
 
         Public Shared Sub LoadGame(sender As Object, e As EventArgs)
@@ -67,35 +64,21 @@ Namespace API
         End Sub
 
         Public Shared Sub GameGallery(sender As Object, e As EventArgs)
-            WindowAPI.ClearContent(WindowAPI.GetGrid)
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "gallery.xaml")
+            WindowAPI.LoadPage("gallery.xaml")
         End Sub
 
         Public Shared Sub GameSetting(sender As Object, e As EventArgs)
-            WindowAPI.ClearContent(WindowAPI.GetGrid)
-            WindowAPI.LoadElement(WindowAPI.GetGrid, "setting.xaml")
+            WindowAPI.LoadPage("setting.xaml")
         End Sub
 
         Public Shared Sub ExitGame()
-            WindowAPI.GetDispatcher.Invoke(Sub() AppCore.API.WindowAPI.GetWindow.Close())
+            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Close())
         End Sub
 
-        Public Shared Sub Execute(fileName As String, startLine As Integer, endLine As Integer)
-            Executer.Executer.ExecuteData(fileName, startLine, endLine)
-        End Sub
-
-        Public Shared Sub SetLoad(value As Boolean)
-            SaveLoad.Load.CanLoad = value
-            Executer.Executer.canLoad = value
-        End Sub
-
-        Public Shared Sub SetSave(value As Boolean)
-            SaveLoad.Save.CanSave = value
-            Executer.Executer.canSave = value
-        End Sub
-
-        Public Shared Sub Jump(name As String)
-            Executer.Executer.JumpToMark(name)
+        Public Shared Sub SaveGame()
+            Dim fileName = "savedata\" & DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss")
+            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.SaveImage(fileName & ".jpg"))
+            Serializer.SaveToFile(fileName & ".vm")
         End Sub
 
     End Class
