@@ -123,8 +123,8 @@ Namespace API
             Dim loopContent As New PluginInterface.Looping(effect)
             dispatcher.Invoke(Sub() Config.UIConfig.ChoiceContent.Visibility = Windows.Visibility.Visible)
             '开始渲染
-            AppCore.API.LoopingAPI.AddLoop(loopContent)
-            AppCore.API.LoopingAPI.WaitLoop(loopContent)
+            AppCore.API.LoopingAPI.AddLoopSync(loopContent)
+            AppCore.API.LoopingAPI.WaitLoopSync(loopContent)
             '注销事件
             For Each tmpPanel In choicePanel
                 RemoveHandler tmpPanel.MouseLeftButtonDown, AddressOf Config.UIConfig.TextBlock_Click

@@ -18,7 +18,7 @@ Namespace PluginInterface
     Public Class Script : Implements Plugin.IScript
 
         Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements Plugin.IScript.StartRegisting
-            ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.TextModule.API", "TM")
+            ScriptAPI.RegisterSync(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.TextModule.API", "TM")
         End Sub
 
     End Class

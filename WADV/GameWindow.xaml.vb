@@ -8,7 +8,7 @@ Public Class GameWindow
 
     Private Sub GameWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         '绑定事件
-        AddHandler NavigationService.LoadCompleted, Sub() MessageAPI.Send("WINDOW_PAGE_CHANGE")
+        AddHandler NavigationService.LoadCompleted, Sub() MessageAPI.SendSync("WINDOW_PAGE_CHANGE")
         '设定参数
         AppCore.Path.PathConfig.Plugin = My.Settings.PluginURL
         AppCore.Path.PathConfig.Resource = My.Settings.ResourceURL
@@ -23,7 +23,7 @@ Public Class GameWindow
         '执行插件初始化函数
         AppCore.Plugin.PluginFunction.InitialisingGame()
         '调用初始化脚本
-        ScriptAPI.RunFile("init.lua")
+        ScriptAPI.RunFileAsync("init.lua")
     End Sub
 
 End Class

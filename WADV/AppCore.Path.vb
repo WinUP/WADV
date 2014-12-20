@@ -81,6 +81,17 @@
             Return System.IO.Path.Combine(My.Application.Info.DirectoryPath, typePath, filePath)
         End Function
 
+        ''' <summary>
+        ''' 获取文件的绝对路径的URI表示形式
+        ''' </summary>
+        ''' <param name="type">路径类型</param>
+        ''' <param name="filePath">从类型开始后的文件路径</param>
+        ''' <returns>文件的绝对路径</returns>
+        ''' <remarks></remarks>
+        Protected Friend Shared Function GetFullUri(type As PathType, Optional filePath As String = "") As Uri
+            Return New Uri(GetFullPath(type, filePath))
+        End Function
+
     End Class
 
 End Namespace

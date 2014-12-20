@@ -14,7 +14,7 @@ Namespace AppCore.Script
 
         Private Sub New()
             vm = New LuaInterface.Lua
-            MessageAPI.Send("SCRIPT_INIT_FINISH")
+            MessageAPI.SendSync("SCRIPT_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -40,9 +40,9 @@ Namespace AppCore.Script
         ''' <param name="fileName">文件路径</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunFile(fileName As String)
-            MessageAPI.Send("SCRIPT_FILE_BEFOREDO")
+            MessageAPI.SendSync("SCRIPT_FILE_BEFOREDO")
             vm.DoFile(fileName)
-            MessageAPI.Send("SCRIPT_FILE_AFTERDO")
+            MessageAPI.SendSync("SCRIPT_FILE_AFTERDO")
         End Sub
 
         ''' <summary>
@@ -51,9 +51,9 @@ Namespace AppCore.Script
         ''' <param name="script">要执行的脚本</param>
         ''' <remarks></remarks>
         Protected Friend Sub RunStrng(script As String)
-            MessageAPI.Send("SCRIPT_STRING_BEFOREDO")
+            MessageAPI.SendSync("SCRIPT_STRING_BEFOREDO")
             vm.DoString(script)
-            MessageAPI.Send("SCRIPT_STRING_AFTERDO")
+            MessageAPI.SendSync("SCRIPT_STRING_AFTERDO")
         End Sub
 
         ''' <summary>
@@ -66,9 +66,9 @@ Namespace AppCore.Script
         Protected Friend Function RunFunction(functionName As String, params() As Object) As Object()
             Dim tmpFunction = vm.GetFunction(functionName)
             If tmpFunction Is Nothing Then Throw New MissingMethodException("当前脚本主机中不存在函数" & functionName & "，是否忘记执行包含它的文件？")
-            MessageAPI.Send("SCRIPT_METHOD_BEFOREDO")
+            MessageAPI.SendSync("SCRIPT_METHOD_BEFOREDO")
             Dim returnData() As Object = tmpFunction.Call(params)
-            MessageAPI.Send("SCRIPT_METHOD_AFTERDO")
+            MessageAPI.SendSync("SCRIPT_METHOD_AFTERDO")
             Return returnData
         End Function
 
@@ -152,7 +152,7 @@ Namespace AppCore.Script
         Protected Friend Shared Sub AddFunction(functionContent As Plugin.IScript)
             If Not registingFunctionList.Contains(functionContent) Then
                 registingFunctionList.Add(functionContent)
-                MessageAPI.Send("SCRIPT_CONTENT_ADD")
+                MessageAPI.SendSync("SCRIPT_CONTENT_ADD")
             End If
         End Sub
 
@@ -165,7 +165,7 @@ Namespace AppCore.Script
             For Each tmpFunction In registingFunctionList
                 tmpFunction.StartRegisting(ScriptCore.GetInstance.ScriptVM)
             Next
-            MessageAPI.Send("SCRIPT_CONTENT_INITFINISH")
+            MessageAPI.SendSync("SCRIPT_CONTENT_INITFINISH")
         End Sub
 
         ''' <summary>
@@ -186,7 +186,7 @@ Namespace AppCore.Script
                     ScriptCore.GetInstance.ScriptVM.RegisterFunction(String.Format(prefix & "_{0}_{1}", apiBaseName.Remove(apiBaseName.Length - 3), tmpMethod.Name), apiBase, tmpMethod)
                 Next
             Next
-            MessageAPI.Send("SCRIPT_CONTENT_ADD")
+            MessageAPI.SendSync("SCRIPT_CONTENT_ADD")
         End Sub
 
     End Class

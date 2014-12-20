@@ -101,7 +101,7 @@ Namespace AppCore.Plugin
         ''' </summary>
         ''' <remarks></remarks>
         Protected Friend Shared Sub InitialiseAllPlugins()
-            Dim pluginFileList = Directory.GetDirectories(Path.PathFunction.GetFullPath(Path.PathFunction.PathType.Plugin, ""))
+            Dim pluginFileList = Directory.GetDirectories(PathAPI.GetPath(Path.PathFunction.PathType.Plugin, ""))
             For Each fileName In pluginFileList
                 Try
                     If Not AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\") + 1))) Then Throw New Exception("插件的初始化函数报告它失败了")
@@ -109,7 +109,7 @@ Namespace AppCore.Plugin
                     MessageBox.Show("插件" & My.Computer.FileSystem.GetName(fileName) & "初始化失败，这是详细信息：" & Environment.NewLine & ex.Message)
                 End Try
             Next
-            MessageAPI.Send("GAME_PLUGIN_INITFINISH")
+            MessageAPI.SendSync("GAME_PLUGIN_INITFINISH")
         End Sub
 
         ''' <summary>
@@ -144,7 +144,7 @@ Namespace AppCore.Plugin
             If initFunction IsNot Nothing Then initialiserList.Add(initFunction)
             If destructFunction IsNot Nothing Then destructorList.Add(destructFunction)
             pluginFileList.Add(fileName)
-            MessageAPI.Send("GAME_PLUGIN_ADD")
+            MessageAPI.SendSync("GAME_PLUGIN_ADD")
             Return True
         End Function
 

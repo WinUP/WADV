@@ -6,7 +6,7 @@ Namespace PluginInterface
     Public Class Script : Implements AppCore.Plugin.IScript
 
         Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScript.StartRegisting
-            ScriptAPI.RegisterFunction(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.ChoiceModule.API", "CM")
+            ScriptAPI.RegisterSync(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.ChoiceModule.API", "CM")
         End Sub
 
     End Class

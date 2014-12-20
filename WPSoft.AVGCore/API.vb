@@ -7,28 +7,28 @@ Namespace API
     Public Class GameAPI
 
         Public Shared Sub Initialise(frame As Integer, width As Integer, height As Integer)
-            WindowAPI.SetResizeMode(False)
-            WindowAPI.SetBackgroundByHex("#000000")
-            WindowAPI.SetIcon("icon.ico")
-            WindowAPI.SetWidth(width)
-            WindowAPI.SetHeight(height)
-            LoopingAPI.SetFrame(frame)
-            LoopingAPI.StartMainLoop()
-            ResourceAPI.LoadToGame("app_resource.xaml")
-            ResourceAPI.LoadToWindow("window_resource.xaml")
+            WindowAPI.SetResizeModeSync(False)
+            WindowAPI.SetBackgroundByHexSync("#000000")
+            WindowAPI.SetIconSync("icon.ico")
+            WindowAPI.SetWidthSync(width)
+            WindowAPI.SetHeightSync(height)
+            LoopingAPI.SetFrameSync(frame)
+            LoopingAPI.StartMainLoopSync()
+            ResourceAPI.LoadToGameSync("app_resource.xaml")
+            ResourceAPI.LoadToWindowSync("window_resource.xaml")
         End Sub
 
         Public Shared Sub ShowLogo(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("logo.xaml")
-            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            WindowAPI.LoadPageAsync("logo.xaml")
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
             CGModule.API.ImageAPI.Show("image\logo.png", "FadeIn", 30, "LogoMainGrid")
             System.Threading.Thread.Sleep(1500)
             CGModule.API.ImageAPI.Show("image\logo.png", "FadeOut", 30, "LogoMainGrid")
         End Sub
 
         Public Shared Sub ShowMenu(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("menu.xaml")
-            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            WindowAPI.LoadPageAsync("menu.xaml")
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
             CGModule.API.ImageAPI.Show("image\menu.png", "FadeIn", 60, "MenuMainGrid")
             Dim tmpButton As Button
             tmpButton = WindowAPI.GetChildByName(Of Button)(WindowAPI.GetWindow, "StartGame")
@@ -42,8 +42,8 @@ Namespace API
         End Sub
 
         Public Shared Sub StartGame(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("game.xaml")
-            MessageAPI.Wait("WINDOW_PAGE_CHANGE")
+            WindowAPI.LoadPageAsync("game.xaml")
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
             TextModule.API.ConfigAPI.SetTextArea(WindowAPI.SearchObject(Of TextBlock)("MainTextArea"))
             TextModule.API.ConfigAPI.SetCharacterArea(WindowAPI.SearchObject(Of TextBlock)("MainCharacter"))
             TextModule.API.ConfigAPI.SetFrameArea(WindowAPI.SearchObject(Of FrameworkElement)("ConversationArea"))
@@ -52,11 +52,11 @@ Namespace API
             ChoiceModule.API.UIAPI.SetContent(WindowAPI.SearchObject(Of Panel)("MainChoiceArea"))
             ChoiceModule.API.UIAPI.SetStyle("choice.xaml")
             ChoiceModule.API.UIAPI.SetMargin(50)
-            ScriptAPI.RunFile("logic\game.lua")
+            ScriptAPI.RunFileAsync("logic\game.lua")
         End Sub
 
         Public Shared Sub LoadGameScreen(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("load.xaml")
+            WindowAPI.LoadPageAsync("load.xaml")
         End Sub
 
         Public Shared Sub LoadGame(sender As Object, e As EventArgs)
@@ -64,11 +64,11 @@ Namespace API
         End Sub
 
         Public Shared Sub GameGallery(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("gallery.xaml")
+            WindowAPI.LoadPageAsync("gallery.xaml")
         End Sub
 
         Public Shared Sub GameSetting(sender As Object, e As EventArgs)
-            WindowAPI.LoadPage("setting.xaml")
+            WindowAPI.LoadPageAsync("setting.xaml")
         End Sub
 
         Public Shared Sub ExitGame()

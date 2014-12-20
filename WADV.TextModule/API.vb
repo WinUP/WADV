@@ -165,9 +165,9 @@ Namespace API
             '生成循环体
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
             '开始循环
-            AppCore.API.LoopingAPI.AddLoop(loopContent)
+            AppCore.API.LoopingAPI.AddLoopSync(loopContent)
             '等待结束
-            AppCore.API.LoopingAPI.WaitLoop(loopContent)
+            AppCore.API.LoopingAPI.WaitLoopSync(loopContent)
             Return True
         End Function
 

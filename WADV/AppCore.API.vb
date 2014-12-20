@@ -1,15 +1,15 @@
-﻿Imports System.IO
-Imports System.Xml
+﻿Imports System.CodeDom.Compiler
+Imports System.IO
 Imports System.Text
 Imports System.Threading
 Imports System.Windows.Markup
-Imports System.CodeDom.Compiler
+Imports System.Xml
 Imports Microsoft.CSharp
-Imports WADV.AppCore.UI
+Imports WADV.AppCore.Looping
 Imports WADV.AppCore.Path
 Imports WADV.AppCore.Plugin
 Imports WADV.AppCore.Script
-Imports WADV.AppCore.Looping
+Imports WADV.AppCore.UI
 
 Namespace AppCore.API
 
@@ -21,45 +21,41 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 修改窗口标题
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="text">新标题</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetTitle(text As String)
+        Public Shared Sub SetTitleSync(text As String)
             GetDispatcher.Invoke(Sub() GetWindow.Title = text)
-            MessageAPI.Send("WINDOW_TITLE_CHANGE")
+            MessageAPI.SendSync("WINDOW_TITLE_CHANGE")
         End Sub
 
         ''' <summary>
-        ''' 清空指定容器并加载子元素
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 清空指定容器
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <remarks></remarks>
-        Public Shared Sub ClearContent(content As Panel)
+        Public Shared Sub ClearContentSync(content As Panel)
             content.Dispatcher.Invoke(Sub() content.Children.Clear())
-            MessageAPI.Send("PANEL_CONTENT_CLEAR")
+            MessageAPI.SendSync("PANEL_CONTENT_CLEAR")
         End Sub
 
         ''' <summary>
         ''' 为指定容器加载子元素
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="name">子元素所在文件的路径(从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadElement(content As Panel, name As String)
+        Public Shared Sub LoadElementSync(content As Panel, name As String)
             content.Dispatcher.Invoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathFunction.PathType.Skin, name)))))
-            MessageAPI.Send("PANEL_CONTENT_CHANGE")
+            MessageAPI.SendSync("PANEL_CONTENT_CHANGE")
         End Sub
 
         ''' <summary>
         ''' 为指定容器加载子元素
-        ''' 该方法会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 异步方法|UI线程
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <param name="name">子元素所在的文件名(从Skin目录下开始)</param>
@@ -68,207 +64,193 @@ Namespace AppCore.API
             content.Dispatcher.BeginInvoke(
                 Sub()
                     content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathFunction.PathType.Skin, name))))
-                    MessageAPI.Send("PANEL_CONTENT_CHANGE")
+                    MessageAPI.SendSync("PANEL_CONTENT_CHANGE")
                 End Sub)
         End Sub
 
         ''' <summary>
         ''' 从文件加载指定的页面布局
-        ''' 该方法会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 异步方法|UI线程
         ''' </summary>
         ''' <param name="fileName">文件路径(从Skin目录下开始)</param>
-        Public Shared Sub LoadPage(fileName As String)
+        Public Shared Sub LoadPageAsync(fileName As String)
             GetDispatcher.BeginInvoke(Sub() GetWindow.NavigationService.Navigate(New Uri(PathAPI.GetPath(PathFunction.PathType.Skin, fileName))))
         End Sub
 
         ''' <summary>
         ''' 返回上一个页面
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
-        Public Shared Sub GoBack()
+        Public Shared Sub GoBackSync()
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoBack Then
                                          GetWindow.NavigationService.GoBack()
-                                         MessageAPI.Send("WINDOW_PAGE_GOBACK")
+                                         MessageAPI.SendSync("WINDOW_PAGE_GOBACK")
                                      End If
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 前进到下一个页面
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
-        Public Shared Sub GoForward()
+        Public Shared Sub GoForwardSync()
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoForward Then
                                          GetWindow.NavigationService.GoForward()
-                                         MessageAPI.Send("WINDOW_PAGE_GOFORWARD")
+                                         MessageAPI.SendSync("WINDOW_PAGE_GOFORWARD")
                                      End If
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 移除一个最近的返回记录
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
-        Public Shared Sub RemoveOneBack()
+        Public Shared Sub RemoveOneBackSync()
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoBack Then
                                          GetWindow.NavigationService.RemoveBackEntry()
-                                         MessageAPI.Send("WINDOW_NAVIGATE_REMOVEONE")
+                                         MessageAPI.SendSync("WINDOW_NAVIGATE_REMOVEONE")
                                      End If
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 移除所有的返回记录
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
-        Public Shared Sub RemoveBackList()
+        Public Shared Sub RemoveBackListSync()
             GetDispatcher.Invoke(Sub()
                                      While GetWindow.NavigationService.CanGoBack
                                          GetWindow.NavigationService.RemoveBackEntry()
                                      End While
-                                     MessageAPI.Send("WINDOW_NAVIGATE_REMOVEALL")
+                                     MessageAPI.SendSync("WINDOW_NAVIGATE_REMOVEALL")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="color">颜色对象</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetBackgroundByColor(color As Color)
+        Public Shared Sub SetBackgroundByColorSync(color As Color)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(color)
-                                     MessageAPI.Send("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="r">红色值</param>
         ''' <param name="g">绿色值</param>
         ''' <param name="b">蓝色值</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetBackgroundByRGB(r As Byte, g As Byte, b As Byte)
+        Public Shared Sub SetBackgroundByRGBSync(r As Byte, g As Byte, b As Byte)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b))
-                                     MessageAPI.Send("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 修改窗口背景色
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="hex">16进制颜色值</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetBackgroundByHex(hex As String)
+        Public Shared Sub SetBackgroundByHexSync(hex As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex))
-                                     MessageAPI.Send("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 修改窗口宽度
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="width">新的宽度</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetWidth(width As Double)
+        Public Shared Sub SetWidthSync(width As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Width = width
-                                     MessageAPI.Send("WINDOW_CHANGE_WIDTH")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_WIDTH")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 修改窗口高度
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="height">新的高度</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetHeight(height As Double)
+        Public Shared Sub SetHeightSync(height As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Height = height
-                                     MessageAPI.Send("WINDOW_CHANGE_HEIGHT")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_HEIGHT")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 设置窗口调整模式
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="canResize">是否能够调整大小</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetResizeMode(canResize As Boolean)
+        Public Shared Sub SetResizeModeSync(canResize As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize)
-                                     MessageAPI.Send("WINDOW_CHANGE_RESIZEMODE")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_RESIZEMODE")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 设置窗口置顶模式
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="isTopmost">是否保持最前</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetTopmost(isTopmost As Boolean)
+        Public Shared Sub SetTopmostSync(isTopmost As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Topmost = isTopmost
-                                     MessageAPI.Send("WINDOW_CHANGE_TOPMOST")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_TOPMOST")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 设置窗口图标
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="fileName">图标文件路径(ICO格式且从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetIcon(fileName As String)
+        Public Shared Sub SetIconSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Icon = BitmapFrame.Create(New Uri(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName)))
-                                     MessageAPI.Send("WINDOW_CHANGE_ICON")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_ICON")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 设置窗口指针
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="fileName">指针文件名称(ANI或CUR格式且从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetCursor(fileName As String)
+        Public Shared Sub SetCursorSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName))
-                                     MessageAPI.Send("WINDOW_CHANGE_CURSOR")
+                                     MessageAPI.SendSync("WINDOW_CHANGE_CURSOR")
                                  End Sub)
         End Sub
 
         ''' <summary>
         ''' 根据名称获取元素的子元素(支持多级查找)
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <typeparam name="T">子元素类型</typeparam>
         ''' <param name="obj">父元素</param>
@@ -294,6 +276,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 在窗口中查找具有指定名称的元素
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <typeparam name="T">元素类型</typeparam>
         ''' <param name="name">元素名称</param>
@@ -305,6 +288,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获得窗口中的根元素
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <typeparam name="T">元素类型</typeparam>
         ''' <returns>根元素的实例</returns>
@@ -321,7 +305,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取窗口线程工作队列
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -331,7 +315,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取窗口对象
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -341,6 +325,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取主窗口的截图
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>截图的编码器</returns>
         ''' <remarks></remarks>
@@ -356,6 +341,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 将主窗口的截图保存到文件中
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">要保存的路径(从UserFile目录下开始)</param>
         ''' <remarks></remarks>
@@ -376,81 +362,75 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 加载资源到游戏全局
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">资源文件路径(从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadToGame(fileName As String)
+        Public Shared Sub LoadToGameSync(fileName As String)
             Dim tmpDictionart As New ResourceDictionary
             tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName))
             Application.Current.Resources.MergedDictionaries.Add(tmpDictionart)
-            MessageAPI.Send("GAME_RESOURCE_ADD")
+            MessageAPI.SendSync("GAME_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
         ''' 加载资源到主窗口
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">资源文件路径(从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadToWindow(fileName As String)
+        Public Shared Sub LoadToWindowSync(fileName As String)
             Dim tmpDictionart As New ResourceDictionary
             tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName))
             WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
-            MessageAPI.Send("WINDOW_RESOURCE_ADD")
+            MessageAPI.SendSync("WINDOW_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
         ''' 清空全局资源
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub ClearGame()
+        Public Shared Sub ClearGameSync()
             Application.Current.Resources.MergedDictionaries.Clear()
-            MessageAPI.Send("GAME_RESOURCE_CLEAR")
+            MessageAPI.SendSync("GAME_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
         ''' 清空主窗口资源
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub ClearWindow()
+        Public Shared Sub ClearWindowSync()
             WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
-            MessageAPI.Send("WINDOW_RESOURCE_CLEAR")
+            MessageAPI.SendSync("WINDOW_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
         ''' 清除指定全局资源
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
-        Public Shared Sub RemoveFromGame(resource As ResourceDictionary)
+        Public Shared Sub RemoveFromGameSync(resource As ResourceDictionary)
             Application.Current.Resources.MergedDictionaries.Remove(resource)
-            MessageAPI.Send("GAME_RESOURCE_REMOVE")
+            MessageAPI.SendSync("GAME_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>
         ''' 清除指定主窗口资源
-        ''' 该方法不会立即返回
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
-        Public Shared Sub RemoveFromWindow(resource As ResourceDictionary)
+        Public Shared Sub RemoveFromWindowSync(resource As ResourceDictionary)
             WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
-            MessageAPI.Send("WINDOW_RESOURCE_REMOVE")
+            MessageAPI.SendSync("WINDOW_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>
         ''' 获取全局资源对象
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -460,7 +440,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取主窗口资源对象
-        ''' 该方法在UI线程中执行
+        ''' 同步方法|UI线程
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -478,7 +458,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 加载一个插件
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">插件文件路径(从Plugin目录下开始)</param>
         ''' <returns>是否加载成功</returns>
@@ -489,6 +469,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 编译一个代码文件
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">文件路径(从Resource目录下开始)</param>
         ''' <returns>编译得到的程序集</returns>
@@ -501,7 +482,7 @@ Namespace AppCore.API
             ElseIf codeFile.Extension.ToLower = ".cs" Then
                 codeProvider = New CSharpCodeProvider
             Else
-                Throw New FileFormatException("目前只能编译VB和CSharp的代码文件")
+                Throw New FileFormatException("目前只能编译VB.NET和CSharp的代码文件，并且.NET Framework版本不能高于4.0")
                 Return Nothing
             End If
             Dim param As New CompilerParameters
@@ -528,7 +509,7 @@ Namespace AppCore.API
                 MessageBox.Show("编译" & fileName & "时没有通过：" & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
                 Return Nothing
             End If
-            MessageAPI.Send("GAME_PLUGIN_COMPILE")
+            MessageAPI.SendSync("GAME_PLUGIN_COMPILE")
             Return result.CompiledAssembly
         End Function
 
@@ -542,19 +523,18 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置理想帧率
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="frame">新的次数</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetFrame(frame As Integer)
+        Public Shared Sub SetFrameSync(frame As Integer)
             If frame < 1 Then Throw New ValueUnavailableException("逻辑更新频率不能小于每秒1次")
             LoopingFunction.Frame = frame
         End Sub
 
         ''' <summary>
         ''' 获取理想帧率
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>循环次数</returns>
         ''' <remarks></remarks>
@@ -564,49 +544,45 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 添加一个循环体
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub AddLoop(loopContent As Plugin.ILooping)
+        Public Shared Sub AddLoopSync(loopContent As Plugin.ILooping)
             MainLooping.GetInstance.AddLooping(loopContent)
         End Sub
 
         ''' <summary>
         ''' 等待一个子循环的完成
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub WaitLoop(loopContent As Plugin.ILooping)
+        Public Shared Sub WaitLoopSync(loopContent As Plugin.ILooping)
             MainLooping.GetInstance.WaitLooping(loopContent)
         End Sub
 
         ''' <summary>
         ''' 标记游戏循环为进行状态
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub StartMainLoop()
+        Public Shared Sub StartMainLoopSync()
             LoopingFunction.StartMainLooping()
         End Sub
 
         ''' <summary>
         ''' 标记游戏循环为停止状态
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub StopMainLoop()
+        Public Shared Sub StopMainLoopSync()
             LoopingFunction.StopMainLooping()
         End Sub
 
         ''' <summary>
         ''' 获取当前的帧计数
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function CurrentFrame() As Integer
@@ -622,41 +598,37 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 添加一个接收器
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Shared Sub Add(receiver As IMessage)
+        Public Shared Sub AddSync(receiver As IMessage)
             Message.MessageService.GetInstance.AddReceiver(receiver)
         End Sub
 
         ''' <summary>
         ''' 删除一个接收器
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Shared Sub Delete(receiver As IMessage)
+        Public Shared Sub DeleteSync(receiver As IMessage)
             Message.MessageService.GetInstance.DeleteReceiver(receiver)
         End Sub
 
         ''' <summary>
         ''' 发送一个消息
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Public Shared Sub Send(message As String)
+        Public Shared Sub SendSync(message As String)
             AppCore.Message.MessageService.GetInstance.SendMessage(message)
         End Sub
 
         ''' <summary>
         ''' 等待下一个指定消息的出现
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Public Shared Sub Wait(message As String)
+        Public Shared Sub WaitSync(message As String)
             AppCore.Message.MessageService.GetInstance.WaitMessage(message)
         End Sub
 
@@ -670,25 +642,23 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 显示提示信息
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="content">内容</param>
         ''' <param name="title">标题</param>
         ''' <remarks></remarks>
-        Public Shared Sub ShowMessage(content As String, title As String)
+        Public Shared Sub ShowMessageSync(content As String, title As String)
             MessageBox.Show(content, title, MessageBoxButton.OK, MessageBoxImage.Information)
-            MessageAPI.Send("SCRIPT_MESSAGE_SHOW")
+            MessageAPI.SendSync("SCRIPT_MESSAGE_SHOW")
         End Sub
 
         ''' <summary>
         ''' 执行脚本文件中的所有代码
-        ''' 该方法会立即返回
-        ''' 该方法在新的线程中执行
+        ''' 异步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">文件路径(从Script目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub RunFile(fileName As String)
+        Public Shared Sub RunFileAsync(fileName As String)
             Dim tmpThread As New Thread(Sub() ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathFunction.PathType.Script, fileName)))
             tmpThread.Name = "脚本文件执行线程"
             tmpThread.IsBackground = True
@@ -698,8 +668,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 执行脚本文件中的所有代码
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="filename">文件路径(从Script目录下开始)</param>
         ''' <remarks></remarks>
@@ -709,12 +678,11 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 执行一段字符串脚本
-        ''' 该方法会立即返回
-        ''' 该方法在新的线程中执行
+        ''' 异步方法|调用线程
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
-        Public Shared Sub RunStrng(content As String)
+        Public Shared Sub RunStrngAsync(content As String)
             Dim tmpThread As New Thread(Sub() ScriptCore.GetInstance.RunStrng(content))
             tmpThread.IsBackground = True
             tmpThread.Priority = ThreadPriority.Normal
@@ -723,8 +691,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 执行一段字符串脚本
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
@@ -734,7 +701,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 执行一个存在的脚本函数
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="functionName">函数名</param>
         ''' <param name="params">参数列表</param>
@@ -746,108 +713,107 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 设置脚本全局变量的值(该变量内容不是字符串)
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <param name="value">变量内容(字符串形式)</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetGlobalVariable(name As String, value As String)
+        Public Shared Sub SetSync(name As String, value As String)
             RunStringSync(String.Format("{0}={1}", name, value))
         End Sub
 
         ''' <summary>
         ''' 设置脚本全局变量的值(该变量内容是字符串)
-        ''' 该方法不会立即返回
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <param name="value">变量内容</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetGlobalStringVariable(name As String, value As String)
-            SetGlobalVariable(name, """" & value & """")
+        Public Shared Sub SetStringSync(name As String, value As String)
+            SetSync(name, """" & value & """")
         End Sub
 
         ''' <summary>
         ''' 获取脚本全局变量的值
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetVariable(name As String) As Object
+        Public Shared Function GetSync(name As String) As Object
             Return ScriptCore.GetInstance.GetVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的字符串形式
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetStringVariable(name As String) As String
+        Public Shared Function GetStringSync(name As String) As String
             Return ScriptCore.GetInstance.GetStringVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的浮点数形式
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetDoubleVariable(name As String) As Double
+        Public Shared Function GetDoubleSync(name As String) As Double
             Return ScriptCore.GetInstance.GetDoubleVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的整数形式
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetIntegerVariable(name As String) As Integer
-            Return CInt(GetDoubleVariable(name))
+        Public Shared Function GetIntegerSync(name As String) As Integer
+            Return CInt(GetDoubleSync(name))
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量的值的LUA TABLE的形式
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetTableVariable(name As String) As LuaInterface.LuaTable
+        Public Shared Function GetTableSync(name As String) As LuaInterface.LuaTable
             Return ScriptCore.GetInstance.GetTableVariable(name)
         End Function
 
         ''' <summary>
         ''' 获取脚本全局变量(Table类型)中某个项的值
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="tableName">表名</param>
         ''' <param name="key">键</param>
         ''' <returns>值</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetVariableInTable(tableName As String, key As String) As Object
+        Public Shared Function GetInTableSync(tableName As String, key As String) As Object
             Return ScriptCore.GetInstance.GetVariableInTable(tableName, key)
         End Function
 
         ''' <summary>
         ''' 使用预定义规则注册脚本函数
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="types">脚本函数类所在的集合(将会不注册非类的元素)</param>
         ''' <param name="belong">脚本函数类所在的名称空间</param>
         ''' <param name="prefix">注册后的脚本函数前缀</param>
-        Public Shared Sub RegisterFunction(types() As Type, belong As String, prefix As String)
+        Public Shared Sub RegisterSync(types() As Type, belong As String, prefix As String)
             Register.RegisterFunction(types, belong, prefix)
         End Sub
 
         ''' <summary>
         ''' 获取游戏脚本主机对象
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>脚本主机</returns>
         ''' <remarks></remarks>
@@ -865,7 +831,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序资源文件的存放路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>程序资源文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -875,7 +841,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序皮肤文件的存放路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>皮肤文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -885,7 +851,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序插件的存放路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>插件的存放路径</returns>
         ''' <remarks></remarks>
@@ -895,7 +861,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序脚本文件的存放路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>脚本文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -905,7 +871,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序用户个人文件的存放路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>用户个人文件的存放路径</returns>
         ''' <remarks></remarks>
@@ -915,7 +881,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取程序主存储目录
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <returns>主存储目录</returns>
         ''' <remarks></remarks>
@@ -925,7 +891,7 @@ Namespace AppCore.API
 
         ''' <summary>
         ''' 获取完整路径
-        ''' 该方法在调用线程中执行
+        ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="urlType">资源路径类型</param>
         ''' <param name="fileURL">从资源目录开始的文件相对路径</param>
@@ -933,6 +899,18 @@ Namespace AppCore.API
         ''' <remarks></remarks>
         Public Shared Function GetPath(urlType As PathFunction.PathType, Optional fileURL As String = "") As String
             Return PathFunction.GetFullPath(urlType, fileURL)
+        End Function
+
+        ''' <summary>
+        ''' 获取完整路径的URI表示形式
+        ''' 同步方法|调用线程
+        ''' </summary>
+        ''' <param name="urlType">资源路径类型</param>
+        ''' <param name="fileURL">从资源目录开始的文件相对路径</param>
+        ''' <returns>文件的绝对路径</returns>
+        ''' <remarks></remarks>
+        Public Shared Function GetUri(urlType As PathFunction.PathType, Optional fileURL As String = "") As Uri
+            Return New Uri(PathFunction.GetFullPath(urlType, fileURL))
         End Function
 
     End Class

@@ -85,7 +85,7 @@ Namespace API
             Dim tmpPlayer = PlayerList.GetPlayer(id)
             tmpPlayer.Play()
             If Not PluginInterface.Looping.isLooping Then
-                LoopingAPI.AddLoop(New PluginInterface.Looping)
+                LoopingAPI.AddLoopSync(New PluginInterface.Looping)
                 PluginInterface.Looping.isLooping = True
             End If
             Return id

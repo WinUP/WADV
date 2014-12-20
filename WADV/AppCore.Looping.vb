@@ -7,6 +7,7 @@ Namespace AppCore.Looping
     ''' 游戏循环
     ''' </summary>
     ''' <remarks></remarks>
+    ''' 等待某个循环体的完全结束
     Public Class MainLooping
         Private Shared self As MainLooping
         Private loopList As New List(Of Plugin.ILooping)
@@ -22,40 +23,30 @@ Namespace AppCore.Looping
         Protected Friend Sub AddLooping(loopContent As Plugin.ILooping)
             If Not loopList.Contains(loopContent) Then
                 loopList.Add(loopContent)
-                MessageAPI.Send("LOOP_CONTENT_ADD")
+                MessageAPI.SendSync("LOOP_CONTENT_ADD")
             End If
         End Sub
 
         ''' <summary>
-        ''' 等待某个循环体的完全结束
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Protected Friend Sub WaitLooping(loopContent As Plugin.ILooping)
-            Dim loopThread = New Thread(New ThreadStart(Sub()
-                                                            While (Status)
-                                                                If loopList.Contains(loopContent) Then
-                                                                    Thread.Sleep(Span)
-                                                                Else
-                                                                    Exit Sub
-                                                                End If
-                                                            End While
-                                                        End Sub))
-            loopThread.IsBackground = True
-            loopThread.Priority = ThreadPriority.BelowNormal
-            loopThread.Start()
-            loopThread.Join()
+            While True
+                MessageAPI.WaitSync("LOOP_REMOVE_CONTENT")
+                If Not loopList.Contains(loopContent) Then Exit While
+            End While
         End Sub
 
         Private Sub New()
             Status = False
-            Span = 17
+            Span = 33
             loopThread = New Thread(AddressOf LoopingContent)
             loopThread.IsBackground = True
             loopThread.Name = "游戏循环线程"
             loopThread.Priority = ThreadPriority.AboveNormal
             frameCount = 0
-            MessageAPI.Send("LOOP_INIT_FINISH")
+            MessageAPI.SendSync("LOOP_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -116,6 +107,7 @@ Namespace AppCore.Looping
                         i += 1
                     Else
                         loopList.Remove(loopContent)
+                        MessageAPI.SendSync("LOOP_REMOVE_CONTENT")
                         loopListCount -= 1
                     End If
                     gameDispatcher.Invoke(Sub() loopContent.StartRendering(gameWindow))
@@ -129,7 +121,7 @@ Namespace AppCore.Looping
     End Class
 
     Public Class LoopingFunction
-        Private Shared _frame As Integer = 60
+        Private Shared _frame As Integer = 30
 
         ''' <summary>
         ''' 获取或设置逻辑循环每秒的理想执行次数
@@ -143,7 +135,7 @@ Namespace AppCore.Looping
             Set(value As Integer)
                 _frame = value
                 MainLooping.GetInstance.Span = 1000 / Frame
-                MessageAPI.Send("LOOP_FRAME_CHANGE")
+                MessageAPI.SendSync("LOOP_FRAME_CHANGE")
             End Set
         End Property
 
@@ -154,7 +146,7 @@ Namespace AppCore.Looping
         Protected Friend Shared Sub StopMainLooping()
             MainLooping.GetInstance.Status = False
             MainLooping.GetInstance.loopThread.Abort()
-            MessageAPI.Send("LOOP_CONTENT_ABORT")
+            MessageAPI.SendSync("LOOP_CONTENT_ABORT")
         End Sub
 
         ''' <summary>
@@ -165,7 +157,7 @@ Namespace AppCore.Looping
             If Not MainLooping.GetInstance.Status Then
                 MainLooping.GetInstance.Status = True
                 MainLooping.GetInstance.loopThread.Start()
-                MessageAPI.Send("LOOP_CONTENT_START")
+                MessageAPI.SendSync("LOOP_CONTENT_START")
             End If
         End Sub
 
