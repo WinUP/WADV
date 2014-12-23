@@ -1,6 +1,7 @@
 ﻿Imports System.Reflection
 Imports System.Threading
 Imports WADV.AppCore.API
+Imports NLua
 
 Namespace AppCore.Script
 
@@ -10,10 +11,11 @@ Namespace AppCore.Script
     ''' <remarks></remarks>
     Public Class ScriptCore
         Private Shared self As ScriptCore
-        Private vm As LuaInterface.Lua
+        Private vm As Lua
 
         Private Sub New()
-            vm = New LuaInterface.Lua
+            vm = New Lua
+            vm.LoadCLRPackage()
             MessageAPI.SendSync("SCRIPT_INIT_FINISH")
         End Sub
 
@@ -28,7 +30,7 @@ Namespace AppCore.Script
         ''' <summary>
         ''' 获取脚本主机实例
         ''' </summary>
-        Protected Friend ReadOnly Property ScriptVM As LuaInterface.Lua
+        Protected Friend ReadOnly Property ScriptVM As Lua
             Get
                 Return vm
             End Get
@@ -54,6 +56,17 @@ Namespace AppCore.Script
             MessageAPI.SendSync("SCRIPT_STRING_BEFOREDO")
             vm.DoString(script)
             MessageAPI.SendSync("SCRIPT_STRING_AFTERDO")
+        End Sub
+
+        ''' <summary>
+        ''' 加载脚本文件
+        ''' </summary>
+        ''' <param name="fileName">文件路径</param>
+        ''' <remarks></remarks>
+        Protected Friend Sub LoadFile(fileName As String)
+            MessageAPI.SendSync("SCRIPT_FILE_BEFORELOAD")
+            vm.LoadFile(fileName)
+            MessageAPI.SendSync("SCRIPT_FILE_AFTERLOAD")
         End Sub
 
         ''' <summary>
@@ -83,46 +96,6 @@ Namespace AppCore.Script
         End Function
 
         ''' <summary>
-        ''' 获取字符串形式的脚本变量
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Protected Friend Function GetStringVariable(name As String) As String
-            Return vm.GetString(name)
-        End Function
-
-        ''' <summary>
-        ''' 获取浮点数形式的脚本变量
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Protected Friend Function GetDoubleVariable(name As String) As Double
-            Return vm.GetNumber(name)
-        End Function
-
-        ''' <summary>
-        ''' 获取整数形式的脚本变量
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Protected Friend Function GetIntegerVariable(name As String) As Integer
-            Return CInt(GetDoubleVariable(name))
-        End Function
-
-        ''' <summary>
-        ''' 获取LUA TABLE形式的脚本变量
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Protected Friend Function GetTableVariable(name As String) As LuaInterface.LuaTable
-            Return vm.GetTable(name)
-        End Function
-
-        ''' <summary>
         ''' 获取LUA TABLE中指定元素的值
         ''' </summary>
         ''' <param name="tableName">表名</param>
@@ -130,7 +103,7 @@ Namespace AppCore.Script
         ''' <returns>元素的值</returns>
         ''' <remarks></remarks>
         Protected Friend Function GetVariableInTable(tableName As String, key As String) As Object
-            Dim tmpTable = GetTableVariable(tableName)
+            Dim tmpTable = vm.GetTable(tableName)
             If tmpTable Is Nothing Then Throw New Exception("找不到表")
             Return tmpTable.Item(key)
         End Function

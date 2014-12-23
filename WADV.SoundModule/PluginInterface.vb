@@ -3,27 +3,10 @@ Imports WADV.MediaModule.AudioCore
 
 Namespace PluginInterface
 
-    Public Class Initialise : Implements AppCore.Plugin.IInitialise
-
-        Public Function StartInitialising() As Boolean Implements AppCore.Plugin.IInitialise.StartInitialising
-            Config.SoundConfig.ReadConfigFile()
-            Return True
-        End Function
-
-    End Class
-
-    Public Class Script : Implements AppCore.Plugin.IScript
-
-        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements AppCore.Plugin.IScript.StartRegisting
-            ScriptAPI.RegisterSync(Assembly.GetExecutingAssembly.GetTypes, "WADV.MediaModule.API", "MM")
-        End Sub
-
-    End Class
-
-    Public Class Looping : Implements AppCore.Plugin.ILooping
+    Public Class Looping : Implements AppCore.Plugin.ILoopReceiver
         Protected Friend Shared isLooping As Boolean = False
 
-        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILoopReceiver.Logic
             For Each item In PlayerList.deleteList
                 PlayerList.soundList(item).Dispose()
                 PlayerList.soundList.Remove(item)
@@ -46,7 +29,7 @@ Namespace PluginInterface
             Return True
         End Function
 
-        Public Sub StartRendering(window As Windows.Window) Implements AppCore.Plugin.ILooping.StartRendering
+        Public Sub StartRendering(window As Windows.Window) Implements AppCore.Plugin.ILoopReceiver.Render
 
         End Sub
 

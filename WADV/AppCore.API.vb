@@ -498,7 +498,7 @@ Namespace AppCore.API
                 param.ReferencedAssemblies.Add(PathAPI.GetPath(PathFunction.PathType.Plugin, gameAssemblies.InnerXml))
             Next
             For Each ownAssemblies As XmlNode In asList.SelectNodes("/assemblies/own")
-                param.ReferencedAssemblies.Add(PathAPI.GetPath(PathFunction.PathType.Other, ownAssemblies.InnerXml))
+                param.ReferencedAssemblies.Add(PathAPI.GetPath(PathFunction.PathType.Game, ownAssemblies.InnerXml))
             Next
             Dim result = codeProvider.CompileAssemblyFromFile(param, codeFile.FullName)
             If result.Errors.HasErrors Then
@@ -511,6 +511,22 @@ Namespace AppCore.API
             End If
             MessageAPI.SendSync("GAME_PLUGIN_COMPILE")
             Return result.CompiledAssembly
+        End Function
+
+        ''' <summary>
+        ''' 加载一个动态链接库
+        ''' 同步方法|调用线程
+        ''' </summary>
+        ''' <param name="fileName">文件路径(从游戏主目录下开始)</param>
+        ''' <returns>编译得到的程序集</returns>
+        ''' <remarks></remarks>
+        Public Shared Function LoadLibrary(fileName As String) As System.Reflection.Assembly
+            Dim filePath = PathAPI.GetPath(PathFunction.PathType.Game, fileName)
+            If Not My.Computer.FileSystem.FileExists(filePath) Then
+                Throw New FileNotFoundException("找不到要载入的链接库文件")
+                Return Nothing
+            End If
+            Return Reflection.Assembly.LoadFrom(filePath)
         End Function
 
     End Class
@@ -548,7 +564,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub AddLoopSync(loopContent As Plugin.ILooping)
+        Public Shared Sub AddLoopSync(loopContent As Plugin.ILoopReceiver)
             MainLooping.GetInstance.AddLooping(loopContent)
         End Sub
 
@@ -558,7 +574,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Public Shared Sub WaitLoopSync(loopContent As Plugin.ILooping)
+        Public Shared Sub WaitLoopSync(loopContent As Plugin.ILoopReceiver)
             MainLooping.GetInstance.WaitLooping(loopContent)
         End Sub
 
@@ -601,7 +617,7 @@ Namespace AppCore.API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Shared Sub AddSync(receiver As IMessage)
+        Public Shared Sub AddSync(receiver As IMessageReceiver)
             Message.MessageService.GetInstance.AddReceiver(receiver)
         End Sub
 
@@ -610,7 +626,7 @@ Namespace AppCore.API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Shared Sub DeleteSync(receiver As IMessage)
+        Public Shared Sub DeleteSync(receiver As IMessageReceiver)
             Message.MessageService.GetInstance.DeleteReceiver(receiver)
         End Sub
 
@@ -629,7 +645,8 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="message">消息内容</param>
         Public Shared Sub WaitSync(message As String)
-            AppCore.Message.MessageService.GetInstance.WaitMessage(message)
+            Dim waiter As New AppCore.Message.WaitReceiver
+            waiter.WaitMessage(message)
         End Sub
 
     End Class
@@ -745,50 +762,6 @@ Namespace AppCore.API
         End Function
 
         ''' <summary>
-        ''' 获取脚本全局变量的值的字符串形式
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetStringSync(name As String) As String
-            Return ScriptCore.GetInstance.GetStringVariable(name)
-        End Function
-
-        ''' <summary>
-        ''' 获取脚本全局变量的值的浮点数形式
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetDoubleSync(name As String) As Double
-            Return ScriptCore.GetInstance.GetDoubleVariable(name)
-        End Function
-
-        ''' <summary>
-        ''' 获取脚本全局变量的值的整数形式
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetIntegerSync(name As String) As Integer
-            Return CInt(GetDoubleSync(name))
-        End Function
-
-        ''' <summary>
-        ''' 获取脚本全局变量的值的LUA TABLE的形式
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <param name="name">变量名</param>
-        ''' <returns>变量内容</returns>
-        ''' <remarks></remarks>
-        Public Shared Function GetTableSync(name As String) As LuaInterface.LuaTable
-            Return ScriptCore.GetInstance.GetTableVariable(name)
-        End Function
-
-        ''' <summary>
         ''' 获取脚本全局变量(Table类型)中某个项的值
         ''' 同步方法|调用线程
         ''' </summary>
@@ -817,7 +790,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>脚本主机</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetVM() As LuaInterface.Lua
+        Public Shared Function GetVM() As NLua.Lua
             Return ScriptCore.GetInstance.ScriptVM
         End Function
 

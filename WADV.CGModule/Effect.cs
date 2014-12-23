@@ -34,7 +34,8 @@ namespace WADV.CGModule.Effect
         protected internal static void LoadEffect()
         {
             EffectList = new Dictionary<string, Type>();
-            string basePath = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Plugin, "WADV.CGModule\\Effect\\");
+            EffectList.Add("BaseEffect", typeof(BaseBGRA32));
+            string basePath = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "CGEffect\\");
             foreach(string file in System.IO.Directory.GetFiles(basePath,"*.dll"))
             {
                 var assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes();

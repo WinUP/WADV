@@ -7,25 +7,25 @@ Namespace AppCore.Plugin
     ''' 逻辑循环接口
     ''' </summary>
     ''' <remarks></remarks>
-    Public Interface ILooping
+    Public Interface ILoopReceiver
 
         ''' <summary>
         ''' 执行一次循环
         ''' </summary>
-        Function StartLooping(frame As Integer) As Boolean
+        Function Logic(frame As Integer) As Boolean
 
         ''' <summary>
         ''' 执行一次渲染
         ''' </summary>
         ''' <remarks></remarks>
-        Sub StartRendering(window As Window)
+        Sub Render(window As Window)
 
     End Interface
 
     ''' <summary>
     ''' 消息循环接口
     ''' </summary>
-    Public Interface IMessage
+    Public Interface IMessageReceiver
 
         ''' <summary>
         ''' 执行一次消息处理
@@ -44,7 +44,7 @@ Namespace AppCore.Plugin
         ''' <summary>
         ''' 开始初始化
         ''' </summary>
-        Function StartInitialising() As Boolean
+        Function Initialising() As Boolean
 
     End Interface
 
@@ -58,7 +58,7 @@ Namespace AppCore.Plugin
         ''' 注册脚本函数
         ''' </summary>
         ''' <param name="scriptVM">脚本执行主机</param>
-        Sub StartRegisting(scriptVM As LuaInterface.Lua)
+        Sub StartRegisting(scriptVM As NLua.Lua)
 
     End Interface
 
@@ -126,7 +126,7 @@ Namespace AppCore.Plugin
             Dim destructFunction As IGameClose = Nothing
             For Each tmpTypeName In pluginTypes
                 If tmpTypeName.GetInterface("IInitialise") <> Nothing Then
-                    If Not TryCast(Activator.CreateInstance(tmpTypeName), Plugin.IInitialise).StartInitialising() Then
+                    If Not TryCast(Activator.CreateInstance(tmpTypeName), Plugin.IInitialise).Initialising() Then
                         Return False
                     End If
                 End If

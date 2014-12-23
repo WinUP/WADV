@@ -10,9 +10,8 @@ Namespace Config
     ''' </summary>
     ''' <remarks></remarks>
     Public Class SoundConfig
-        Private Shared BackgroundVolume As Integer
-        Private Shared ReadingVolume As Integer
-        Private Shared EffectVolume As Integer
+
+        Protected Friend Shared LastReadingID As Integer = -1
 
         ''' <summary>
         ''' 获取或设置背景音量
@@ -21,15 +20,6 @@ Namespace Config
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Friend Shared Property Background As Integer
-            Get
-                Return BackgroundVolume
-            End Get
-            Set(value As Integer)
-                BackgroundVolume = value
-                PlayerList.ChangeVolume(SoundType.Background, value)
-                WriteConfig()
-            End Set
-        End Property
 
         ''' <summary>
         ''' 获取或设置对话音量
@@ -38,15 +28,6 @@ Namespace Config
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Friend Shared Property Reading As Integer
-            Get
-                Return ReadingVolume
-            End Get
-            Set(value As Integer)
-                ReadingVolume = value
-                PlayerList.ChangeVolume(SoundType.Reading, value)
-                WriteConfig()
-            End Set
-        End Property
 
         ''' <summary>
         ''' 获取或设置效果音量
@@ -55,40 +36,6 @@ Namespace Config
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Friend Shared Property Effect As Integer
-            Get
-                Return EffectVolume
-            End Get
-            Set(value As Integer)
-                EffectVolume = value
-                PlayerList.ChangeVolume(SoundType.Effect, value)
-                WriteConfig()
-            End Set
-        End Property
-
-        ''' <summary>
-        ''' 读取配置文件
-        ''' </summary>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub ReadConfigFile()
-            Dim configFile As New XmlDocument
-            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
-            BackgroundVolume = CDbl(configFile.SelectSingleNode("/config/background").InnerXml)
-            ReadingVolume = CDbl(configFile.SelectSingleNode("/config/reading").InnerXml)
-            EffectVolume = CDbl(configFile.SelectSingleNode("/config/effect").InnerXml)
-        End Sub
-
-        ''' <summary>
-        ''' 保存配置
-        ''' </summary>
-        ''' <remarks></remarks>
-        Private Shared Sub WriteConfig()
-            Dim configFile As New XmlDocument
-            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
-            configFile.SelectSingleNode("/config/background").InnerXml = BackgroundVolume
-            configFile.SelectSingleNode("/config/reading").InnerXml = ReadingVolume
-            configFile.SelectSingleNode("/config/effect").InnerXml = EffectVolume
-            configFile.Save(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.MediaModule.xml"))
-        End Sub
 
     End Class
 

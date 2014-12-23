@@ -6,7 +6,7 @@ Namespace PluginInterface
 
     Public Class Initialise : Implements Plugin.IInitialise
 
-        Public Function StartInitialising() As Boolean Implements Plugin.IInitialise.StartInitialising
+        Public Function StartInitialising() As Boolean Implements Plugin.IInitialise.Initialising
             Config.ModuleConfig.ReadConfigFile()
             Config.ModuleConfig.Ellipsis = False
             Config.ModuleConfig.Fast = False
@@ -15,15 +15,7 @@ Namespace PluginInterface
 
     End Class
 
-    Public Class Script : Implements Plugin.IScript
-
-        Public Sub StartRegisting(ScriptVM As LuaInterface.Lua) Implements Plugin.IScript.StartRegisting
-            ScriptAPI.RegisterSync(Reflection.Assembly.GetExecutingAssembly.GetTypes, "WADV.TextModule.API", "TM")
-        End Sub
-
-    End Class
-
-    Public Class CustomizedLoop : Implements Plugin.ILooping
+    Public Class CustomizedLoop : Implements Plugin.ILoopReceiver
         Private effect As TextEffect.StandardEffect
         Private waitingCount As Integer = 0
         Private renderingText As TextEffect.StandardEffect.SentenceInfo
@@ -32,7 +24,7 @@ Namespace PluginInterface
             Me.effect = effect
         End Sub
 
-        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILooping.StartLooping
+        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILoopReceiver.Logic
             Dim text As TextEffect.StandardEffect.SentenceInfo
             If waitingCount > 0 Then
                 waitingCount -= 1
@@ -80,7 +72,7 @@ Namespace PluginInterface
             Return True
         End Function
 
-        Public Sub StartRendering(window As Window) Implements AppCore.Plugin.ILooping.StartRendering
+        Public Sub StartRendering(window As Window) Implements AppCore.Plugin.ILoopReceiver.Render
             Config.UIConfig.TextArea.Text = renderingText.Content
             Config.UIConfig.CharacterArea.Text = renderingText.Character
         End Sub

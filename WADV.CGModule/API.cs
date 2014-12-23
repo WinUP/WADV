@@ -19,14 +19,27 @@ namespace WADV.CGModule.API
         /// <returns></returns>
         public static bool Show(string fileName, string effectName, int duration, string contentName)
         {
+            if (Config.DPI < 1) return false;
             if (!Effect.Initialiser.EffectList.ContainsKey(effectName)) return false;
             Effect.IEffect effect = (Effect.BaseBGRA32)Activator.CreateInstance(Effect.Initialiser.EffectList[effectName], new object[] { fileName, duration });
             var content = WindowAPI.GetChildByName<Panel>(WindowAPI.GetWindow(), contentName);
             if (content == null) return false;
             PluginInterface.ImageLoop loopContent = new PluginInterface.ImageLoop(effect, content);
-            LoopingAPI.AddLoop(loopContent);
-            LoopingAPI.WaitLoop(loopContent);
+            MessageAPI.SendSync("CG_SHOW_BEFORE");
+            LoopingAPI.AddLoopSync(loopContent);
+            LoopingAPI.WaitLoopSync(loopContent);
+            MessageAPI.SendSync("CG_SHOW_AFTER");
             return true;
+        }
+
+        /// <summary>
+        /// 初始化CG模块
+        /// </summary>
+        /// <param name="dpi">图像默认DPI</param>
+        /// <returns></returns>
+        public static void Init(int dpi)
+        {
+            Config.DPI = dpi;
         }
     }
 }

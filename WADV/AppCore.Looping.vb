@@ -10,7 +10,7 @@ Namespace AppCore.Looping
     ''' 等待某个循环体的完全结束
     Public Class MainLooping
         Private Shared self As MainLooping
-        Private loopList As New List(Of Plugin.ILooping)
+        Private loopList As New List(Of Plugin.ILoopReceiver)
         Private loopListCount As Integer
         Protected Friend loopThread As Thread
         Private frameCount As Integer
@@ -20,7 +20,7 @@ Namespace AppCore.Looping
         ''' </summary>
         ''' <param name="loopContent">循环函数</param>
         ''' <remarks></remarks>
-        Protected Friend Sub AddLooping(loopContent As Plugin.ILooping)
+        Protected Friend Sub AddLooping(loopContent As Plugin.ILoopReceiver)
             If Not loopList.Contains(loopContent) Then
                 loopList.Add(loopContent)
                 MessageAPI.SendSync("LOOP_CONTENT_ADD")
@@ -31,7 +31,7 @@ Namespace AppCore.Looping
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
-        Protected Friend Sub WaitLooping(loopContent As Plugin.ILooping)
+        Protected Friend Sub WaitLooping(loopContent As Plugin.ILoopReceiver)
             While True
                 MessageAPI.WaitSync("LOOP_REMOVE_CONTENT")
                 If Not loopList.Contains(loopContent) Then Exit While
@@ -91,7 +91,7 @@ Namespace AppCore.Looping
         ''' <remarks></remarks>
         Private Sub LoopingContent()
             Dim i As Integer
-            Dim loopContent As Plugin.ILooping
+            Dim loopContent As Plugin.ILoopReceiver
             Dim timeNow As Long
             Dim nextStartTime = timeNow
             Dim sleepTime = 0
@@ -103,14 +103,14 @@ Namespace AppCore.Looping
                 loopListCount = loopList.Count
                 While i < loopListCount
                     loopContent = loopList(i)
-                    If loopContent.StartLooping(frameCount) Then
+                    If loopContent.Logic(frameCount) Then
                         i += 1
                     Else
                         loopList.Remove(loopContent)
                         MessageAPI.SendSync("LOOP_REMOVE_CONTENT")
                         loopListCount -= 1
                     End If
-                    gameDispatcher.Invoke(Sub() loopContent.StartRendering(gameWindow))
+                    gameDispatcher.Invoke(Sub() loopContent.Render(gameWindow))
                 End While
                 sleepTime = timeNow + Span - Now.Ticks
                 If sleepTime > 10 Then Thread.Sleep(sleepTime)

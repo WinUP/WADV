@@ -14,7 +14,8 @@ Namespace Effect
 
         Protected Friend Shared Sub LoadEffect()
             EffectList = New Dictionary(Of String, Type)
-            Dim basePath = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Plugin, "WADV.TEModule\Effect\")
+            EffectList.Add("BaseEffect", GetType(BaseEffect))
+            Dim basePath = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "TEEffect\")
             For Each file In IO.Directory.GetFiles(basePath, "*.dll")
                 Dim assembly = Reflection.Assembly.LoadFrom(file).GetTypes()
                 For Each type In assembly

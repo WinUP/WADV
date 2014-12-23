@@ -11,57 +11,74 @@ Namespace API
     Public Class ConfigAPI
 
         ''' <summary>
-        ''' 获取背景音乐音量
+        ''' 初始化模块
+        ''' </summary>
+        ''' <param name="bgmVolume">默认BGM音量(-5000~5000)</param>
+        ''' <param name="readingVolume">默认语音音量(-5000~5000)</param>
+        ''' <param name="effectVolume">默认效果音音量(-5000~5000)</param>
+        ''' <remarks></remarks>
+        Public Shared Sub Init(Optional bgmVolume As Integer = 0, Optional readingVolume As Integer = 0, Optional effectVolume As Integer = 0)
+            SetBackgroundVolume(bgmVolume)
+            SetReadingVolume(readingVolume)
+            SetEffectVolume(effectVolume)
+            MessageAPI.SendSync("MEDIA_INIT_FINISH")
+        End Sub
+
+        ''' <summary>
+        ''' 获取背景音乐音量(-5000~5000)
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetBackgroundVolume() As Double
-            Return SoundConfig.Background
+            Return SoundConfig.Background + 5000
         End Function
 
         ''' <summary>
-        ''' 获取对话音量
+        ''' 获取对话音量(-5000~5000)
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetReadingVolume() As Double
-            Return SoundConfig.Reading
+            Return SoundConfig.Reading + 5000
         End Function
 
         ''' <summary>
-        ''' 获取效果音量
+        ''' 获取效果音量(-5000~5000)
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetEffectVolume() As Double
-            Return SoundConfig.Effect
+            Return SoundConfig.Effect + 5000
         End Function
 
         ''' <summary>
-        ''' 设置背景音乐音量
+        ''' 设置背景音乐音量(-5000~5000)
         ''' </summary>
         ''' <param name="value"></param>
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundVolume(value As Double)
-            SoundConfig.Background = value
+            SoundConfig.Background = value - 5000
+            MessageAPI.SendSync("MEDIA_BGM_CHANGEVOLUME")
         End Sub
 
         ''' <summary>
-        ''' 设置对话音量
+        ''' 设置对话音量(-5000~5000)
         ''' </summary>
         ''' <param name="value"></param>
         ''' <remarks></remarks>
         Public Shared Sub SetReadingVolume(value As Double)
-            SoundConfig.Reading = value
+            SoundConfig.Reading = value - 5000
+            MessageAPI.SendSync("MEDIA_READ_CHANGEVOLUME")
         End Sub
 
         ''' <summary>
-        ''' 设置效果音量
+        ''' 设置效果音量(-5000~5000)
         ''' </summary>
         ''' <param name="value"></param>
         ''' <remarks></remarks>
         Public Shared Sub SetEffectVolume(value As Double)
-            SoundConfig.Effect = value
+            SoundConfig.Effect = value - 5000
+            MessageAPI.SendSync("MEDIA_EFFECT_CHANGEVOLUME")
         End Sub
 
     End Class
@@ -97,6 +114,7 @@ Namespace API
         ''' <param name="fileName">文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
         Public Shared Function PlayBGM(fileName As String) As Integer
+            MessageAPI.SendSync("MEDIA_BGN_PLAY")
             Return PlaySound(fileName, SoundType.Background, True, -1)
         End Function
 
@@ -106,7 +124,10 @@ Namespace API
         ''' <param name="fileName">文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
         Public Shared Function PlayReading(fileName As String) As Integer
-            Return PlaySound(fileName, SoundType.Reading, False, 0)
+            MessageAPI.SendSync("MEDIA_READ_PLAY")
+            Dim id = PlaySound(fileName, SoundType.Reading, False, 0)
+            Config.SoundConfig.LastReadingID = id
+            Return id
         End Function
 
         ''' <summary>
@@ -115,6 +136,7 @@ Namespace API
         ''' <param name="fileName">文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
         Public Shared Function PlayEffect(fileName As String) As Integer
+            MessageAPI.SendSync("MEDIA_EFFECT_PLAY")
             Return PlaySound(fileName, SoundType.Effect, False, 0)
         End Function
 
@@ -148,6 +170,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub StopSound(id As Integer)
             PlayerList.DeletePlayer(id)
+            MessageAPI.SendSync("MEDIA_SOUND_STOP")
         End Sub
 
         ''' <summary>
@@ -157,7 +180,10 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub PauseSound(id As Integer)
             Dim soundContent = PlayerList.GetPlayer(id)
-            If soundContent IsNot Nothing Then soundContent.Pause()
+            If soundContent IsNot Nothing Then
+                soundContent.Pause()
+                MessageAPI.SendSync("MEDIA_SOUND_PAUSE")
+            End If
         End Sub
 
         ''' <summary>
@@ -167,7 +193,10 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub ResumeSound(id As Integer)
             Dim soundContent = PlayerList.GetPlayer(id)
-            If soundContent IsNot Nothing Then soundContent.Play()
+            If soundContent IsNot Nothing Then
+                soundContent.Play()
+                MessageAPI.SendSync("MEDIA_SOUND_RESUME")
+            End If
         End Sub
 
         ''' <summary>
@@ -178,7 +207,18 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub ChangeSoundVolume(id As Integer, volume As Double)
             Dim soundContent = PlayerList.GetPlayer(id)
-            If soundContent IsNot Nothing Then soundContent.Volume = volume
+            If soundContent IsNot Nothing Then
+                soundContent.Volume = volume
+                MessageAPI.SendSync("MEDIA_SOUND_CHANGEVOLUME")
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' 停止最近一个对话
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub StopNearlyReading()
+            StopSound(Config.SoundConfig.LastReadingID)
         End Sub
 
     End Class

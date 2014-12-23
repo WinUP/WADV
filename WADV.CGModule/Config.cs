@@ -1,48 +1,12 @@
-﻿using System;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Xml;
-using WADV.AppCore.API;
 
 namespace WADV.CGModule
 {
     class Config
     {
-        private static int dpi;
 
-        protected static internal int DPI
-        {
-            get
-            {
-                return dpi;
-            }
-            set
-            {
-                dpi = value;
-                WriteConfig();
-            }
-        }
-
-        /// <summary>
-        /// 读取配置
-        /// </summary>
-        protected static internal void ReadConfigFile()
-        {
-            XmlDocument configFile = new XmlDocument();
-            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.CGModule.xml"));
-            dpi = Convert.ToInt32(configFile.SelectSingleNode("/config/dpi").InnerXml);
-        }
-
-        /// <summary>
-        /// 保存配置
-        /// </summary>
-        private static void WriteConfig()
-        {
-            XmlDocument configFile = new XmlDocument();
-            configFile.Load(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.CGModule.xml"));
-            configFile.SelectSingleNode("/config/dpi").InnerXml = Convert.ToString(DPI);
-            configFile.Save(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile, "WADV.CGModule.xml"));
-        }
+        protected static internal int DPI { get; set; }
 
         /// <summary>
         /// 转换BGRA像素数组为图片

@@ -3,71 +3,85 @@ Imports System.Windows
 
 Namespace Effect
 
-    ''' <summary>
-    ''' 选项显示效果基类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public MustInherit Class StandardEffect
-        Protected choices() As FrameworkElement
-        Protected waitingTime As Integer
-        Protected alreadyWaiting As Integer = 0
+    Public Interface IEffect
 
-        Public Sub New(choices() As FrameworkElement, wait As Integer)
-            Me.choices = choices
-            waitingTime = wait
-        End Sub
+        Function NextState() As Boolean
+
+        Sub Render()
+
+        Function GetAnswer() As String
+
+    End Interface
+
+    Public Class Initialiser
+        ''' <summary>
+        ''' 待实例化的图像效果列表
+        ''' </summary>
+        Protected Friend Shared EffectList As Dictionary(Of String, Type)
 
         ''' <summary>
-        ''' 渲染下一个显示状态
+        ''' 读取并缓存所有图像效果
         ''' </summary>
-        ''' <remarks></remarks>
-        Public MustOverride Sub RenderingUI()
-
-        ''' <summary>
-        ''' 对选择时间计时
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function GetNextUIStyle() As Boolean
-            If waitingTime = -1 Then Return True
-            If alreadyWaiting > 0 Then
-                If alreadyWaiting > waitingTime Then
-                    Return False
-                Else
-                    alreadyWaiting += 1
-                    Return True
-                End If
-            End If
-            Return True
-        End Function
-
-    End Class
-
-    ''' <summary>
-    ''' 渐显显示效果
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class FadeInEffect : Inherits Effect.StandardEffect
-        Private renderingPanelIndex As Integer = 0
-
-        Public Sub New(choices() As FrameworkElement, wait As Integer)
-            MyBase.New(choices, wait)
-            For Each tmpPanel In choices
-                tmpPanel.Dispatcher.Invoke(Sub() tmpPanel.Opacity = 0)
+        Protected Friend Shared Sub LoadEffect()
+            EffectList = New Dictionary(Of String, Type)
+            EffectList.Add("BaseEffect", GetType(BaseEffect))
+            Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "ChoiceEffect\")
+            For Each file As String In System.IO.Directory.GetFiles(basePath, "*.dll")
+                Dim assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes()
+                For Each type As Type In assembly
+                    If type.GetInterface("IStyle") IsNot Nothing Then
+                        EffectList.Add(type.Name, type)
+                    End If
+                Next
             Next
         End Sub
+    End Class
 
-        Public Overrides Sub RenderingUI()
-            If alreadyWaiting > 0 Then Exit Sub
-            If renderingPanelIndex = choices.Length Then
-                alreadyWaiting = 1
-                Exit Sub
-            End If
-            Dim renderingPanel = choices(renderingPanelIndex)
-            If renderingPanel.Opacity < 1 Then
-                renderingPanel.Opacity += 0.2
+    Public Class BaseEffect : Implements IEffect
+        Protected choices() As TextBlock
+        Protected waitTime As Integer
+        Protected countBlock As TextBlock
+        Protected initFinished As Boolean
+        Private answer As String
+
+        Public Sub New(choices() As TextBlock, wait As Integer, Optional count As TextBlock = Nothing)
+            Me.choices = choices
+            waitTime = wait
+            countBlock = count
+            initFinished = False
+            For Each choice In choices
+                AddHandler choice.MouseLeftButtonDown, Sub()
+                                                           answer = choice.Text
+                                                           MessageAPI.SendSync("CHOICE_USER_CLICK")
+                                                       End Sub
+            Next
+            If countBlock IsNot Nothing AndAlso waitTime > -1 Then countBlock.Text = "∞"
+        End Sub
+
+        Public Function GetAnswer() As String Implements IEffect.GetAnswer
+            Return answer
+        End Function
+
+        Public Function NextState() As Boolean Implements IEffect.NextState
+            If Not initFinished Then Return True
+            If waitTime = -1 Then Return True
+            waitTime -= 1
+            If waitTime >= 0 Then
+                Return True
             Else
-                renderingPanelIndex += 1
+                Return False
+            End If
+        End Function
+
+        Public Overridable Sub Render() Implements IEffect.Render
+            If initFinished Then
+                If countBlock IsNot Nothing AndAlso waitTime > -1 Then
+                    countBlock.Text = waitTime
+                Else
+                    Exit Sub
+                End If
+            Else
+                initFinished = True
             End If
         End Sub
 

@@ -1,5 +1,5 @@
-﻿Imports System.Threading
-Imports System.Collections.Concurrent
+﻿Imports System.Collections.Concurrent
+Imports System.Threading
 
 Namespace AppCore.Message
 
@@ -8,16 +8,16 @@ Namespace AppCore.Message
     ''' </summary>
     Public Class MessageService
         Private Shared self As MessageService
-        Private callList As List(Of Plugin.IMessage)
+        Private callList As List(Of Plugin.IMessageReceiver)
         Private receiverThread As Thread
         Private messageList As ConcurrentQueue(Of String)
-        Private lastMessage As String = ""
+        Protected Friend lastMessage As String = ""
 
         ''' <summary>
         ''' 添加一个接收器
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Protected Friend Sub AddReceiver(receiver As Plugin.IMessage)
+        Protected Friend Sub AddReceiver(receiver As Plugin.IMessageReceiver)
             If callList.Contains(receiver) Then Return
             callList.Add(receiver)
         End Sub
@@ -26,7 +26,7 @@ Namespace AppCore.Message
         ''' 删除一个接收器
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Protected Friend Sub DeleteReceiver(receiver As Plugin.IMessage)
+        Protected Friend Sub DeleteReceiver(receiver As Plugin.IMessageReceiver)
             If Not callList.Contains(receiver) Then Return
             callList.Remove(receiver)
         End Sub
@@ -42,18 +42,8 @@ Namespace AppCore.Message
             Monitor.Exit(messageList)
         End Sub
 
-        Protected Friend Sub WaitMessage(message As String)
-            While True
-                SyncLock (lastMessage)
-                    If lastMessage = message Then
-                        Exit While
-                    End If
-                End SyncLock
-            End While
-        End Sub
-
         Private Sub New()
-            callList = New List(Of Plugin.IMessage)
+            callList = New List(Of Plugin.IMessageReceiver)
             messageList = New ConcurrentQueue(Of String)
             receiverThread = New Thread(
                 Sub()
@@ -88,6 +78,29 @@ Namespace AppCore.Message
             If self Is Nothing Then self = New MessageService
             Return self
         End Function
+
+    End Class
+
+    ''' <summary>
+    ''' 消息循环等待接收器
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class WaitReceiver
+
+        ''' <summary>
+        ''' 等待指定消息的发出
+        ''' </summary>
+        ''' <param name="message">要等待的消息</param>
+        ''' <remarks></remarks>
+        Protected Friend Sub WaitMessage(message As String)
+            While True
+                SyncLock (MessageService.GetInstance.lastMessage)
+                    If MessageService.GetInstance.lastMessage = message Then
+                        Exit While
+                    End If
+                End SyncLock
+            End While
+        End Sub
 
     End Class
 

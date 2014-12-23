@@ -12,25 +12,16 @@ namespace WADV.CGModule.PluginInterface
     public class Initialise : IInitialise
     {
 
-        public bool StartInitialising()
+        public bool Initialising()
         {
-            Config.ReadConfigFile();
             Initialiser.LoadEffect();
+            MessageAPI.SendSync("CG_INIT_FINISH");
             return true;
         }
 
     }
 
-    public class Script : IScript
-    {
-
-        public void StartRegisting(LuaInterface.Lua ScriptVM)
-        {
-            ScriptAPI.RegisterFunction(System.Reflection.Assembly.GetExecutingAssembly().GetTypes(), "WADV.CGModule.API", "IM");
-        }
-    }
-
-    public class ImageLoop : ILooping
+    public class ImageLoop : ILoopReceiver
     {
         private IEffect effect;
         private Panel content;
@@ -57,14 +48,14 @@ namespace WADV.CGModule.PluginInterface
             }));
         }
 
-        public bool StartLooping(int frame)
+        public bool Logic(int frame)
         {
             effect.GetNextImageState(frame);
             if (effect.IsFinished()) return false;
             return true;
         }
 
-        public void StartRendering(Window window)
+        public void Render(Window window)
         {
             image.WritePixels(imageRect, effect.GetPixel(), width * 4, 0);
         }

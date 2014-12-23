@@ -118,6 +118,17 @@ Namespace AudioCore
             CycleCount = count
             Me.Cycle = cycle
             _id = id
+            AddHandler _player.Ending, Sub()
+                                           If (Not Me.Cycle) OrElse (Me.Cycle AndAlso CycleCount = 0) Then
+                                               PlayerList.DeletePlayer(id)
+                                               MessageAPI.SendSync("MEDIA_PLAY_END")
+                                               _player.Dispose()
+                                           Else
+                                               Position = 0
+                                               Play()
+                                               If CycleCount > 0 Then CycleCount -= 1
+                                           End If
+                                       End Sub
         End Sub
 
         Public Sub Play()

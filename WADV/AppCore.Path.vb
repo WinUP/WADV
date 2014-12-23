@@ -41,6 +41,16 @@
         ''' <returns></returns>
         Protected Friend Shared Property UserFile As String
 
+        ''' <summary>
+        ''' 获取游戏主目录
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Friend Shared ReadOnly Property Game As String
+            Get
+                Return My.Application.Info.DirectoryPath
+            End Get
+        End Property
+
     End Class
 
     ''' <summary>
@@ -50,12 +60,12 @@
     Public Class PathFunction
 
         Public Enum PathType
+            Game
             Plugin
             Resource
             Skin
             Script
             UserFile
-            Other
         End Enum
 
         ''' <summary>
