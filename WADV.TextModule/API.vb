@@ -171,22 +171,6 @@ Namespace API
             Return True
         End Function
 
-        ''' <summary>
-        ''' 显示文本
-        ''' </summary>
-        ''' <param name="text">对话内容</param>
-        ''' <param name="character">说话者</param>
-        ''' <param name="effectName">效果类的名字</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function Show(text As LuaInterface.LuaTable, character As LuaInterface.LuaTable, effectName As String) As Boolean
-            Dim text1(text.Values.Count - 1) As String
-            text.Values.CopyTo(text1, 0)
-            Dim character1(character.Values.Count - 1) As String
-            character.Values.CopyTo(character1, 0)
-            Return ShowReular(text1, character1, effectName)
-        End Function
-
     End Class
 
 End Namespace

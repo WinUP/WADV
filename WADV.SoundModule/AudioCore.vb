@@ -121,12 +121,12 @@ Namespace AudioCore
             AddHandler _player.Ending, Sub()
                                            If (Not Me.Cycle) OrElse (Me.Cycle AndAlso CycleCount = 0) Then
                                                PlayerList.DeletePlayer(id)
-                                               MessageAPI.SendSync("MEDIA_PLAY_END")
-                                               _player.Dispose()
+                                               MessageAPI.SendSync("MEDIA_SOUND_END")
                                            Else
                                                Position = 0
                                                Play()
                                                If CycleCount > 0 Then CycleCount -= 1
+                                               MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
                                            End If
                                        End Sub
         End Sub
@@ -150,19 +150,23 @@ Namespace AudioCore
 
     Public Class PlayerList
         Protected Friend Shared soundList As New Dictionary(Of Integer, Player)
-        Protected Friend Shared deleteList As New List(Of Integer)
         Private Shared nextId As Integer = 0
 
         Protected Friend Shared Function AddPlayer(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Integer
             Dim tmpPlayer As New Player(fileName, type, cycle, count, nextId)
             soundList.Add(nextId, tmpPlayer)
             nextId += 1
+            MessageAPI.SendSync("MEDIA_SOUND_ADD")
             Return nextId - 1
         End Function
 
         Protected Friend Shared Sub DeletePlayer(id As Integer)
-            If Not soundList.ContainsKey(id) Then Exit Sub
-            If Not deleteList.Contains(id) Then deleteList.Add(id)
+            Dim player = GetPlayer(id)
+            If player Is Nothing Then Exit Sub
+            player.Finish()
+            player.Dispose()
+            soundList.Remove(id)
+            MessageAPI.SendSync("MEDIA_SOUND_REMOVE")
         End Sub
 
         Protected Friend Shared Function GetPlayer(id As Integer) As Player
@@ -174,6 +178,7 @@ Namespace AudioCore
             For Each tmpSound In soundList.Values
                 If tmpSound.Type = type Then tmpSound.Volume = value
             Next
+            MessageAPI.SendSync("MEDIA_SOUND_CHANGEVOLUME")
         End Sub
 
     End Class

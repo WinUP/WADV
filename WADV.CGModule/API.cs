@@ -40,6 +40,7 @@ namespace WADV.CGModule.API
         public static void Init(int dpi)
         {
             Config.DPI = dpi;
+            MessageAPI.SendSync("CG_SCRIPT_INIT");
         }
     }
 }

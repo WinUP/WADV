@@ -44,8 +44,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LuaInterface">
-      <HintPath>..\WADV\LuaInterface.dll</HintPath>
+    <Reference Include="KeraLua">
+      <HintPath>..\packages\NLua.1.3.2.1\lib\net40\KeraLua.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NLua">
+      <HintPath>..\packages\NLua.1.3.2.1\lib\net40\NLua.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -87,7 +91,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PluginInterface.vb" />
     <Compile Include="Serializer.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +111,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WADV.ChoiceModule\WADV.ChoiceModule.vbproj">
@@ -132,6 +136,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+xcopy /s /y "C:\Users\博\Documents\Visual Studio 2013\Projects\WADV\packages\NLua.1.3.2.1\lib\native\*.*" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

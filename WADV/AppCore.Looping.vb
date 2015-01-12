@@ -10,7 +10,7 @@ Namespace AppCore.Looping
     ''' 等待某个循环体的完全结束
     Public Class MainLooping
         Private Shared self As MainLooping
-        Private loopList As New List(Of Plugin.ILoopReceiver)
+        Protected Friend loopList As New List(Of Plugin.ILoopReceiver)
         Private loopListCount As Integer
         Protected Friend loopThread As Thread
         Private frameCount As Integer
@@ -25,17 +25,6 @@ Namespace AppCore.Looping
                 loopList.Add(loopContent)
                 MessageAPI.SendSync("LOOP_CONTENT_ADD")
             End If
-        End Sub
-
-        ''' <summary>
-        ''' </summary>
-        ''' <param name="loopContent">循环体</param>
-        ''' <remarks></remarks>
-        Protected Friend Sub WaitLooping(loopContent As Plugin.ILoopReceiver)
-            While True
-                MessageAPI.WaitSync("LOOP_REMOVE_CONTENT")
-                If Not loopList.Contains(loopContent) Then Exit While
-            End While
         End Sub
 
         Private Sub New()
@@ -122,6 +111,18 @@ Namespace AppCore.Looping
 
     Public Class LoopingFunction
         Private Shared _frame As Integer = 30
+
+        ''' <summary>
+        ''' </summary>
+        ''' <param name="loopContent">循环体</param>
+        ''' <remarks></remarks>
+        Protected Friend Sub WaitLooping(loopContent As Plugin.ILoopReceiver)
+            Dim loopList = MainLooping.GetInstance.loopList
+            While True
+                MessageAPI.WaitSync("LOOP_REMOVE_CONTENT")
+                If Not loopList.Contains(loopContent) Then Exit While
+            End While
+        End Sub
 
         ''' <summary>
         ''' 获取或设置逻辑循环每秒的理想执行次数

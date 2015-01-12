@@ -56,6 +56,7 @@ Namespace Effect
                                                        End Sub
             Next
             If countBlock IsNot Nothing AndAlso waitTime > -1 Then countBlock.Text = "∞"
+            MessageAPI.SendSync("CHOICE_BASEEFFECT_DECLARE")
         End Sub
 
         Public Function GetAnswer() As String Implements IEffect.GetAnswer
@@ -82,6 +83,7 @@ Namespace Effect
                 End If
             Else
                 initFinished = True
+                MessageAPI.SendSync("CHOICE_BASEEFFECT_SHOWFINISH")
             End If
         End Sub
 

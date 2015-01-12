@@ -138,7 +138,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByColorSync(color As Color)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(color)
-                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -153,7 +153,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByRGBSync(r As Byte, g As Byte, b As Byte)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b))
-                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -166,7 +166,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByHexSync(hex As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex))
-                                     MessageAPI.SendSync("WINDOW_CHANGE_BACKGROUND")
+                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -179,7 +179,7 @@ Namespace AppCore.API
         Public Shared Sub SetWidthSync(width As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Width = width
-                                     MessageAPI.SendSync("WINDOW_CHANGE_WIDTH")
+                                     MessageAPI.SendSync("WINDOW_WIDTH_CHANGE")
                                  End Sub)
         End Sub
 
@@ -192,7 +192,7 @@ Namespace AppCore.API
         Public Shared Sub SetHeightSync(height As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Height = height
-                                     MessageAPI.SendSync("WINDOW_CHANGE_HEIGHT")
+                                     MessageAPI.SendSync("WINDOW_HEIGHT_CHANGE")
                                  End Sub)
         End Sub
 
@@ -205,7 +205,7 @@ Namespace AppCore.API
         Public Shared Sub SetResizeModeSync(canResize As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize)
-                                     MessageAPI.SendSync("WINDOW_CHANGE_RESIZEMODE")
+                                     MessageAPI.SendSync("WINDOW_RESIZEMODE_CHANGE")
                                  End Sub)
         End Sub
 
@@ -218,7 +218,7 @@ Namespace AppCore.API
         Public Shared Sub SetTopmostSync(isTopmost As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Topmost = isTopmost
-                                     MessageAPI.SendSync("WINDOW_CHANGE_TOPMOST")
+                                     MessageAPI.SendSync("WINDOW_TOPMOST_CHANGE")
                                  End Sub)
         End Sub
 
@@ -231,7 +231,7 @@ Namespace AppCore.API
         Public Shared Sub SetIconSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Icon = BitmapFrame.Create(New Uri(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName)))
-                                     MessageAPI.SendSync("WINDOW_CHANGE_ICON")
+                                     MessageAPI.SendSync("WINDOW_ICON_CHANGE")
                                  End Sub)
         End Sub
 
@@ -244,7 +244,7 @@ Namespace AppCore.API
         Public Shared Sub SetCursorSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathFunction.PathType.Skin, fileName))
-                                     MessageAPI.SendSync("WINDOW_CHANGE_CURSOR")
+                                     MessageAPI.SendSync("WINDOW_CURSOR_CHANGE")
                                  End Sub)
         End Sub
 
@@ -350,6 +350,7 @@ Namespace AppCore.API
             Dim stream As New FileStream(PathAPI.GetPath(PathFunction.PathType.UserFile, fileName), FileMode.Create)
             image.Save(stream)
             stream.Close()
+            MessageAPI.SendSync("WINDOW_IMAGE_SAVE")
         End Sub
 
     End Class
@@ -509,7 +510,7 @@ Namespace AppCore.API
                 MessageBox.Show("编译" & fileName & "时没有通过：" & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
                 Return Nothing
             End If
-            MessageAPI.SendSync("GAME_PLUGIN_COMPILE")
+            MessageAPI.SendSync("GAME_CODE_COMPILE")
             Return result.CompiledAssembly
         End Function
 
@@ -526,6 +527,7 @@ Namespace AppCore.API
                 Throw New FileNotFoundException("找不到要载入的链接库文件")
                 Return Nothing
             End If
+            MessageAPI.SendSync("GAME_ASSEMBLE_LOAD")
             Return Reflection.Assembly.LoadFrom(filePath)
         End Function
 
@@ -575,7 +577,8 @@ Namespace AppCore.API
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Public Shared Sub WaitLoopSync(loopContent As Plugin.ILoopReceiver)
-            MainLooping.GetInstance.WaitLooping(loopContent)
+            Dim receiver As New LoopingFunction
+            receiver.WaitLooping(loopContent)
         End Sub
 
         ''' <summary>

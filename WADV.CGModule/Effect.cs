@@ -88,6 +88,7 @@ namespace WADV.CGModule.Effect
             bitmapContent.CopyPixels(pixel, width * 4, 0);
             length = pixel.Length;
             this.duration = duration;
+            MessageAPI.SendSync("CG_BASEEFFECT_DECLARE");
         }
     }
 }

@@ -58,6 +58,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundVolume(value As Double)
             SoundConfig.Background = value - 5000
+            AudioCore.PlayerList.ChangeVolume(SoundType.Background, SoundConfig.Background)
             MessageAPI.SendSync("MEDIA_BGM_CHANGEVOLUME")
         End Sub
 
@@ -68,6 +69,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetReadingVolume(value As Double)
             SoundConfig.Reading = value - 5000
+            AudioCore.PlayerList.ChangeVolume(SoundType.Reading, SoundConfig.Reading)
             MessageAPI.SendSync("MEDIA_READ_CHANGEVOLUME")
         End Sub
 
@@ -78,6 +80,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetEffectVolume(value As Double)
             SoundConfig.Effect = value - 5000
+            AudioCore.PlayerList.ChangeVolume(SoundType.Effect, SoundConfig.Effect)
             MessageAPI.SendSync("MEDIA_EFFECT_CHANGEVOLUME")
         End Sub
 
@@ -100,11 +103,8 @@ Namespace API
         Public Shared Function PlaySound(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Integer
             Dim id = PlayerList.AddPlayer(fileName, type, cycle, count)
             Dim tmpPlayer = PlayerList.GetPlayer(id)
+            If tmpPlayer Is Nothing Then Return -1
             tmpPlayer.Play()
-            If Not PluginInterface.Looping.isLooping Then
-                LoopingAPI.AddLoopSync(New PluginInterface.Looping)
-                PluginInterface.Looping.isLooping = True
-            End If
             Return id
         End Function
 
@@ -114,7 +114,7 @@ Namespace API
         ''' <param name="fileName">文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
         Public Shared Function PlayBGM(fileName As String) As Integer
-            MessageAPI.SendSync("MEDIA_BGN_PLAY")
+            MessageAPI.SendSync("MEDIA_BGM_INITPLAY")
             Return PlaySound(fileName, SoundType.Background, True, -1)
         End Function
 
@@ -124,7 +124,7 @@ Namespace API
         ''' <param name="fileName">文件路径(Resource目录下)</param>
         ''' <remarks></remarks>
         Public Shared Function PlayReading(fileName As String) As Integer
-            MessageAPI.SendSync("MEDIA_READ_PLAY")
+            MessageAPI.SendSync("MEDIA_READ_INITPLAY")
             Dim id = PlaySound(fileName, SoundType.Reading, False, 0)
             Config.SoundConfig.LastReadingID = id
             Return id
@@ -148,8 +148,8 @@ Namespace API
         Public Shared Sub PlayEffectAndWait(fileName As String)
             Dim id = PlayEffect(fileName)
             While True
+                MessageAPI.WaitSync("MEDIA_SOUND_END")
                 If Not PlayerList.soundList.ContainsKey(id) Then Exit While
-                System.Threading.Thread.Sleep(1000 / LoopingAPI.GetFrame)
             End While
         End Sub
 
@@ -170,7 +170,6 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub StopSound(id As Integer)
             PlayerList.DeletePlayer(id)
-            MessageAPI.SendSync("MEDIA_SOUND_STOP")
         End Sub
 
         ''' <summary>
@@ -249,11 +248,8 @@ Namespace API
         Public Shared Sub PlayAndWait(fileName As String, clickSkip As Boolean)
             PlayVideo(fileName, clickSkip)
             While True
-                If VideoConfig.IsPlayFinished Then
-                    Exit While
-                Else
-                    Threading.Thread.Sleep(1000)
-                End If
+                MessageAPI.WaitSync("MEDIA_VIDEO_END")
+                If VideoConfig.IsPlayFinished Then Exit While
             End While
         End Sub
 
@@ -270,7 +266,11 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub PauseVideo()
-            If VideoConfig.VideoContent IsNot Nothing Then VideoConfig.VideoContent.Dispatcher.BeginInvoke(Sub() VideoConfig.VideoContent.Pause())
+            If VideoConfig.VideoContent IsNot Nothing Then VideoConfig.VideoContent.Dispatcher.BeginInvoke(
+                Sub()
+                    VideoConfig.VideoContent.Pause()
+                    MessageAPI.SendSync("MEDIA_VIDEO_PAUSE")
+                End Sub)
         End Sub
 
         ''' <summary>
@@ -278,7 +278,11 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub ResumeVideo()
-            If VideoConfig.VideoContent IsNot Nothing Then VideoConfig.VideoContent.Dispatcher.BeginInvoke(Sub() VideoConfig.VideoContent.Play())
+            If VideoConfig.VideoContent IsNot Nothing Then VideoConfig.VideoContent.Dispatcher.BeginInvoke(
+                Sub()
+                    VideoConfig.VideoContent.Play()
+                    MessageAPI.SendSync("MEDIA_VIDEO_RESUME")
+                End Sub)
         End Sub
 
     End Class
