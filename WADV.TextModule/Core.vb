@@ -13,7 +13,8 @@ Namespace Core
         End Sub
 
         Public Shared Sub TextArea_Click(sender As Object, e As MouseButtonEventArgs)
-            Config.ModuleConfig.Ellipsis = True
+            Config.ModuleConfig.Clicked = True
+            MessageAPI.SendSync("TEXT_USER_CLICK")
         End Sub
 
     End Class

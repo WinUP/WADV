@@ -85,14 +85,14 @@ Namespace AppCore.Message
     ''' 消息循环等待接收器
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class WaitReceiver
+    Public NotInheritable Class WaitReceiver
 
         ''' <summary>
         ''' 等待指定消息的发出
         ''' </summary>
         ''' <param name="message">要等待的消息</param>
         ''' <remarks></remarks>
-        Protected Friend Sub WaitMessage(message As String)
+        Friend Sub WaitMessage(message As String)
             While True
                 SyncLock (MessageService.GetInstance.lastMessage)
                     If MessageService.GetInstance.lastMessage = message Then

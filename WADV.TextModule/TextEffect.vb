@@ -1,192 +1,185 @@
 ﻿Namespace TextEffect
 
-    ''' <summary>
-    ''' 文字效果类的基类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public MustInherit Class StandardEffect
-        Protected TextArray() As String
-        Protected CharacterArray() As String
-        Protected NextTextIndex As Integer = 0
-        Protected ReadOver As Boolean = False
-        Protected SentenceReadOver As Boolean = False
+    Public Interface ITextEffect
 
-        ''' <summary>
-        ''' 对话信息
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Structure SentenceInfo
-            Public Character As String
-            Public Content As String
+        Structure SentenceInfo
+            Public Text As String
+            Public Speaker As String
         End Structure
 
+        Function GetNext() As SentenceInfo
+
+        Function IsAllOver() As Boolean
+
+        Function IsSentenceOver() As Boolean
+
+    End Interface
+
+    Public Class Initialiser
         ''' <summary>
-        ''' 所有对话是否都已播放完毕
+        ''' 待实例化的文字效果列表
+        ''' </summary>
+        Protected Friend Shared EffectList As Dictionary(Of String, Type)
+
+        ''' <summary>
+        ''' 读取并缓存所有文字效果
+        ''' </summary>
+        Protected Friend Shared Sub LoadEffect()
+            EffectList = New Dictionary(Of String, Type)
+            Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "TextEffect\")
+            For Each file As String In System.IO.Directory.GetFiles(basePath, "*.dll")
+                Dim assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes()
+                For Each type As Type In assembly
+                    If type.GetInterface("ITextEffect") IsNot Nothing Then
+                        EffectList.Add(type.Name, type)
+                    End If
+                Next
+            Next
+        End Sub
+    End Class
+
+    Public MustInherit Class StandardEffect : Implements ITextEffect
+        Private ReadOnly _text() As String
+        Private ReadOnly _speaker() As String
+        Private ReadOnly _textLength As Integer
+        Private _sentence As String
+        Private _sentenceSpeaker As String
+        Private _sentenceLength As Integer
+        Private _processLineIndex As Integer
+
+        Public Sub New(text() As String, speaker() As String)
+            _text = text
+            _speaker = speaker
+            _textLength = _text.Length
+            Sentence = _text(0)
+            SentenceSpeaker = _speaker(0)
+            SentenceLength = Sentence.Length
+            _processLineIndex = 0
+            AllOver = False
+            SentenceOver = False
+            MessageAPI.SendSync("TEXT_BASEEFFECT_DECLARE")
+        End Sub
+
+        ''' <summary>
+        ''' 获取当前处理的句子的长度
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public ReadOnly Property IsReadOver As Boolean
+        Protected Property SentenceLength As Integer
             Get
-                Return ReadOver
+                Return _sentenceLength
             End Get
+            Private Set(value As Integer)
+                _sentenceLength = value
+            End Set
         End Property
 
         ''' <summary>
-        ''' 当前句子是否已播放完毕
+        ''' 获取当前处理的句子
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public ReadOnly Property IsSentenceReadOver As Boolean
+        Protected Property Sentence As String
             Get
-                Return SentenceReadOver
+                Return _sentence
+            End Get
+            Private Set(value As String)
+                _sentence = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' 获取当前处理的句子的讲话者
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Property SentenceSpeaker As String
+            Get
+                Return _sentenceSpeaker
+            End Get
+            Private Set(value As String)
+                _sentenceSpeaker = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' 获取或设置整个对话的完成状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Property AllOver As Boolean
+
+        ''' <summary>
+        ''' 获取或设置当前句子的完成状态
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected Property SentenceOver As Boolean
+
+        ''' <summary>
+        ''' 获取对话数组的内容
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Protected ReadOnly Property Text As String()
+            Get
+                Return _text
             End Get
         End Property
 
-        Public Sub New(text() As String, character() As String)
-            TextArray = text
-            CharacterArray = character
-        End Sub
-
         ''' <summary>
-        ''' 获取下一个要显示的对话
+        ''' 获取讲话者数组的内容
         ''' </summary>
+        ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public MustOverride Function GetNextString() As SentenceInfo
-
-    End Class
-
-    ''' <summary>
-    ''' 逐字显示效果类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class PerWordEffect : Inherits StandardEffect
-        Private LastUsedText As String = ""
-
-        Public Sub New(text() As String, character() As String)
-            MyBase.New(text, character)
-        End Sub
+        Protected ReadOnly Property Speaker As String()
+            Get
+                Return _speaker
+            End Get
+        End Property
 
         ''' <summary>
-        ''' 获取下一个要显示的对话
+        ''' 整个对话数组的长度
         ''' </summary>
+        ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Overrides Function GetNextString() As SentenceInfo
-            If NextTextIndex = TextArray.Length Then
-                ReadOver = True
-                SentenceReadOver = True
-                Return New SentenceInfo With {.Character = "", .Content = ""}
+        Protected ReadOnly Property TextLength As Integer
+            Get
+                Return _textLength
+            End Get
+        End Property
+
+        Protected Sub MoveNext()
+            If _processLineIndex = TextLength Then Return
+            _processLineIndex += 1
+            If _processLineIndex = TextLength Then
+                SentenceOver = True
+                AllOver = True
+                Return
             End If
-            Dim tmpText = TextArray(NextTextIndex)
-            If LastUsedText.Length = tmpText.Length - 1 Then
-                LastUsedText = tmpText
-                SentenceReadOver = True
-            ElseIf LastUsedText = tmpText Then
-                SentenceReadOver = False
-                NextTextIndex += 1
-                If NextTextIndex = TextArray.Length Then
-                    SentenceReadOver = True
-                    ReadOver = True
-                    Return New SentenceInfo With {.Character = "", .Content = ""}
-                End If
-                LastUsedText = tmpText(0)
-            Else
-                LastUsedText = tmpText.Remove(LastUsedText.Length + 1)
-            End If
-            Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex), .Content = LastUsedText}
+            Sentence = Text(_processLineIndex)
+            SentenceSpeaker = Speaker(_processLineIndex)
+            SentenceLength = Sentence.Length
+            SentenceOver = False
+            MessageAPI.SendSync("TEXT_SENTENCE_OVER")
+        End Sub
+
+        Public MustOverride Function GetNext() As ITextEffect.SentenceInfo Implements ITextEffect.GetNext
+
+        Public Function IsAllOver() As Boolean Implements ITextEffect.IsAllOver
+            Return AllOver
         End Function
 
-    End Class
-
-    ''' <summary>
-    ''' 代码风格效果类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Class CodeEffect : Inherits TextEffect.StandardEffect
-
-        Private LastUsedText As String = ""
-        Private charIndex As Integer
-        Private nextGenerate As NextGenerateType
-        Private randomGenerator As New Random
-
-        ''' <summary>
-        ''' 下一个要显示的文字类型
-        ''' </summary>
-        ''' <remarks></remarks>
-        Private Enum NextGenerateType
-            FirstCode
-            SecondCode
-            TextContent
-        End Enum
-
-        Public Sub New(text() As String, character() As String)
-            MyBase.New(text, character)
-            charIndex = 0
-            nextGenerate = NextGenerateType.FirstCode
-        End Sub
-
-        ''' <summary>
-        ''' 获取下一个要显示的对话
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Overrides Function GetNextString() As SentenceInfo
-            If NextTextIndex = TextArray.Length Then
-                ReadOver = True
-                SentenceReadOver = True
-                Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex - 1), .Content = TextArray(NextTextIndex - 1)}
-            End If
-            Dim tmpText = TextArray(NextTextIndex)
-            If charIndex = tmpText.Length - 1 Then
-                If nextGenerate = NextGenerateType.FirstCode Then
-                    LastUsedText &= GenerateCode()
-                    nextGenerate = NextGenerateType.SecondCode
-                ElseIf nextGenerate = NextGenerateType.SecondCode Then
-                    LastUsedText &= GenerateCode()
-                    nextGenerate = NextGenerateType.TextContent
-                Else
-                    LastUsedText = tmpText
-                    charIndex += 1
-                    SentenceReadOver = True
-                    nextGenerate = NextGenerateType.FirstCode
-                End If
-            ElseIf LastUsedText = tmpText Then
-                SentenceReadOver = False
-                NextTextIndex += 1
-                If NextTextIndex = TextArray.Length Then
-                    SentenceReadOver = True
-                    ReadOver = True
-                    Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex - 1), .Content = TextArray(NextTextIndex - 1)}
-                End If
-                LastUsedText = GenerateCode()
-                charIndex = 0
-                nextGenerate = NextGenerateType.SecondCode
-            Else
-                If nextGenerate = NextGenerateType.FirstCode Then
-                    LastUsedText &= GenerateCode()
-                    nextGenerate = NextGenerateType.SecondCode
-                ElseIf nextGenerate = NextGenerateType.SecondCode Then
-                    LastUsedText &= GenerateCode()
-                    nextGenerate = NextGenerateType.TextContent
-                Else
-                    LastUsedText = tmpText.Remove(charIndex + 1)
-                    charIndex += 1
-                    nextGenerate = NextGenerateType.FirstCode
-                End If
-            End If
-            Return New SentenceInfo With {.Character = CharacterArray(NextTextIndex), .Content = LastUsedText}
-        End Function
-
-        ''' <summary>
-        ''' 获取随机乱码
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Function GenerateCode() As String
-            Return "&" & randomGenerator.Next(1, 99).ToString
+        Public Function IsSentenceOver() As Boolean Implements ITextEffect.IsSentenceOver
+            Return SentenceOver
         End Function
 
     End Class

@@ -106,9 +106,9 @@ Namespace API
             dispatcher.Invoke(Sub() content.Visibility = Windows.Visibility.Visible)
             '开始渲染
             MessageAPI.SendSync("CHOICE_SHOW_BEFORE")
-            AppCore.API.LoopingAPI.AddLoopSync(loopContent)
+            LoopingAPI.AddLoopSync(loopContent)
             '等待渲染结束
-            AppCore.API.LoopingAPI.WaitLoopSync(loopContent)
+            LoopingAPI.WaitLoopSync(loopContent)
             MessageAPI.SendSync("CHOICE_SHOW_AFTER")
             '移除界面元素
             For Each tmpPanel In choiceList

@@ -104,7 +104,7 @@ Namespace AppCore.Plugin
             Dim pluginFileList = Directory.GetDirectories(PathAPI.GetPath(Path.PathFunction.PathType.Plugin, ""))
             For Each fileName In pluginFileList
                 Try
-                    If Not AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\") + 1))) Then Throw New Exception("插件的初始化函数报告它失败了")
+                    If Not AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\", StringComparison.Ordinal) + 1))) Then Throw New Exception("插件的初始化函数报告它失败了")
                 Catch ex As Exception
                     MessageBox.Show("插件" & My.Computer.FileSystem.GetName(fileName) & "初始化失败，这是详细信息：" & Environment.NewLine & ex.Message)
                 End Try

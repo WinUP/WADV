@@ -1,5 +1,6 @@
 ﻿Imports System.Reflection
 Imports System.Windows.Controls
+Imports WADV.TextModule.TextEffect
 
 Namespace API
 
@@ -8,6 +9,14 @@ Namespace API
     ''' </summary>
     ''' <remarks></remarks>
     Public Class ConfigAPI
+
+        Public Shared Sub Init(framsBetweenWord As Integer, framsBetweenSetence As Integer, auto As Boolean, ignoreReaded As Boolean)
+            Config.ModuleConfig.Auto = auto
+            Config.ModuleConfig.Clicked = False
+            Config.ModuleConfig.Fast = False
+            Config.ModuleConfig.Ignore = ignoreReaded
+            MessageAPI.SendSync("TEXT_SCRIPT_INIT")
+        End Sub
 
         ''' <summary>
         ''' 获取文字之间的间隔帧
@@ -52,6 +61,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetWordFrame(frame As Integer)
             Config.ModuleConfig.WordFrame = frame
+            MessageAPI.SendSync("TEXT_WORDFRAME_CHANGE")
         End Sub
 
         ''' <summary>
@@ -61,6 +71,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetSentenceFrame(frame As Integer)
             Config.ModuleConfig.SetenceFrame = frame
+            MessageAPI.SendSync("TEXT_SENTENCEFRAME_CHANGE")
         End Sub
 
         ''' <summary>
@@ -70,6 +81,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetAutoMode(auto As Boolean)
             Config.ModuleConfig.Auto = auto
+            MessageAPI.SendSync("TEXT_AUTOMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -79,6 +91,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetIgnoreMode(ignore As Boolean)
             Config.ModuleConfig.Ignore = ignore
+            MessageAPI.SendSync("TEXT_IGNOREMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -88,6 +101,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetTextArea(area As TextBlock)
             Config.UIConfig.TextArea = area
+            MessageAPI.SendSync("TEXT_TEXTAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -95,8 +109,9 @@ Namespace API
         ''' </summary>
         ''' <param name="area">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetCharacterArea(area As TextBlock)
-            Config.UIConfig.CharacterArea = area
+        Public Shared Sub SetSpeakerArea(area As TextBlock)
+            Config.UIConfig.SpeakerArea = area
+            MessageAPI.SendSync("TEXT_SPEAKERAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -106,6 +121,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetFrameArea(area As Windows.FrameworkElement)
             Config.UIConfig.FrameArea = area
+            MessageAPI.SendSync("TEXT_MAINAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -113,8 +129,9 @@ Namespace API
         ''' </summary>
         ''' <param name="visible">是否可见</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetUIVisibility(visible As Boolean)
+        Public Shared Sub SetVisibility(visible As Boolean)
             WindowAPI.GetDispatcher.Invoke(Sub() Config.UIConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
+            MessageAPI.SendSync("TEXT_VISIBLE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -125,6 +142,7 @@ Namespace API
             AddHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
             AddHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             AddHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
+            MessageAPI.SendSync("TEXT_EVENT_REGISTER")
         End Sub
 
         ''' <summary>
@@ -135,6 +153,7 @@ Namespace API
             RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
             RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             RemoveHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
+            MessageAPI.SendSync("TEXT_EVENT_UNREGISTER")
         End Sub
 
     End Class
@@ -157,17 +176,17 @@ Namespace API
             '检查状态
             If Config.UIConfig.TextArea Is Nothing Then Return False
             '查找特效
-            Dim classList = From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Name = effectName AndAlso tmpClass.Namespace = "WADV.TextModule.TextEffect" Select tmpClass
-            If classList.Count < 1 Then Return False
-            '生成特效
-            Dim effect As TextEffect.StandardEffect = Activator.CreateInstance(classList.FirstOrDefault, New Object() {text, character})
-            Config.ModuleConfig.Ellipsis = False
+            If Not Initialiser.EffectList.ContainsKey(effectName) Then Return ""
+            Dim effect As StandardEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {text, character})
+            Config.ModuleConfig.Clicked = False
             '生成循环体
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
             '开始循环
-            AppCore.API.LoopingAPI.AddLoopSync(loopContent)
+            MessageAPI.SendSync("TEXT_SHOW_BEFORE")
+            LoopingAPI.AddLoopSync(loopContent)
             '等待结束
-            AppCore.API.LoopingAPI.WaitLoopSync(loopContent)
+            LoopingAPI.WaitLoopSync(loopContent)
+            MessageAPI.SendSync("TEXT_SHOW_AFTER")
             Return True
         End Function
 

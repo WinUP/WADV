@@ -1,5 +1,5 @@
 ﻿Imports WADV.AppCore
-Imports System.Reflection
+Imports WADV.TextModule.TextEffect
 Imports System.Windows
 
 Namespace PluginInterface
@@ -7,74 +7,75 @@ Namespace PluginInterface
     Public Class Initialise : Implements Plugin.IInitialise
 
         Public Function StartInitialising() As Boolean Implements Plugin.IInitialise.Initialising
-            Config.ModuleConfig.ReadConfigFile()
-            Config.ModuleConfig.Ellipsis = False
+            Config.ModuleConfig.Clicked = False
             Config.ModuleConfig.Fast = False
+            Initialiser.LoadEffect()
+            MessageAPI.SendSync("TEXT_INIT_FINISH")
             Return True
         End Function
 
     End Class
 
     Public Class CustomizedLoop : Implements Plugin.ILoopReceiver
-        Private effect As TextEffect.StandardEffect
-        Private waitingCount As Integer = 0
-        Private renderingText As TextEffect.StandardEffect.SentenceInfo
+        Private ReadOnly _effect As ITextEffect
+        Private _waitingCount As Integer = 0
+        Private _renderingText As ITextEffect.SentenceInfo
 
-        Public Sub New(effect As TextEffect.StandardEffect)
-            Me.effect = effect
+        Public Sub New(effect As ITextEffect)
+            _effect = effect
         End Sub
 
-        Public Function StartLooping(frame As Integer) As Boolean Implements AppCore.Plugin.ILoopReceiver.Logic
-            Dim text As TextEffect.StandardEffect.SentenceInfo
-            If waitingCount > 0 Then
-                waitingCount -= 1
+        Public Function Logic(frame As Integer) As Boolean Implements Plugin.ILoopReceiver.Logic
+            Dim text As ITextEffect.SentenceInfo
+            If _waitingCount > 0 Then
+                _waitingCount -= 1
                 Return True
             End If
             '快进状态
             If Config.ModuleConfig.Fast Then
-                text = effect.GetNextString
-                While Not effect.IsSentenceReadOver
-                    text = effect.GetNextString
+                text = _effect.GetNext
+                While Not _effect.IsSentenceOver
+                    text = _effect.GetNext
                 End While
-                renderingText.Character = text.Character
-                renderingText.Content = text.Content
-                If effect.IsReadOver Then Return False
-                waitingCount = 10
+                _renderingText.Speaker = text.Speaker
+                _renderingText.Text = text.Text
+                If _effect.IsAllOver Then Return False
+                _waitingCount = 10
                 Return True
             End If
             '自动状态
             If Config.ModuleConfig.Auto Then
-                text = effect.GetNextString
-                renderingText.Character = text.Character
-                renderingText.Content = text.Content
-                If effect.IsReadOver Then Return False
-                If effect.IsSentenceReadOver Then
-                    waitingCount = Config.ModuleConfig.SetenceFrame
+                text = _effect.GetNext
+                _renderingText.Speaker = text.Speaker
+                _renderingText.Text = text.Text
+                If _effect.IsAllOver Then Return False
+                If _effect.IsSentenceOver Then
+                    _waitingCount = Config.ModuleConfig.SetenceFrame
                     Return True
                 End If
-                waitingCount = Config.ModuleConfig.WordFrame
+                _waitingCount = Config.ModuleConfig.WordFrame
                 Return True
             End If
             '手动状态
-            If Not Config.ModuleConfig.Ellipsis AndAlso effect.IsSentenceReadOver AndAlso Not effect.IsReadOver Then Return True
-            If effect.IsSentenceReadOver Then Config.ModuleConfig.Ellipsis = False
-            text = effect.GetNextString
-            If Config.ModuleConfig.Ellipsis Then
-                While Not effect.IsSentenceReadOver
-                    text = effect.GetNextString
+            If Not Config.ModuleConfig.Clicked AndAlso _effect.IsSentenceOver AndAlso Not _effect.IsAllOver Then Return True
+            If _effect.IsSentenceOver Then Config.ModuleConfig.Clicked = False
+            text = _effect.GetNext
+            If Config.ModuleConfig.Clicked Then
+                While Not _effect.IsSentenceOver
+                    text = _effect.GetNext
                 End While
             End If
-            renderingText.Character = text.Character
-            renderingText.Content = text.Content
-            Config.ModuleConfig.Ellipsis = False
-            If effect.IsReadOver Then Return False
-            waitingCount = Config.ModuleConfig.WordFrame
+            _renderingText.Speaker = text.Speaker
+            _renderingText.Text = text.Text
+            Config.ModuleConfig.Clicked = False
+            If _effect.IsAllOver Then Return False
+            _waitingCount = Config.ModuleConfig.WordFrame
             Return True
         End Function
 
-        Public Sub StartRendering(window As Window) Implements AppCore.Plugin.ILoopReceiver.Render
-            Config.UIConfig.TextArea.Text = renderingText.Content
-            Config.UIConfig.CharacterArea.Text = renderingText.Character
+        Public Sub Render(window As Window) Implements Plugin.ILoopReceiver.Render
+            Config.UIConfig.TextArea.Text = _renderingText.Text
+            Config.UIConfig.SpeakerArea.Text = _renderingText.Speaker
         End Sub
 
     End Class

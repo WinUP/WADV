@@ -27,6 +27,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.AchievementModule", "W
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.ChoiceEffectPack", "WPSoft.ChoiceStylePack\WPSoft.ChoiceEffectPack.vbproj", "{BD458AFF-B33F-41CA-A94E-30BB051E01AE}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.TextEffectPack", "WPSoft.TextEffectPack\WPSoft.TextEffectPack.vbproj", "{00602172-D242-4646-93BD-E47109A43976}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,16 @@ Global
 		{BD458AFF-B33F-41CA-A94E-30BB051E01AE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BD458AFF-B33F-41CA-A94E-30BB051E01AE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BD458AFF-B33F-41CA-A94E-30BB051E01AE}.Release|Win32.ActiveCfg = Release|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{00602172-D242-4646-93BD-E47109A43976}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
