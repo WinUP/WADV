@@ -31,8 +31,8 @@ Namespace PluginInterface
                 _waitingCount -= 1
                 Return True
             End If
-            '快进状态
-            If Config.ModuleConfig.Fast Then
+            '快进状态或略过已读
+            If Config.ModuleConfig.Fast OrElse (Config.ModuleConfig.Ignore AndAlso _effect.IsRead) Then
                 text = _effect.GetNext
                 While Not _effect.IsSentenceOver
                     text = _effect.GetNext

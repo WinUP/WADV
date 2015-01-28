@@ -168,16 +168,16 @@ Namespace API
         ''' 显示文本
         ''' </summary>
         ''' <param name="text">对话内容</param>
-        ''' <param name="character">说话者</param>
+        ''' <param name="speaker">说话者</param>
         ''' <param name="effectName">效果类的名字</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function ShowReular(text() As String, character() As String, effectName As String) As Boolean
+        Public Shared Function Show(text() As String, speaker() As String, isRead() As Boolean, effectName As String) As Boolean
             '检查状态
             If Config.UIConfig.TextArea Is Nothing Then Return False
             '查找特效
             If Not Initialiser.EffectList.ContainsKey(effectName) Then Return ""
-            Dim effect As StandardEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {text, character})
+            Dim effect As StandardEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {text, speaker, isRead})
             Config.ModuleConfig.Clicked = False
             '生成循环体
             Dim loopContent As New PluginInterface.CustomizedLoop(effect)
