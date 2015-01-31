@@ -27,14 +27,28 @@ Namespace Effect
     End Class
 
     Public Class BaseEffect : Implements IEffect
-        Protected imageContent As Image
+        Private ReadOnly _imageContent As Image
+        Private ReadOnly _params() As String
 
-        Public Sub New(content As Image, Optional variable As String() = Nothing)
-            imageContent = content
+        Protected Friend ReadOnly Property ImageContent As Image
+            Get
+                Return _imageContent
+            End Get
+        End Property
+
+        Protected Friend ReadOnly Property Params As String()
+            Get
+                Return _params
+            End Get
+        End Property
+
+        Public Sub New(content As Image, Optional params As String() = Nothing)
+            _imageContent = content
+            _params = params
         End Sub
 
         Public Overridable Sub Rendering() Implements IEffect.Rendering
-
+            ImageContent.Visibility = Windows.Visibility.Visible
         End Sub
 
     End Class

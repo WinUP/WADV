@@ -493,7 +493,6 @@ Namespace AppCore.API
                 codeProvider = New CSharpCodeProvider
             Else
                 Throw New FileFormatException("目前只能编译VB.NET和CSharp的代码文件，并且目标.NET Framework版本不能高于4.0")
-                Return Nothing
             End If
             Dim param As New CompilerParameters
             param.GenerateExecutable = False
@@ -627,6 +626,38 @@ Namespace AppCore.API
         ''' <returns></returns>
         Public Shared Function CurrentFrame() As Integer
             Return Looping.MainLooping.GetInstance.CurrentFrame
+        End Function
+
+        ''' <summary>
+        ''' 将指定帧数转换为理想运行时间
+        ''' </summary>
+        ''' <param name="count">要转换的帧数目</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function TranslateToTime(count As Integer) As TimeSpan
+            Dim day, hour, minute, second, millionsecond As Integer
+            Dim currentFps = GetFrame()
+            day = count / (216000 * currentFps)
+            count -= day * 216000 * currentFps
+            hour = count / (3600 * currentFps)
+            count -= hour * 3600 * currentFps
+            minute = count / (60 * currentFps)
+            count -= minute * 60 * currentFps
+            second = count / currentFps
+            count -= second * currentFps
+            millionsecond = count * 1000 / currentFps
+            Return New TimeSpan(day, hour, minute, second, millionsecond)
+        End Function
+
+        ''' <summary>
+        ''' 将指定时间长度转换为理想帧数
+        ''' </summary>
+        ''' <param name="time">要转换的时间长度</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function TranslateToFrame(time As TimeSpan) As Integer
+            Dim currentFps = GetFrame()
+            Return (time.Days * 216000 + time.Hours * 3600 + time.Minutes * 60 + time.Seconds) * currentFps + CInt((CDbl(time.Milliseconds) / 1000.0) * currentFps)
         End Function
 
     End Class
