@@ -49,20 +49,6 @@ Namespace AppCore.Plugin
     End Interface
 
     ''' <summary>
-    ''' 脚本函数注册接口
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Interface IScript
-
-        ''' <summary>
-        ''' 注册脚本函数
-        ''' </summary>
-        ''' <param name="scriptVM">脚本执行主机</param>
-        Sub StartRegisting(scriptVM As NLua.Lua)
-
-    End Interface
-
-    ''' <summary>
     ''' 游戏初始化接口
     ''' </summary>
     Public Interface IGameStart
@@ -101,10 +87,11 @@ Namespace AppCore.Plugin
         ''' </summary>
         ''' <remarks></remarks>
         Protected Friend Shared Sub InitialiseAllPlugins()
-            Dim pluginFileList = Directory.GetDirectories(PathAPI.GetPath(Path.PathFunction.PathType.Plugin, ""))
-            For Each fileName In pluginFileList
+            Dim tmpPluginFileList = Directory.GetDirectories(PathAPI.GetPath(Path.PathFunction.PathType.Plugin, ""))
+            For Each fileName In tmpPluginFileList
                 Try
                     If Not AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\", StringComparison.Ordinal) + 1))) Then Throw New Exception("插件的初始化函数报告它失败了")
+                    pluginFileList.Add(fileName)
                 Catch ex As Exception
                     MessageBox.Show("插件" & My.Computer.FileSystem.GetName(fileName) & "初始化失败，这是详细信息：" & Environment.NewLine & ex.Message)
                 End Try
@@ -121,7 +108,6 @@ Namespace AppCore.Plugin
         Protected Friend Shared Function AddPlugin(fileName As String) As Boolean
             If pluginFileList.Contains(fileName) Then Return True
             Dim pluginTypes = Reflection.Assembly.LoadFrom(fileName).GetTypes
-            Dim scriptFunction As IScript = Nothing
             Dim initFunction As IGameStart = Nothing
             Dim destructFunction As IGameClose = Nothing
             For Each tmpTypeName In pluginTypes
@@ -130,9 +116,6 @@ Namespace AppCore.Plugin
                         Return False
                     End If
                 End If
-                If tmpTypeName.GetInterface("IScript") <> Nothing Then
-                    scriptFunction = Activator.CreateInstance(tmpTypeName)
-                End If
                 If tmpTypeName.GetInterface("IGameStart") <> Nothing Then
                     initFunction = Activator.CreateInstance(tmpTypeName)
                 End If
@@ -140,7 +123,6 @@ Namespace AppCore.Plugin
                     destructFunction = Activator.CreateInstance(tmpTypeName)
                 End If
             Next
-            If scriptFunction IsNot Nothing Then Script.Register.AddFunction(scriptFunction)
             If initFunction IsNot Nothing Then initialiserList.Add(initFunction)
             If destructFunction IsNot Nothing Then destructorList.Add(destructFunction)
             pluginFileList.Add(fileName)

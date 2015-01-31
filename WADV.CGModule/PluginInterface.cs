@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,10 +14,17 @@ namespace WADV.CGModule.PluginInterface
     public class Initialise : IInitialise
     {
 
-        public bool Initialising()
-        {
+        public bool Initialising() {
             Initialiser.LoadEffect();
-            MessageAPI.SendSync("CG_INIT_FINISH");
+            ScriptAPI.RunStringSync("api_cg={}");
+            foreach (var tmpApiClass in (from tmpClass in Assembly.GetExecutingAssembly().GetTypes() where tmpClass.Namespace == "WADV.CGModule.API" && tmpClass.IsClass && tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) == tmpClass.Name.Length - 3 select tmpClass))
+            {
+                var registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower();
+                ScriptAPI.RunStringSync("api_cg." + registerName + "={}");
+                ScriptAPI.RegisterSync(tmpApiClass, "api_cg." + registerName);
+        }
+
+        MessageAPI.SendSync("CG_INIT_FINISH");
             return true;
         }
 

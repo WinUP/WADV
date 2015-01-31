@@ -16,13 +16,22 @@ Public Class GameWindow
         AppCore.Path.PathConfig.Skin = My.Settings.SkinURL
         AppCore.Path.PathConfig.UserFile = My.Settings.UserFileURL
         AppCore.UI.WindowConfig.BaseWindow = Me
+        '注册脚本函数
+        ScriptAPI.RunStringSync("api_system={}")
+        For Each tmpAPIClass In (From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.AppCore.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
+            Dim registerName = tmpAPIClass.Name.Substring(0, tmpAPIClass.Name.Length - 3).ToLower
+            ScriptAPI.RunStringSync("api_system." & registerName & "={}")
+            ScriptAPI.RegisterSync(tmpAPIClass, "api_system." & registerName)
+        Next
         '加载插件
         AppCore.Plugin.PluginFunction.InitialiseAllPlugins()
-        '注册脚本函数
-        AppCore.Script.Register.RegisterFunction()
         '执行插件初始化函数
         AppCore.Plugin.PluginFunction.InitialisingGame()
-        '调用初始化脚本
+        '初始化环境变量
+        ScriptAPI.RunStringSync("env={}")
+        ScriptAPI.RunStringSync("env.version=""1.0""")
+        ScriptAPI.RunStringSync("env.path=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
+        '执行游戏逻辑
         ScriptAPI.RunFileAsync("init.lua")
     End Sub
 

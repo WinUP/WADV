@@ -119,7 +119,7 @@ Namespace API
         ''' </summary>
         ''' <param name="area">目标面板区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetFrameArea(area As Windows.FrameworkElement)
+        Public Shared Sub SetMainArea(area As Windows.FrameworkElement)
             Config.UIConfig.FrameArea = area
             MessageAPI.SendSync("TEXT_MAINAREA_CHANGE")
         End Sub

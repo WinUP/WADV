@@ -78,6 +78,15 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
+        ''' 从对象加载指定的页面布局
+        ''' 异步方法|UI线程
+        ''' </summary>
+        ''' <param name="target">目标对象</param>
+        Public Shared Sub LoadObjectAsync(target As Page)
+            GetDispatcher.BeginInvoke(Sub() GetWindow.NavigationService.Navigate(target))
+        End Sub
+
+        ''' <summary>
         ''' 返回上一个页面
         ''' 同步方法|UI线程
         ''' </summary>
@@ -483,7 +492,7 @@ Namespace AppCore.API
             ElseIf codeFile.Extension.ToLower = ".cs" Then
                 codeProvider = New CSharpCodeProvider
             Else
-                Throw New FileFormatException("目前只能编译VB.NET和CSharp的代码文件，并且.NET Framework版本不能高于4.0")
+                Throw New FileFormatException("目前只能编译VB.NET和CSharp的代码文件，并且目标.NET Framework版本不能高于4.0")
                 Return Nothing
             End If
             Dim param As New CompilerParameters
@@ -507,7 +516,7 @@ Namespace AppCore.API
                 For Each tmpError As CompilerError In result.Errors
                     errorString.Append(Environment.NewLine & tmpError.ErrorText)
                 Next
-                MessageBox.Show("编译" & fileName & "时没有通过：" & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
+                MessageBox.Show("编译" & fileName & "时没有通过：" & Environment.NewLine & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
                 Return Nothing
             End If
             MessageAPI.SendSync("GAME_CODE_COMPILE")
@@ -579,6 +588,18 @@ Namespace AppCore.API
         Public Shared Sub WaitLoopSync(loopContent As Plugin.ILoopReceiver)
             Dim receiver As New LoopingFunction
             receiver.WaitLooping(loopContent)
+        End Sub
+
+        ''' <summary>
+        ''' 将当前线程挂起指定帧数
+        ''' 同步方法|调用线程
+        ''' </summary>
+        ''' <param name="count">要挂起的帧数</param>
+        ''' <remarks></remarks>
+        Public Shared Sub WaitFrameSync(count As Integer)
+            Dim tmpWaiter As New Looping.EmptyLooping(count)
+            AddLoopSync(tmpWaiter)
+            WaitLoopSync(tmpWaiter)
         End Sub
 
         ''' <summary>
@@ -780,11 +801,11 @@ Namespace AppCore.API
         ''' 使用预定义规则注册脚本函数
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="types">脚本函数类所在的集合(将会不注册非类的元素)</param>
-        ''' <param name="belong">脚本函数类所在的名称空间</param>
-        ''' <param name="prefix">注册后的脚本函数前缀</param>
-        Public Shared Sub RegisterSync(types() As Type, belong As String, prefix As String)
-            Register.RegisterFunction(types, belong, prefix)
+        ''' <param name="instance">要注册的类的类型声明</param>
+        ''' <param name="prefix">函数前缀</param>
+        ''' <param name="toLower">是否转换函数名为小写</param>
+        Public Shared Sub RegisterSync(instance As Type, prefix As String, Optional toLower As Boolean = False)
+            Register.RegisterFunction(instance, prefix, toLower)
         End Sub
 
         ''' <summary>
@@ -793,7 +814,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <returns>脚本主机</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetVM() As NLua.Lua
+        Public Shared Function GetVm() As NLua.Lua
             Return ScriptCore.GetInstance.ScriptVM
         End Function
 

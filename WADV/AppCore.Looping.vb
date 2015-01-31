@@ -9,7 +9,7 @@ Namespace AppCore.Looping
     ''' <remarks></remarks>
     ''' 等待某个循环体的完全结束
     Public Class MainLooping
-        Private Shared self As MainLooping
+        Private Shared _self As MainLooping
         Protected Friend loopList As New List(Of Plugin.ILoopReceiver)
         Private loopListCount As Integer
         Protected Friend loopThread As Thread
@@ -70,8 +70,8 @@ Namespace AppCore.Looping
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Friend Shared Function GetInstance() As MainLooping
-            If self Is Nothing Then self = New MainLooping
-            Return self
+            If _self Is Nothing Then _self = New MainLooping
+            Return _self
         End Function
 
         ''' <summary>
@@ -162,6 +162,24 @@ Namespace AppCore.Looping
             End If
         End Sub
 
+    End Class
+
+    Friend Class EmptyLooping : Implements Plugin.ILoopReceiver
+        Private _count As Integer
+
+        Public Sub New(count As Integer)
+            _count = count
+        End Sub
+
+        Public Function Logic(frame As Integer) As Boolean Implements Plugin.ILoopReceiver.Logic
+            If _count = 0 Then Return False
+            _count -= 1
+            Return True
+        End Function
+
+        Public Sub Render(window As Window) Implements Plugin.ILoopReceiver.Render
+
+        End Sub
     End Class
 
 End Namespace

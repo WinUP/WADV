@@ -6,26 +6,6 @@ Namespace API
 
     Public Class GameAPI
 
-        Public Shared Sub Initialise(frame As Integer, width As Integer, height As Integer)
-            WindowAPI.SetResizeModeSync(False)
-            WindowAPI.SetBackgroundByHexSync("#000000")
-            WindowAPI.SetIconSync("icon.ico")
-            WindowAPI.SetWidthSync(width)
-            WindowAPI.SetHeightSync(height)
-            LoopingAPI.SetFrameSync(frame)
-            LoopingAPI.StartMainLoopSync()
-            ResourceAPI.LoadToGameSync("app_resource.xaml")
-            ResourceAPI.LoadToWindowSync("window_resource.xaml")
-        End Sub
-
-        Public Shared Sub ShowLogo(sender As Object, e As EventArgs)
-            WindowAPI.LoadPageAsync("logo.xaml")
-            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
-            CGModule.API.ImageAPI.Show("image\logo.png", "FadeIn", 30, "LogoMainGrid")
-            System.Threading.Thread.Sleep(1500)
-            CGModule.API.ImageAPI.Show("image\logo.png", "FadeOut", 30, "LogoMainGrid")
-        End Sub
-
         Public Shared Sub ShowMenu(sender As Object, e As EventArgs)
             WindowAPI.LoadPageAsync("menu.xaml")
             MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
@@ -46,7 +26,7 @@ Namespace API
             MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
             TextModule.API.ConfigAPI.SetTextArea(WindowAPI.SearchObject(Of TextBlock)("MainTextArea"))
             TextModule.API.ConfigAPI.SetSpeakerArea(WindowAPI.SearchObject(Of TextBlock)("MainCharacter"))
-            TextModule.API.ConfigAPI.SetFrameArea(WindowAPI.SearchObject(Of FrameworkElement)("ConversationArea"))
+            TextModule.API.ConfigAPI.SetMainArea(WindowAPI.SearchObject(Of FrameworkElement)("ConversationArea"))
             TextModule.API.ConfigAPI.SetVisibility(False)
             TextModule.API.ConfigAPI.RegisterEvent()
             ChoiceModule.API.UIAPI.SetContent(WindowAPI.SearchObject(Of Panel)("MainChoiceArea"))

@@ -6,7 +6,7 @@ Namespace PluginInterface
 
     Public Class Initialise : Implements Plugin.IInitialise
 
-        Public Function StartInitialising() As Boolean Implements Plugin.IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements Plugin.IInitialise.Initialising
             Config.ModuleConfig.Clicked = False
             Config.ModuleConfig.Fast = False
             Initialiser.LoadEffect()

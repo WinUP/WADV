@@ -10,7 +10,7 @@ Namespace AppCore.Script
     ''' </summary>
     ''' <remarks></remarks>
     Public Class ScriptCore
-        Private Shared self As ScriptCore
+        Private Shared _self As ScriptCore
         Private vm As Lua
 
         Private Sub New()
@@ -23,8 +23,8 @@ Namespace AppCore.Script
         ''' 获取脚本核心的唯一实例
         ''' </summary>
         Protected Friend Shared Function GetInstance() As ScriptCore
-            If self Is Nothing Then self = New ScriptCore
-            Return self
+            If _self Is Nothing Then _self = New ScriptCore
+            Return _self
         End Function
 
         ''' <summary>
@@ -45,6 +45,7 @@ Namespace AppCore.Script
             MessageAPI.SendSync("SCRIPT_FILE_BEFOREDO")
             vm.DoFile(fileName)
             MessageAPI.SendSync("SCRIPT_FILE_AFTERDO")
+
         End Sub
 
         ''' <summary>
@@ -115,49 +116,19 @@ Namespace AppCore.Script
     ''' </summary>
     ''' <remarks></remarks>
     Public Class Register
-        Private Shared registingFunctionList As New List(Of Plugin.IScript)
 
         ''' <summary>
-        ''' 添加一个脚本接口函数
+        ''' 注册脚本接口函数
         ''' </summary>
-        ''' <param name="functionContent">要添加的函数</param>
+        ''' <param name="instance">要注册的类的类型声明</param>
+        ''' <param name="prefix">函数前缀</param>
+        ''' <param name="toLower">是否转换函数名为小写</param>
         ''' <remarks></remarks>
-        Protected Friend Shared Sub AddFunction(functionContent As Plugin.IScript)
-            If Not registingFunctionList.Contains(functionContent) Then
-                registingFunctionList.Add(functionContent)
-                MessageAPI.SendSync("SCRIPT_CONTENT_ADD")
-            End If
-        End Sub
-
-        ''' <summary>
-        ''' 注册所有的脚本接口函数
-        ''' </summary>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub RegisterFunction()
-            RegisterFunction(Assembly.GetExecutingAssembly.GetTypes, "WADV.AppCore.API", "SYS")
-            For Each tmpFunction In registingFunctionList
-                tmpFunction.StartRegisting(ScriptCore.GetInstance.ScriptVM)
-            Next
-            MessageAPI.SendSync("SCRIPT_CONTENT_INITFINISH")
-        End Sub
-
-        ''' <summary>
-        ''' 使用内置命名规范注册脚本接口函数
-        ''' </summary>
-        ''' <param name="types">要注册的函数所在的类(将会自动过滤非类的元素)</param>
-        ''' <param name="belong">要注册的函数所在的类的名称空间</param>
-        ''' <param name="prefix">脚本接口函数前缀</param>
-        ''' <remarks></remarks>
-        Protected Friend Shared Sub RegisterFunction(types() As Type, belong As String, prefix As String)
-            Dim classList = From tmpClass In types Where tmpClass.IsClass AndAlso tmpClass.Namespace = belong Select tmpClass
-            Dim apiBaseName As String
-            For Each tmpClass In classList
-                apiBaseName = tmpClass.Name
-                Dim apiBase = tmpClass.Assembly.CreateInstance(belong & "." & apiBaseName)
-                Dim functionList = tmpClass.GetMethods
-                For Each tmpMethod In functionList
-                    ScriptCore.GetInstance.ScriptVM.RegisterFunction(String.Format(prefix & "_{0}_{1}", apiBaseName.Remove(apiBaseName.Length - 3), tmpMethod.Name), apiBase, tmpMethod)
-                Next
+        Protected Friend Shared Sub RegisterFunction(instance As Type, prefix As String, toLower As Boolean)
+            Dim apiBaseName = instance.Name
+            Dim apiBase = instance.Assembly.CreateInstance(instance.Namespace & "." & instance.Name)
+            For Each tmpMethod In instance.GetMethods
+                ScriptCore.GetInstance.ScriptVM.RegisterFunction(prefix & "." & If(toLower, tmpMethod.Name.ToLower, tmpMethod.Name), apiBase, tmpMethod)
             Next
             MessageAPI.SendSync("SCRIPT_CONTENT_ADD")
         End Sub
