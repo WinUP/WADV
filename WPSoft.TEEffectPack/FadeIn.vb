@@ -8,8 +8,8 @@ Imports System.Windows.Media.Animation
 ''' <remarks></remarks>
 Public Class FadeIn : Inherits WADV.TEModule.Effect.BaseEffect
 
-    Public Sub New(content As Image, variable As String())
-        MyBase.New(content, variable)
+    Public Sub New(id As Integer, variable As String())
+        MyBase.New(id, variable)
     End Sub
 
     Public Overrides Sub Rendering()

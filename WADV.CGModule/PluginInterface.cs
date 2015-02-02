@@ -22,9 +22,8 @@ namespace WADV.CGModule.PluginInterface
                 var registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower();
                 ScriptAPI.RunStringSync("api_cg." + registerName + "={}");
                 ScriptAPI.RegisterSync(tmpApiClass, "api_cg." + registerName);
-        }
-
-        MessageAPI.SendSync("CG_INIT_FINISH");
+            }
+            MessageAPI.SendSync("CG_INIT_FINISH");
             return true;
         }
 

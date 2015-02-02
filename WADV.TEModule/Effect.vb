@@ -1,5 +1,4 @@
 ﻿Imports System.Windows.Controls
-Imports System.Windows.Media.Imaging
 
 Namespace Effect
 
@@ -29,6 +28,7 @@ Namespace Effect
     Public Class BaseEffect : Implements IEffect
         Private ReadOnly _imageContent As Image
         Private ReadOnly _params() As String
+        Private ReadOnly _id As Integer
 
         Protected Friend ReadOnly Property ImageContent As Image
             Get
@@ -42,13 +42,23 @@ Namespace Effect
             End Get
         End Property
 
-        Public Sub New(content As Image, Optional params As String() = Nothing)
-            _imageContent = content
+        Public ReadOnly Property ID As Integer
+            Get
+                Return _id
+            End Get
+        End Property
+
+        Public Sub New(id As Integer , Optional params As String() = Nothing)
+            _imageContent = TEList.List.Item(id)
             _params = params
         End Sub
 
         Public Overridable Sub Rendering() Implements IEffect.Rendering
             ImageContent.Visibility = Windows.Visibility.Visible
+        End Sub
+
+        Public Sub Dispose()
+            TEList.List.Delete(_id)
         End Sub
 
     End Class
