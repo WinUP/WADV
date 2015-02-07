@@ -96,7 +96,7 @@ Namespace AppCore.Looping
                         i += 1
                     Else
                         loopList.Remove(loopContent)
-                        MessageAPI.SendSync("LOOP_REMOVE_CONTENT")
+                        MessageAPI.SendSync("LOOP_CONTENT_REMOVE")
                         loopListCount -= 1
                     End If
                     gameDispatcher.Invoke(Sub() loopContent.Render(gameWindow))
@@ -119,7 +119,7 @@ Namespace AppCore.Looping
         Protected Friend Sub WaitLooping(loopContent As Plugin.ILoopReceiver)
             Dim loopList = MainLooping.GetInstance.loopList
             While True
-                MessageAPI.WaitSync("LOOP_REMOVE_CONTENT")
+                MessageAPI.WaitSync("LOOP_CONTENT_REMOVE")
                 If Not loopList.Contains(loopContent) Then Exit While
             End While
         End Sub

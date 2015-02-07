@@ -1,0 +1,3 @@
+﻿Class Logo
+
+End Class

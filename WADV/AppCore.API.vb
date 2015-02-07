@@ -78,12 +78,53 @@ Namespace AppCore.API
         End Sub
 
         ''' <summary>
+        ''' 从文件加载指定的页面布局
+        ''' 同步方法|UI线程
+        ''' </summary>
+        ''' <param name="fileName">文件路径(从Skin目录下开始)</param>
+        Public Shared Sub LoadPageSync(fileName As String)
+            LoadPageAsync(fileName)
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
+        End Sub
+
+        ''' <summary>
         ''' 从对象加载指定的页面布局
         ''' 异步方法|UI线程
         ''' </summary>
         ''' <param name="target">目标对象</param>
         Public Shared Sub LoadObjectAsync(target As Page)
             GetDispatcher.BeginInvoke(Sub() GetWindow.NavigationService.Navigate(target))
+        End Sub
+
+        ''' <summary>
+        ''' 从对象加载指定的页面布局
+        ''' 同步方法|UI线程
+        ''' </summary>
+        ''' <param name="target">目标对象</param>
+        Public Shared Sub LoadObjectSync(target As Page)
+            LoadObjectAsync(target)
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
+        End Sub
+
+        ''' <summary>
+        ''' 从路径加载制定的页面布局
+        ''' 异步方法|UI线程
+        ''' </summary>
+        ''' <param name="uri">目标路径</param>
+        ''' <remarks></remarks>
+        Public Shared Sub LoadUriAsync(uri As String)
+            GetDispatcher.BeginInvoke(Sub() GetWindow.NavigationService.Navigate(New Uri(uri)))
+        End Sub
+
+        ''' <summary>
+        ''' 从路径加载制定的页面布局
+        ''' 同步方法|UI线程
+        ''' </summary>
+        ''' <param name="uri">目标路径</param>
+        ''' <remarks></remarks>
+        Public Shared Sub LoadUriSync(uri As String)
+            LoadUriAsync(uri)
+            MessageAPI.WaitSync("WINDOW_PAGE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -484,7 +525,7 @@ Namespace AppCore.API
         ''' <param name="fileName">文件路径(从Resource目录下开始)</param>
         ''' <returns>编译得到的程序集</returns>
         ''' <remarks></remarks>
-        Public Shared Function CompileFile(fileName As String) As System.Reflection.Assembly
+        Public Shared Function CompileCode(fileName As String, Optional options As String = "") As System.Reflection.Assembly
             Dim codeProvider As CodeDomProvider
             Dim codeFile = New FileInfo(PathAPI.GetPath(PathFunction.PathType.Resource, fileName))
             If codeFile.Extension.ToLower = ".vb" Then
@@ -509,6 +550,7 @@ Namespace AppCore.API
             For Each ownAssemblies As XmlNode In asList.SelectNodes("/assemblies/own")
                 param.ReferencedAssemblies.Add(PathAPI.GetPath(PathFunction.PathType.Game, ownAssemblies.InnerXml))
             Next
+            param.CompilerOptions = options
             Dim result = codeProvider.CompileAssemblyFromFile(param, codeFile.FullName)
             If result.Errors.HasErrors Then
                 Dim errorString As New StringBuilder
@@ -731,7 +773,7 @@ Namespace AppCore.API
         ''' <param name="fileName">文件路径(从Script目录下开始)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFileAsync(fileName As String)
-            Dim tmpThread As New Thread(Sub() ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathFunction.PathType.Script, fileName)))
+            Dim tmpThread As New Thread(CType(Sub() ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathFunction.PathType.Script, fileName)), ThreadStart))
             tmpThread.Name = "脚本文件执行线程"
             tmpThread.IsBackground = True
             tmpThread.Priority = ThreadPriority.Normal
@@ -755,7 +797,7 @@ Namespace AppCore.API
         ''' <param name="content">脚本代码内容</param>
         ''' <remarks></remarks>
         Public Shared Sub RunStrngAsync(content As String)
-            Dim tmpThread As New Thread(Sub() ScriptCore.GetInstance.RunStrng(content))
+            Dim tmpThread As New Thread(CType(Sub() ScriptCore.GetInstance.RunStrng(content), ThreadStart))
             tmpThread.IsBackground = True
             tmpThread.Priority = ThreadPriority.Normal
             tmpThread.Start(content)

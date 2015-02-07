@@ -1,5 +1,4 @@
-﻿Imports System.Windows.Media
-Imports WADV.MediaModule.Config
+﻿Imports WADV.MediaModule.Config
 Imports WADV.MediaModule.AudioCore
 
 Namespace API
@@ -58,7 +57,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundVolume(value As Double)
             SoundConfig.Background = value - 5000
-            AudioCore.PlayerList.ChangeVolume(SoundType.Background, SoundConfig.Background)
+            PlayerList.ChangeVolume(SoundType.Background, SoundConfig.Background)
             MessageAPI.SendSync("MEDIA_BGM_CHANGEVOLUME")
         End Sub
 
@@ -69,7 +68,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetReadingVolume(value As Double)
             SoundConfig.Reading = value - 5000
-            AudioCore.PlayerList.ChangeVolume(SoundType.Reading, SoundConfig.Reading)
+            PlayerList.ChangeVolume(SoundType.Reading, SoundConfig.Reading)
             MessageAPI.SendSync("MEDIA_READ_CHANGEVOLUME")
         End Sub
 
@@ -80,7 +79,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetEffectVolume(value As Double)
             SoundConfig.Effect = value - 5000
-            AudioCore.PlayerList.ChangeVolume(SoundType.Effect, SoundConfig.Effect)
+            PlayerList.ChangeVolume(SoundType.Effect, SoundConfig.Effect)
             MessageAPI.SendSync("MEDIA_EFFECT_CHANGEVOLUME")
         End Sub
 
@@ -101,11 +100,10 @@ Namespace API
         ''' <param name="count">循环次数(永久循环为-1)</param>
         ''' <remarks></remarks>
         Public Shared Function PlaySound(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Integer
-            Dim id = PlayerList.AddPlayer(fileName, type, cycle, count)
-            Dim tmpPlayer = PlayerList.GetPlayer(id)
+            Dim tmpPlayer = PlayerList.AddPlayer(fileName, type, cycle, count)
             If tmpPlayer Is Nothing Then Return -1
             tmpPlayer.Play()
-            Return id
+            Return tmpPlayer.ID
         End Function
 
         ''' <summary>
@@ -126,7 +124,7 @@ Namespace API
         Public Shared Function PlayReading(fileName As String) As Integer
             MessageAPI.SendSync("MEDIA_READ_INITPLAY")
             Dim id = PlaySound(fileName, SoundType.Reading, False, 0)
-            Config.SoundConfig.LastReadingID = id
+            SoundConfig.LastReadingID = id
             Return id
         End Function
 
@@ -217,7 +215,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopNearlyReading()
-            StopSound(Config.SoundConfig.LastReadingID)
+            StopSound(SoundConfig.LastReadingID)
         End Sub
 
     End Class

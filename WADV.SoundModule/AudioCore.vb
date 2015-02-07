@@ -18,9 +18,9 @@ Namespace AudioCore
     ''' </summary>
     ''' <remarks></remarks>
     Public Class Player
-        Private _type As SoundType
-        Private _player As Audio
-        Private _id As Integer
+        Private ReadOnly _type As SoundType
+        Private ReadOnly _player As Audio
+        Private ReadOnly _id As Integer
 
         ''' <summary>
         ''' 获取声音类型
@@ -34,6 +34,12 @@ Namespace AudioCore
             End Get
         End Property
 
+        ''' <summary>
+        ''' 获取声音ID
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Public ReadOnly Property ID As Integer
             Get
                 Return _id
@@ -118,22 +124,13 @@ Namespace AudioCore
             CycleCount = count
             Me.Cycle = cycle
             _id = id
-            AddHandler _player.Ending, Sub()
-                                           If (Not Me.Cycle) OrElse (Me.Cycle AndAlso CycleCount = 0) Then
-                                               PlayerList.DeletePlayer(id)
-                                               MessageAPI.SendSync("MEDIA_SOUND_END")
-                                           Else
-                                               Position = 0
-                                               Play()
-                                               If CycleCount > 0 Then CycleCount -= 1
-                                               MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
-                                           End If
-                                       End Sub
+            AddHandler _player.Ending, AddressOf Sound_Ending
         End Sub
 
         Public Sub Play()
             _player.Play()
         End Sub
+
         Public Sub Pause()
             _player.Pause()
         End Sub
@@ -146,18 +143,31 @@ Namespace AudioCore
             _player.Dispose()
         End Sub
 
+        Private Sub Sound_Ending(sender As Object, e As EventArgs)
+            Debug.Write("END")
+            If (Not Me.Cycle) OrElse (Me.Cycle AndAlso CycleCount = 0) Then
+                PlayerList.DeletePlayer(ID)
+                MessageAPI.SendSync("MEDIA_SOUND_END")
+            Else
+                Position = 0
+                Play()
+                If CycleCount > 0 Then CycleCount -= 1
+                MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
+            End If
+        End Sub
+
     End Class
 
     Public Class PlayerList
         Protected Friend Shared soundList As New Dictionary(Of Integer, Player)
         Private Shared nextId As Integer = 0
 
-        Protected Friend Shared Function AddPlayer(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Integer
+        Protected Friend Shared Function AddPlayer(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Player
             Dim tmpPlayer As New Player(fileName, type, cycle, count, nextId)
             soundList.Add(nextId, tmpPlayer)
             nextId += 1
             MessageAPI.SendSync("MEDIA_SOUND_ADD")
-            Return nextId - 1
+            Return tmpPlayer
         End Function
 
         Protected Friend Shared Sub DeletePlayer(id As Integer)

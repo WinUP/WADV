@@ -46,23 +46,23 @@ Namespace AppCore.Message
             callList = New List(Of Plugin.IMessageReceiver)
             messageList = New ConcurrentQueue(Of String)
             receiverThread = New Thread(
-                Sub()
-                    Dim message As String = ""
-                    Monitor.Enter(messageList)
-                    While True
-                        While Not messageList.IsEmpty
-                            messageList.TryDequeue(message)
-                            For Each receiver In callList
-                                receiver.ReceivingMessage(message)
-                            Next
-                        End While
-                        SyncLock (lastMessage)
-                            lastMessage = message
-                        End SyncLock
-                        Monitor.Wait(messageList)
-                    End While
-                    Monitor.Exit(messageList)
-                End Sub)
+                CType(Sub()
+                          Dim message As String = ""
+                          Monitor.Enter(messageList)
+                          While True
+                              While Not messageList.IsEmpty
+                                  messageList.TryDequeue(message)
+                                  For Each receiver In callList
+                                      receiver.ReceivingMessage(message)
+                                  Next
+                              End While
+                              SyncLock (lastMessage)
+                                  lastMessage = message
+                              End SyncLock
+                              Monitor.Wait(messageList)
+                          End While
+                          Monitor.Exit(messageList)
+                      End Sub, ThreadStart))
             receiverThread.Name = "消息循环线程"
             receiverThread.Priority = ThreadPriority.AboveNormal
             receiverThread.IsBackground = True
