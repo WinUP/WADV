@@ -30,7 +30,8 @@ Public Class GameWindow
         '初始化环境变量
         ScriptAPI.RunStringSync("env={}")
         ScriptAPI.RunStringSync("env.version=""1.0""")
-        ScriptAPI.RunStringSync("env.path=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path={}")
+        ScriptAPI.RunStringSync("env.path.game=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
         '执行游戏逻辑
         ScriptAPI.RunFileAsync("init.lua")
     End Sub

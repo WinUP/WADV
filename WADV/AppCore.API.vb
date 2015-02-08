@@ -344,13 +344,9 @@ Namespace AppCore.API
         ''' <returns>根元素的实例</returns>
         ''' <remarks></remarks>
         Public Shared Function GetRoot(Of T As FrameworkElement)() As T
-            If VisualTreeHelper.GetChildrenCount(GetWindow) > 0 Then
-                Dim child = VisualTreeHelper.GetChild(GetWindow, 0)
-                If TypeOf child Is T Then
-                    Return TryCast(child, T)
-                End If
-            End If
-            Return Nothing
+            If GetWindow.Content Is Nothing Then Return Nothing
+            Dim contentPage As Page = GetWindow.Content
+            Return TryCast(contentPage.Content, T)
         End Function
 
         ''' <summary>

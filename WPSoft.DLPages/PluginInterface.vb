@@ -22,7 +22,7 @@ Namespace PluginInterface
     Public NotInheritable Class GlobalReceiver : Implements IMessageReceiver
 
         Public Sub ReceivingMessage(message As String) Implements WADV.AppCore.Plugin.IMessageReceiver.ReceivingMessage
-            Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss ") & message)
+            Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss:ffff ") & message)
         End Sub
 
     End Class

@@ -3,7 +3,7 @@ Imports WADV.AppCore.Plugin
 
 Namespace PluginInterface
 
-    Public Class Initlizer : Implements IInitialise
+    Public Class Initialiser : Implements IInitialise
 
         Public Function Initialising() As Boolean Implements WADV.AppCore.Plugin.IInitialise.Initialising
             ScriptAPI.RunStringSync("api_media={}")
@@ -16,6 +16,18 @@ Namespace PluginInterface
             Return True
         End Function
 
+    End Class
+
+    Public Class LoopReceiver : Implements ILoopReceiver
+
+        Public Function Logic(frame As Integer) As Boolean Implements AppCore.Plugin.ILoopReceiver.Logic
+            AudioCore.PlayerList.CheckEnding()
+            Return Config.ModuleConfig.LoopOn
+        End Function
+
+        Public Sub Render(window As Windows.Window) Implements AppCore.Plugin.ILoopReceiver.Render
+
+        End Sub
     End Class
 
 End Namespace

@@ -124,7 +124,6 @@ Namespace AudioCore
             CycleCount = count
             Me.Cycle = cycle
             _id = id
-            AddHandler _player.Ending, AddressOf Sound_Ending
         End Sub
 
         Public Sub Play()
@@ -141,19 +140,6 @@ Namespace AudioCore
 
         Public Sub Dispose()
             _player.Dispose()
-        End Sub
-
-        Private Sub Sound_Ending(sender As Object, e As EventArgs)
-            Debug.Write("END")
-            If (Not Me.Cycle) OrElse (Me.Cycle AndAlso CycleCount = 0) Then
-                PlayerList.DeletePlayer(ID)
-                MessageAPI.SendSync("MEDIA_SOUND_END")
-            Else
-                Position = 0
-                Play()
-                If CycleCount > 0 Then CycleCount -= 1
-                MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
-            End If
         End Sub
 
     End Class
@@ -173,8 +159,12 @@ Namespace AudioCore
         Protected Friend Shared Sub DeletePlayer(id As Integer)
             Dim player = GetPlayer(id)
             If player Is Nothing Then Exit Sub
-            player.Finish()
-            player.Dispose()
+            Try
+                player.Finish()
+                player.Dispose()
+            Catch ex As Exception
+                Debug.WriteLine("--ERROR: " & ex.Message)
+            End Try
             soundList.Remove(id)
             MessageAPI.SendSync("MEDIA_SOUND_REMOVE")
         End Sub
@@ -185,10 +175,28 @@ Namespace AudioCore
         End Function
 
         Protected Friend Shared Sub ChangeVolume(type As SoundType, value As Integer)
-            For Each tmpSound In soundList.Values
-                If tmpSound.Type = type Then tmpSound.Volume = value
+            For Each tmpSound In (From singleSound In soundList.Values Where singleSound.Type = type Select singleSound)
+                tmpSound.Volume = value
             Next
             MessageAPI.SendSync("MEDIA_SOUND_CHANGEVOLUME")
+        End Sub
+
+        Protected Friend Shared Sub CheckEnding()
+            Dim player As Player
+            For Each sound In soundList
+                player = sound.Value
+                If player.Duration = player.Position Then
+                    If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then
+                        DeletePlayer(player.ID)
+                        MessageAPI.SendSync("MEDIA_SOUND_END")
+                    Else
+                        player.Position = 0.0
+                        player.Play()
+                        If player.CycleCount > 0 Then player.CycleCount -= 1
+                        MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
+                    End If
+                End If
+            Next
         End Sub
 
     End Class

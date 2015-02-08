@@ -24,6 +24,25 @@ Namespace API
         End Sub
 
         ''' <summary>
+        ''' 启动监听器
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub StartReceiver()
+            If Not ModuleConfig.LoopOn Then
+                ModuleConfig.LoopOn = True
+                LoopingAPI.AddLoopSync(New PluginInterface.LoopReceiver)
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' 停止监听器
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub StopReceiver()
+            ModuleConfig.LoopOn = False
+        End Sub
+
+        ''' <summary>
         ''' 获取背景音乐音量(-5000~5000)
         ''' </summary>
         ''' <returns></returns>

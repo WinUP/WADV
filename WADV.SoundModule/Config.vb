@@ -68,7 +68,7 @@ Namespace Config
                                                       VideoContent = New MediaElement
                                                       VideoContent.SetValue(Panel.ZIndexProperty, 10)
                                                       VideoContent.LoadedBehavior = MediaState.Manual
-                                                      VideoContent.Source = New Uri(PathAPI.GetPath(PathAPI.Resource, fileName))
+                                                      VideoContent.Source = New Uri(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, fileName))
                                                       VideoContent.Height = content.Height
                                                       VideoContent.Width = content.Width
                                                       VideoContent.Margin = New Windows.Thickness(0)
@@ -83,7 +83,6 @@ Namespace Config
 
         Protected Shared Sub Video_Click(sender As Object, e As Windows.Input.MouseButtonEventArgs)
             If ClickToSkip Then
-                VideoContent.Close()
                 Video_Ended(VideoContent, New Windows.RoutedEventArgs)
                 MessageAPI.SendSync("MEDIA_VIDEO_SKIP")
             End If
@@ -94,7 +93,24 @@ Namespace Config
             VideoContent.Visibility = Windows.Visibility.Collapsed
             IsPlayFinished = True
             MessageAPI.SendSync("MEDIA_VIDEO_END")
+            VideoContent.Close()
         End Sub
+
+    End Class
+
+    ''' <summary>
+    ''' 模块设置类
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Class ModuleConfig
+
+        ''' <summary>
+        ''' 监测循环是否已启动
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Property LoopOn As Boolean
 
     End Class
 
