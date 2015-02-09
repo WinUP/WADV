@@ -132,7 +132,9 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function PlayBGM(fileName As String) As Integer
             MessageAPI.SendSync("MEDIA_BGM_INITPLAY")
-            Return PlaySound(fileName, SoundType.Background, True, -1)
+            Dim id = PlaySound(fileName, SoundType.Background, True, -1)
+            SoundConfig.LastBGMID = id
+            Return id
         End Function
 
         ''' <summary>
@@ -235,6 +237,14 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub StopNearlyReading()
             StopSound(SoundConfig.LastReadingID)
+        End Sub
+
+        ''' <summary>
+        ''' 停止最近一个BGM
+        ''' </summary>
+        ''' <remarks></remarks>
+        Public Shared Sub StopNearlyBGM()
+            StopSound(SoundConfig.LastBGMID)
         End Sub
 
     End Class

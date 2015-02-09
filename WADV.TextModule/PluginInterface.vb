@@ -1,4 +1,5 @@
-﻿Imports WADV.AppCore
+﻿Imports System.Reflection
+Imports WADV.AppCore
 Imports WADV.TextModule.TextEffect
 Imports System.Windows
 
@@ -10,6 +11,12 @@ Namespace PluginInterface
             Config.ModuleConfig.Clicked = False
             Config.ModuleConfig.Fast = False
             Initialiser.LoadEffect()
+            ScriptAPI.RunStringSync("api_text={}")
+            For Each tmpApiClass In (From tmpClass In Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.TextModule.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
+                Dim registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower()
+                ScriptAPI.RunStringSync("api_text." + registerName + "={}")
+                ScriptAPI.RegisterSync(tmpApiClass, "api_text." + registerName)
+            Next
             MessageAPI.SendSync("TEXT_INIT_FINISH")
             Return True
         End Function

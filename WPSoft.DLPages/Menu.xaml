@@ -4,25 +4,21 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
-      Title="Menu">
+      d:DesignHeight="528" d:DesignWidth="1105.001"
+      Title="Menu" Loaded="Page_Loaded">
     <Grid x:Name="MenuMainGrid">
-        <Grid HorizontalAlignment="Right" Width="320.585">
-            <Grid.Background>
-                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                    <GradientStop Color="#0016807B" Offset="0"/>
-                    <GradientStop Color="#FF16807B" Offset="0.613"/>
-                </LinearGradientBrush>
-            </Grid.Background>
-            <TextBlock HorizontalAlignment="Right" Margin="0,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="61.783" Width="245.053" Text="Deus Legem" FontSize="40" RenderTransformOrigin="0.5,0.5" Foreground="#FF1E2E5F">
-                <TextBlock.Effect>
-                    <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="15" Color="White"/>
-                </TextBlock.Effect>
-            </TextBlock>
-            <Button Content="开始" HorizontalAlignment="Right" Height="40" Margin="0,0,20,200" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="196.431" Foreground="White" FontSize="18.667" Click="Button_Click"/>
-            <Button Content="读取" HorizontalAlignment="Right" Height="40" Margin="0,0,20,140" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="196.431" Foreground="White" FontSize="18.667"/>
-            <Button Content="鉴赏" HorizontalAlignment="Right" Height="40" Margin="0,0,20,80" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="196.431" Foreground="White" FontSize="18.667"/>
-            <Button Content="设置" HorizontalAlignment="Right" Height="40" Margin="0,0,20,20" Style="{DynamicResource ButtonStyle1}" VerticalAlignment="Bottom" Width="196.431" Foreground="White" FontSize="18.667"/>
+        <Grid Height="90.238" VerticalAlignment="Bottom" Background="#AA16807B">
+            <Grid HorizontalAlignment="Center" Height="40" Margin="0,0,0,0" VerticalAlignment="Center" Width="844">
+                <Button Content="从零开始" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" Click="Button_Click" Height="40" VerticalAlignment="Top"/>
+                <Button Content="寻找路线" HorizontalAlignment="Left" Height="40" Margin="216,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
+                <Button Content="成就仓库" HorizontalAlignment="Left" Height="40" Margin="432,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
+                <Button Content="系统设置" HorizontalAlignment="Left" Height="40" Margin="648,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
+            </Grid>
         </Grid>
+        <TextBlock x:Name="Logo" HorizontalAlignment="Right" Margin="0,20,20,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="62" Width="301" FontSize="40" RenderTransformOrigin="0.5,0.5" Foreground="{x:Null}">
+            <TextBlock.Effect>
+                <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="15" Color="White"/>
+            </TextBlock.Effect>
+        </TextBlock>
     </Grid>
 </Page>

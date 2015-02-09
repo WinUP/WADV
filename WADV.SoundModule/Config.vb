@@ -12,6 +12,7 @@ Namespace Config
     Public Class SoundConfig
 
         Protected Friend Shared LastReadingID As Integer = -1
+        Protected Friend Shared LastBGMID As Integer = -1
 
         ''' <summary>
         ''' 获取或设置背景音量

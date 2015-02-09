@@ -12,6 +12,21 @@ Namespace API
     Public Class UIAPI
 
         ''' <summary>
+        ''' 初始化模块
+        ''' </summary>
+        ''' <param name="contentName">显示容器的名称</param>
+        ''' <param name="styleFile">样式文件</param>
+        ''' <param name="margin">选项间隔</param>
+        ''' <remarks></remarks>
+        Public Shared Sub Init(contentName As String, styleFile As String, margin As Double)
+            Dim content = WindowAPI.SearchObject(Of Panel)(contentName)
+            If content Is Nothing Then Return
+            SetContent(content)
+            SetStyle(styleFile)
+            SetMargin(margin)
+        End Sub
+
+        ''' <summary>
         ''' 设置显示选项的默认容器
         ''' </summary>
         ''' <param name="content">目标容器</param>

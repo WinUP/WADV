@@ -1,6 +1,7 @@
 ﻿Imports System.Reflection
 Imports System.Windows.Controls
 Imports WADV.TextModule.TextEffect
+Imports NLua
 
 Namespace API
 
@@ -188,6 +189,17 @@ Namespace API
             LoopingAPI.WaitLoopSync(loopContent)
             MessageAPI.SendSync("TEXT_SHOW_AFTER")
             Return True
+        End Function
+
+        Public Shared Function ShowByLua(content As LuaTable, effectName As String) As Boolean
+            Dim text, speaker As New List(Of String)
+            Dim isRead As New List(Of Boolean)
+            For Each record As LuaTable In content.Values
+                text.Add(CStr(record("content")))
+                text.Add(CStr(record("speaker")))
+                text.Add(CBool(record("isread")))
+            Next
+            Return Show(text.ToArray, speaker.ToArray, isRead.ToArray, effectName)
         End Function
 
     End Class

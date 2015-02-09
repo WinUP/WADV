@@ -14,16 +14,14 @@ namespace WPSoft.CGEffectPack
         {
             opacityPerFrame = 255 / duration;
             if (opacityPerFrame < 1) opacityPerFrame = 1;
-            unsafe
-            {
+            unsafe {
                 for (int i = 3; i < length; i += 4) pixel[i] = 0;
             }
         }
 
         public override void GetNextImageState(int frame)
         {
-            unsafe
-            {
+            unsafe {
                 for (int i = 3; i < length; i += 4)
                 {
                     if (pixel[i] + opacityPerFrame < 256) pixel[i] += Convert.ToByte(opacityPerFrame);

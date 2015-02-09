@@ -29,10 +29,10 @@
         Protected Friend Shared Sub LoadEffect()
             EffectList = New Dictionary(Of String, Type)
             Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "TextEffect\")
-            For Each type As Type In (From file In IO.Directory.GetFiles(basePath, "*.dll")
-                                      Select Reflection.Assembly.LoadFrom(file).GetTypes().
-                                      Select(Function(e) e.GetInterface("ITextEffect") IsNot Nothing))
-                EffectList.Add(type.Name, type)
+            For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Reflection.Assembly.LoadFrom(file)))
+                                Select types = assemble.GetTypes.Where(Function(e) e.GetInterface("ITextEffect") IsNot Nothing)
+                                From tmpType1 In types Select tmpType1
+                EffectList.Add(tmpType.Name, tmpType)
             Next
         End Sub
     End Class

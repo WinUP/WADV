@@ -1,6 +1,8 @@
-﻿Imports WADV.AppCore.API
+﻿Imports System.Windows.Media.Animation
+Imports WADV.AppCore.API
 
 Public Class GameWindow
+    Private _allowDirectNavigation = False
 
     Private Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
         AppCore.Plugin.PluginFunction.DestructuringGame(e)
@@ -36,4 +38,42 @@ Public Class GameWindow
         ScriptAPI.RunFileAsync("init.lua")
     End Sub
 
+    ''' <summary>
+    ''' 页面转场动画处理函数
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub GameWindow_Navigating(sender As Object, e As NavigatingCancelEventArgs) Handles Me.Navigating
+        If Content Is Nothing OrElse _allowDirectNavigation Then Return
+        e.Cancel = True
+        IsHitTestVisible = False
+        Dim fadeOut As New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(700)))
+        fadeOut.EasingFunction = New QuinticEase
+        AddHandler fadeOut.Completed, Sub()
+                                          IsHitTestVisible = True
+                                          Select Case e.NavigationMode
+                                              Case NavigationMode.Back
+                                                  NavigationService.GoBack()
+                                              Case NavigationMode.Forward
+                                                  NavigationService.GoForward()
+                                              Case NavigationMode.Refresh
+                                                  NavigationService.Refresh()
+                                              Case NavigationMode.New
+                                                  If e.Uri Is Nothing Then
+                                                      NavigationService.Navigate(e.Content)
+                                                  Else
+                                                      NavigationService.Navigate(e.Uri)
+                                                  End If
+                                          End Select
+                                          _allowDirectNavigation = False
+                                          Dispatcher.BeginInvoke(Sub()
+                                                                     Dim fadeIn As New DoubleAnimation(1.0, New Duration(TimeSpan.FromMilliseconds(700)))
+                                                                     fadeIn.EasingFunction = New QuinticEase
+                                                                     BeginAnimation(OpacityProperty, fadeIn)
+                                                                 End Sub)
+                                      End Sub
+        BeginAnimation(OpacityProperty, fadeOut)
+        _allowDirectNavigation = True
+    End Sub
 End Class

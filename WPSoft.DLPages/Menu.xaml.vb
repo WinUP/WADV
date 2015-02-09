@@ -1,6 +1,13 @@
 ﻿Class Menu
 
     Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
-        MessageBox.Show("CLICKED!")
+        Config.RoteConfig.DetectedRote = "0"
+        WindowAPI.LoadObjectAsync(New Story)
+    End Sub
+
+    Private Sub Page_Loaded(sender As Object, e As RoutedEventArgs)
+        Dim brush As New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(WADV.AppCore.Path.PathFunction.PathType.Resource, "image\Title.png"))))
+        brush.Stretch = Stretch.Uniform
+        Logo.Background = brush
     End Sub
 End Class

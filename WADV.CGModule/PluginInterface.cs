@@ -52,6 +52,7 @@ namespace WADV.CGModule.PluginInterface
                 imageRect = new Int32Rect(0, 0, width, height);
                 brush = new ImageBrush();
                 brush.ImageSource = image;
+                brush.Stretch = Stretch.Uniform;
                 content.Background = brush;
             }));
         }

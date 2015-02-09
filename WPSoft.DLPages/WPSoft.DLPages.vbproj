@@ -12,6 +12,7 @@
     <MyType>Custom</MyType>
     <TargetFrameworkProfile />
     <ProjectGuid>{9E975B7A-AF5D-4F27-B342-829DD678021D}</ProjectGuid>
+    <ExpressionBlendVersion>12.0.51020.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,11 +63,15 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Logo.xaml">
+    <Page Include="Menu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Menu.xaml">
+    <Page Include="Story.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Wait.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -93,9 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API.vb" />
-    <Compile Include="Logo.xaml.vb">
-      <DependentUpon>Logo.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Config.vb" />
     <Compile Include="Menu.xaml.vb">
       <DependentUpon>Menu.xaml</DependentUpon>
     </Compile>
@@ -114,6 +117,12 @@
     </Compile>
     <Compile Include="PageList.vb" />
     <Compile Include="PluginInterface.vb" />
+    <Compile Include="Story.xaml.vb">
+      <DependentUpon>Story.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Wait.xaml.vb">
+      <DependentUpon>Wait.xaml</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -126,11 +135,19 @@
     <AppDesigner Include="My Project\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WADV.SoundModule\WADV.MediaModule.vbproj">
+      <Project>{9c43548f-6bf1-4423-8bcb-cd6bacdb1f5f}</Project>
+      <Name>WADV.MediaModule</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\WADV\WADV.vbproj">
       <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>
       <Name>WADV</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="black_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
