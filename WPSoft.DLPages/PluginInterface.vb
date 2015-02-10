@@ -13,17 +13,8 @@ Namespace PluginInterface
                 ScriptAPI.RunStringSync("api_pages." + registerName + "={}")
                 ScriptAPI.RegisterSync(tmpApiClass, "api_pages." + registerName)
             Next
-            MessageAPI.AddSync(New GlobalReceiver)
             Return True
         End Function
-
-    End Class
-
-    Public NotInheritable Class GlobalReceiver : Implements IMessageReceiver
-
-        Public Sub ReceivingMessage(message As String) Implements WADV.AppCore.Plugin.IMessageReceiver.ReceivingMessage
-            Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss:ffff ") & message)
-        End Sub
 
     End Class
 

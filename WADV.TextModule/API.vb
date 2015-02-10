@@ -1,5 +1,4 @@
-﻿Imports System.Reflection
-Imports System.Windows.Controls
+﻿Imports System.Windows.Controls
 Imports WADV.TextModule.TextEffect
 Imports NLua
 
@@ -98,9 +97,10 @@ Namespace API
         ''' <summary>
         ''' 设置对话内容显示区域
         ''' </summary>
-        ''' <param name="area">目标文本区域</param>
+        ''' <param name="areaName">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetTextArea(area As TextBlock)
+        Public Shared Sub SetTextArea(areaName As String)
+            Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
             Config.UIConfig.TextArea = area
             MessageAPI.SendSync("TEXT_TEXTAREA_CHANGE")
         End Sub
@@ -108,9 +108,10 @@ Namespace API
         ''' <summary>
         ''' 设置说话者显示区域
         ''' </summary>
-        ''' <param name="area">目标文本区域</param>
+        ''' <param name="areaName">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetSpeakerArea(area As TextBlock)
+        Public Shared Sub SetSpeakerArea(areaName As String)
+            Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
             Config.UIConfig.SpeakerArea = area
             MessageAPI.SendSync("TEXT_SPEAKERAREA_CHANGE")
         End Sub
@@ -118,9 +119,10 @@ Namespace API
         ''' <summary>
         ''' 设置主显示区域
         ''' </summary>
-        ''' <param name="area">目标面板区域</param>
+        ''' <param name="areaName">目标面板区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetMainArea(area As Windows.FrameworkElement)
+        Public Shared Sub SetMainArea(areaName As String)
+            Dim area = WindowAPI.SearchObject(Of Windows.FrameworkElement)(areaName)
             Config.UIConfig.FrameArea = area
             MessageAPI.SendSync("TEXT_MAINAREA_CHANGE")
         End Sub
@@ -196,8 +198,8 @@ Namespace API
             Dim isRead As New List(Of Boolean)
             For Each record As LuaTable In content.Values
                 text.Add(CStr(record("content")))
-                text.Add(CStr(record("speaker")))
-                text.Add(CBool(record("isread")))
+                speaker.Add(CStr(record("speaker")))
+                isRead.Add(CBool(record("isread")))
             Next
             Return Show(text.ToArray, speaker.ToArray, isRead.ToArray, effectName)
         End Function

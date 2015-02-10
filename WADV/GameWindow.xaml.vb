@@ -34,6 +34,11 @@ Public Class GameWindow
         ScriptAPI.RunStringSync("env.version=""1.0""")
         ScriptAPI.RunStringSync("env.path={}")
         ScriptAPI.RunStringSync("env.path.game=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path.user=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile).Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path.plugin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Plugin).Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path.resource=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource).Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path.script=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Script).Replace("\", "\\") & """")
+        ScriptAPI.RunStringSync("env.path.skin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Skin).Replace("\", "\\") & """")
         '执行游戏逻辑
         ScriptAPI.RunFileAsync("init.lua")
     End Sub

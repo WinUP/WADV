@@ -16,12 +16,12 @@ Public Class CodeEffect : Inherits StandardEffect
         Text
     End Enum
 
-    Public Sub New(text() As String, speaker() As String, isRead() As String)
+    Public Sub New(text() As String, speaker() As String, isRead() As Boolean)
         MyBase.New(text, speaker, isRead)
         _currentProcessLength = 1
         _generateType = NextGenerateType.Code
         _existSentencePart = ""
-        _randomGenerater = New Random(DateTime.Now.Ticks)
+        _randomGenerater = New Random()
     End Sub
 
     Public Overrides Function GetNext() As ITextEffect.SentenceInfo

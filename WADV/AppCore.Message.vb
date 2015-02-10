@@ -7,11 +7,11 @@ Namespace AppCore.Message
     ''' 消息循环
     ''' </summary>
     Public Class MessageService
-        Private Shared self As MessageService
+        Private Shared _self As MessageService
         Private callList As List(Of Plugin.IMessageReceiver)
         Private receiverThread As Thread
         Private messageList As ConcurrentQueue(Of String)
-        Protected Friend lastMessage As String = ""
+        Protected Friend Shared LastMessage(100) As Char
 
         ''' <summary>
         ''' 添加一个接收器
@@ -52,16 +52,21 @@ Namespace AppCore.Message
                           While True
                               While Not messageList.IsEmpty
                                   messageList.TryDequeue(message)
+#If DEBUG Then
+                                  Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss,fff ") & message)
+#End If
                                   For Each receiver In callList
                                       receiver.ReceivingMessage(message)
                                   Next
+                                  SyncLock LastMessage
+                                      For i As Integer = 0 To message.Length - 1
+                                          LastMessage(i) = message(i)
+                                      Next
+                                      Monitor.PulseAll(LastMessage)
+                                  End SyncLock
                               End While
-                              SyncLock (lastMessage)
-                                  lastMessage = message
-                              End SyncLock
                               Monitor.Wait(messageList)
                           End While
-                          Monitor.Exit(messageList)
                       End Sub, ThreadStart))
             receiverThread.Name = "消息循环线程"
             receiverThread.Priority = ThreadPriority.AboveNormal
@@ -75,8 +80,8 @@ Namespace AppCore.Message
         ''' <returns></returns>
         ''' <remarks></remarks>
         Protected Friend Shared Function GetInstance() As MessageService
-            If self Is Nothing Then self = New MessageService
-            Return self
+            If _self Is Nothing Then _self = New MessageService
+            Return _self
         End Function
 
     End Class
@@ -94,10 +99,14 @@ Namespace AppCore.Message
         ''' <remarks></remarks>
         Friend Sub WaitMessage(message As String)
             While True
-                SyncLock (MessageService.GetInstance.lastMessage)
-                    If MessageService.GetInstance.lastMessage = message Then
-                        Exit While
-                    End If
+                SyncLock MessageService.LastMessage
+                    For i As Integer = 0 To message.Length - 1
+                        If message(i) <> MessageService.LastMessage(i) Then
+                            Monitor.Wait(MessageService.LastMessage)
+                            Continue While
+                        End If
+                    Next
+                    Exit While
                 End SyncLock
             End While
         End Sub

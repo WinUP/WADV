@@ -3,7 +3,7 @@
 Public Class PerWordEffect : Inherits StandardEffect
     Private _currentProcessLength As Integer
 
-    Public Sub New(text() As String, speaker() As String, isRead() As String)
+    Public Sub New(text() As String, speaker() As String, isRead() As Boolean)
         MyBase.New(text, speaker, isRead)
         _currentProcessLength = 1
     End Sub

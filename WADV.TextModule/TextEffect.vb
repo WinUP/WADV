@@ -46,7 +46,7 @@
         Private _sentenceLength As Integer
         Private _processLineIndex As Integer
 
-        Public Sub New(text() As String, speaker() As String, isRead() As String)
+        Public Sub New(text() As String, speaker() As String, isRead() As Boolean)
             _text = text
             _speaker = speaker
             _textLength = _text.Length
@@ -170,7 +170,7 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Property IsRead As String()
+        Private Property IsRead As Boolean()
 
         ''' <summary>
         ''' 整个对话数组的长度
@@ -184,6 +184,10 @@
             End Get
         End Property
 
+        ''' <summary>
+        ''' 移动到下一行
+        ''' </summary>
+        ''' <remarks></remarks>
         Protected Sub MoveNext()
             If _processLineIndex = TextLength Then Return
             SentenceRead = True

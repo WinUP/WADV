@@ -114,11 +114,11 @@ Namespace AudioCore
         Public Sub New(fileName As String, type As SoundType, cycle As Boolean, count As Integer, id As Integer)
             _player = New Audio(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, fileName), False)
             If type = SoundType.Background Then
-                Volume = ConfigAPI.GetBackgroundVolume
+                Volume = Config.SoundConfig.Background
             ElseIf type = SoundType.Effect Then
-                Volume = ConfigAPI.GetEffectVolume
+                Volume = Config.SoundConfig.Effect
             Else
-                Volume = ConfigAPI.GetReadingVolume
+                Volume = Config.SoundConfig.Reading
             End If
             _type = type
             CycleCount = count

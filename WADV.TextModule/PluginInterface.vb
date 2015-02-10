@@ -33,11 +33,11 @@ Namespace PluginInterface
         End Sub
 
         Public Function Logic(frame As Integer) As Boolean Implements Plugin.ILoopReceiver.Logic
-            Dim text As ITextEffect.SentenceInfo
             If _waitingCount > 0 Then
                 _waitingCount -= 1
                 Return True
             End If
+            Dim text As ITextEffect.SentenceInfo
             '快进状态或略过已读
             If Config.ModuleConfig.Fast OrElse (Config.ModuleConfig.Ignore AndAlso _effect.IsRead) Then
                 text = _effect.GetNext
