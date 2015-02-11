@@ -40,6 +40,7 @@
     Public MustInherit Class StandardEffect : Implements ITextEffect
         Private ReadOnly _text() As String
         Private ReadOnly _speaker() As String
+        Private ReadOnly _isRead() As Boolean
         Private ReadOnly _textLength As Integer
         Private _sentence As String
         Private _sentenceSpeaker As String
@@ -49,14 +50,14 @@
         Public Sub New(text() As String, speaker() As String, isRead() As Boolean)
             _text = text
             _speaker = speaker
+            _isRead = isRead
             _textLength = _text.Length
             Sentence = _text(0)
             SentenceSpeaker = _speaker(0)
             SentenceLength = Sentence.Length
-            Me.IsRead = isRead
-            _processLineIndex = 0
             AllOver = False
             SentenceOver = False
+            _processLineIndex = 0
             MessageAPI.SendSync("TEXT_BASEEFFECT_DECLARE")
         End Sub
 
@@ -100,10 +101,10 @@
         ''' <remarks></remarks>
         Protected Property SentenceRead As Boolean
             Get
-                Return IsRead(_processLineIndex)
+                Return _isRead(_processLineIndex)
             End Get
             Private Set(value As Boolean)
-                IsRead(_processLineIndex) = value
+                _isRead(_processLineIndex) = value
             End Set
         End Property
 
@@ -138,69 +139,24 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Property SentenceOver As Boolean
-
-        ''' <summary>
-        ''' 获取对话数组的内容
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Protected ReadOnly Property Text As String()
-            Get
-                Return _text
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' 获取讲话者数组的内容
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Protected ReadOnly Property Speaker As String()
-            Get
-                Return _speaker
-            End Get
-        End Property
-
-        ''' <summary>
-        ''' 获取对话的已读标志
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Private Property IsRead As Boolean()
-
-        ''' <summary>
-        ''' 整个对话数组的长度
-        ''' </summary>
-        ''' <value></value>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Protected ReadOnly Property TextLength As Integer
-            Get
-                Return _textLength
-            End Get
-        End Property
+        Protected Property SentenceOver As Boolean
 
         ''' <summary>
         ''' 移动到下一行
         ''' </summary>
         ''' <remarks></remarks>
         Protected Sub MoveNext()
-            If _processLineIndex = TextLength Then Return
             SentenceRead = True
             _processLineIndex += 1
-            If _processLineIndex = TextLength Then
+            If _processLineIndex >= _textLength Then
                 SentenceOver = True
                 AllOver = True
                 Return
             End If
-            Sentence = Text(_processLineIndex)
-            SentenceSpeaker = Speaker(_processLineIndex)
+            Sentence = _text(_processLineIndex)
+            SentenceSpeaker = _speaker(_processLineIndex)
             SentenceLength = Sentence.Length
-            SentenceOver = False
+            SentenceOver = True
             MessageAPI.SendSync("TEXT_SENTENCE_OVER")
         End Sub
 

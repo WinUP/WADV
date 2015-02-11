@@ -7,7 +7,14 @@
       d:DesignHeight="528" d:DesignWidth="1105.001"
       Title="Menu" Loaded="Page_Loaded">
     <Grid x:Name="MenuMainGrid">
-        <Grid Height="90.238" VerticalAlignment="Bottom" Background="#AA16807B">
+        <Grid x:Name="MenuGrid" Height="90.238" VerticalAlignment="Bottom">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#66409763" Offset="0.45"/>
+                    <GradientStop Color="#99409763" Offset="0.5"/>
+                    <GradientStop Color="#66409763" Offset="0.55"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <Grid HorizontalAlignment="Center" Height="40" Margin="0,0,0,0" VerticalAlignment="Center" Width="844">
                 <Button Content="从零开始" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" Click="Button_Click" Height="40" VerticalAlignment="Top"/>
                 <Button Content="寻找路线" HorizontalAlignment="Left" Height="40" Margin="216,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>

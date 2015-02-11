@@ -37,6 +37,7 @@ Namespace PluginInterface
                 _waitingCount -= 1
                 Return True
             End If
+            If _effect.IsAllOver Then Return False
             Dim text As ITextEffect.SentenceInfo
             '快进状态或略过已读
             If Config.ModuleConfig.Fast OrElse (Config.ModuleConfig.Ignore AndAlso _effect.IsRead) Then
@@ -64,13 +65,18 @@ Namespace PluginInterface
                 Return True
             End If
             '手动状态
-            If Not Config.ModuleConfig.Clicked AndAlso _effect.IsSentenceOver AndAlso Not _effect.IsAllOver Then Return True
-            If _effect.IsSentenceOver Then Config.ModuleConfig.Clicked = False
-            text = _effect.GetNext
             If Config.ModuleConfig.Clicked Then
-                While Not _effect.IsSentenceOver
+                If _effect.IsSentenceOver Then
+                    Config.ModuleConfig.Clicked = False
                     text = _effect.GetNext
-                End While
+                Else
+                    While Not _effect.IsSentenceOver
+                        text = _effect.GetNext
+                    End While
+                End If
+            Else
+                If _effect.IsSentenceOver Then Return True
+                text = _effect.GetNext
             End If
             _renderingText.Speaker = text.Speaker
             _renderingText.Text = text.Text

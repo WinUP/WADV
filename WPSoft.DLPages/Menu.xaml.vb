@@ -9,5 +9,11 @@
         Dim brush As New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(WADV.AppCore.Path.PathFunction.PathType.Resource, "image\Title.png"))))
         brush.Stretch = Stretch.Uniform
         Logo.Background = brush
+        'Dim menuBrush As New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(WADV.AppCore.Path.PathFunction.PathType.Resource, "image\back_shape.png"))))
+        'menuBrush.Stretch = Stretch.UniformToFill
+        'menuBrush.TileMode = TileMode.Tile
+        'menuBrush.ViewportUnits = BrushMappingMode.Absolute
+        'menuBrush.Viewport = New Rect(0, 0, 62, 54)
+        'MenuGrid.Background = menuBrush
     End Sub
 End Class

@@ -15,6 +15,8 @@ Namespace API
             Config.ModuleConfig.Clicked = False
             Config.ModuleConfig.Fast = False
             Config.ModuleConfig.Ignore = ignoreReaded
+            SetWordFrame(framsBetweenWord)
+            SetSentenceFrame(framsBetweenSetence)
             MessageAPI.SendSync("TEXT_SCRIPT_INIT")
         End Sub
 

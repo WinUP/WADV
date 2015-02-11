@@ -37,10 +37,7 @@
 	</Page.Background>
 	<Grid>
 		<TextBlock x:Name="LoadingText" HorizontalAlignment="Right" Margin="0,0,10.333,10.333" TextWrapping="Wrap" Text="Kaslad..." VerticalAlignment="Bottom" FontSize="36"/>
-        <Border BorderThickness="1" HorizontalAlignment="Center" Height="491" Margin="0" VerticalAlignment="Center" Width="491">
-        	<Border.Background>
-        		<ImageBrush ImageSource="black_logo.png" Stretch="Uniform"/>
-        	</Border.Background>
+        <Border x:Name="CenterImage"  BorderThickness="1" HorizontalAlignment="Center" Height="491" Margin="0" VerticalAlignment="Center" Width="491">
         </Border>
 
     </Grid>
