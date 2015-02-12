@@ -9,7 +9,7 @@ Namespace API
     ''' 界面API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class UIAPI
+    Public Class ConfigAPI
 
         ''' <summary>
         ''' 初始化模块
@@ -32,7 +32,7 @@ Namespace API
         ''' <param name="content">目标容器</param>
         ''' <remarks></remarks>
         Public Shared Sub SetContent(content As Panel)
-            Config.UIConfig.ChoiceContent = content
+            UIConfig.ChoiceContent = content
             MessageAPI.SendSync("CHOICE_CONTENT_CHANGE")
         End Sub
 
@@ -42,7 +42,7 @@ Namespace API
         ''' <param name="styleFile">样式文件(放置在Skin目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetStyle(styleFile As String)
-            Config.UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(AppCore.API.PathAPI.GetPath(AppCore.API.PathAPI.Skin, styleFile), System.Text.Encoding.Default)
+            UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Skin, styleFile), Text.Encoding.Default)
             MessageAPI.SendSync("CHOICE_STYLE_CHANGE")
         End Sub
 
@@ -52,7 +52,7 @@ Namespace API
         ''' <param name="margin">新的间隔</param>
         ''' <remarks></remarks>
         Public Shared Sub SetMargin(margin As Double)
-            Config.UIConfig.ChoiceMargin = margin
+            UIConfig.ChoiceMargin = margin
             MessageAPI.SendSync("CHOICE_MARGIN_CHANGE")
         End Sub
 
@@ -64,75 +64,54 @@ Namespace API
     ''' <remarks></remarks>
     Public Class ChoiceAPI
 
-        ''' <summary>
-        ''' 显示选项
-        ''' </summary>
-        ''' <param name="choice">选项内容</param>
-        ''' <param name="waiteTime">等待选择时间(单位为帧)</param>
-        ''' <param name="styleName">选项显示效果类的名字</param>
-        ''' <param name="contentName">要显示选项的容器，不提供则使用默认容器</param>
-        ''' <param name="optionStyle">选项的样式文件，不提供则使用默认样式文件</param>
-        ''' <param name="optionMargin">选项之间的间隔，不提供则使用默认间隔</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Shared Function Show(choice() As String, waiteTime As Integer, styleName As String,
-                                           Optional contentName As String = "", Optional optionStyle As String = "", Optional optionMargin As Integer = 0) As String
-            '窗口渲染线程
+        Public Shared Function Show(choice() As String, showEffectName As String, hideEffectName As String, waitFrame As Integer, Optional waitEffectName As String = "BaseProgress") As String
+            If (UIConfig.ChoiceContent Is Nothing) OrElse (UIConfig.ChoiceStyle = "") Then Return ""
+            If Not Initialiser.ShowEffectList.ContainsKey(showEffectName) Then Return ""
+            If Not Initialiser.HideEffectList.ContainsKey(hideEffectName) Then Return ""
+            If Not Initialiser.ProgressEffectList.ContainsKey(waitEffectName) Then Return ""
+            Dim content = UIConfig.ChoiceContent
             Dim dispatcher = WindowAPI.GetDispatcher
-            '确认显示区域
-            Dim content As Panel
-            If Config.UIConfig.ChoiceContent Is Nothing Then
-                If contentName = "" Then Return ""
-                content = WindowAPI.SearchObject(Of Panel)(contentName)
-                If content Is Nothing Then Return ""
-            Else
-                content = Config.UIConfig.ChoiceContent
-            End If
-            '隐藏选项区域
-            dispatcher.Invoke(Sub() content.Visibility = Windows.Visibility.Collapsed)
-            '确认样式文件
-            Dim style As String = If(optionStyle = "", Config.UIConfig.ChoiceStyle, optionStyle)
-            '确认选项距离
-            Dim margin As Integer = If(optionMargin = 0, Config.UIConfig.ChoiceMargin, optionMargin)
-            '查找时间显示区
-            Dim timeArea As TextBlock = WindowAPI.GetChildByName(Of TextBlock)(content, "TimeArea")
-            '声明选项列表
-            Dim choiceList As New List(Of Windows.FrameworkElement)
-            '声明界面元素
-            For i = 0 To choice.Length - 1
-                Dim readIndex = i
-                Dim totalMargin = i * margin
-                dispatcher.Invoke(Sub()
-                                      '获取元素
-                                      Dim tmpPanel As TextBlock = XamlReader.Parse(Config.UIConfig.ChoiceStyle)
-                                      '设置元素样式
+            Dim margin = UIConfig.ChoiceMargin
+            Dim choiceList As New List(Of Button)
+            Dim totalMargin As Integer
+            dispatcher.Invoke(Sub()
+                                  content.Visibility = Windows.Visibility.Collapsed
+                                  For i = 0 To choice.Length - 1
+                                      totalMargin = i * margin
+                                      Dim tmpPanel As Button = XamlReader.Parse(UIConfig.ChoiceStyle)
                                       tmpPanel.Margin = New Windows.Thickness(tmpPanel.Margin.Left, totalMargin, tmpPanel.Margin.Right, tmpPanel.Margin.Bottom)
-                                      tmpPanel.Text = choice(readIndex)
-                                      '添加到列表和窗口
+                                      tmpPanel.Content = choice(i)
                                       choiceList.Add(tmpPanel)
-                                      Config.UIConfig.ChoiceContent.Children.Add(tmpPanel)
-                                  End Sub)
-            Next
-            '查找特效
-            If Not Initialiser.EffectList.ContainsKey(styleName) Then Return ""
-            Dim effect As Effect.IEffect = Activator.CreateInstance(Initialiser.EffectList(styleName), New Object() {choiceList.ToArray, waiteTime, timeArea})
-            Dim loopContent As New PluginInterface.Looping(effect)
-            '显示选项区域
-            dispatcher.Invoke(Sub() content.Visibility = Windows.Visibility.Visible)
-            '开始渲染
-            MessageAPI.SendSync("CHOICE_SHOW_BEFORE")
+                                      content.Children.Add(tmpPanel)
+                                  Next
+                              End Sub)
+            Dim showEffect As IShowEffect = Activator.CreateInstance(Initialiser.ShowEffectList(showEffectName), New Object() {choiceList.ToArray})
+            Dim hideEffect As IHideEffect = Activator.CreateInstance(Initialiser.HideEffectList(hideEffectName), New Object() {choiceList.ToArray})
+            Dim waitEffect As IProgressEffect = Activator.CreateInstance(Initialiser.ProgressEffectList(waitEffectName), New Object() {choiceList.ToArray, waitFrame})
+            Dim loopContent As New PluginInterface.Looping(waitEffect)
+            MessageAPI.SendSync("CHOICE_DSIPLAY_BEFORE")
+            dispatcher.Invoke(Sub()
+                                  content.Visibility = Windows.Visibility.Visible
+                                  showEffect.Render()
+                              End Sub)
+            showEffect.Wait()
             LoopingAPI.AddLoopSync(loopContent)
-            '等待渲染结束
             LoopingAPI.WaitLoopSync(loopContent)
-            MessageAPI.SendSync("CHOICE_SHOW_AFTER")
-            '移除界面元素
-            For Each tmpPanel In choiceList
-                dispatcher.Invoke(Sub() content.Children.Remove(tmpPanel))
-            Next
-            '隐藏选项区域
-            dispatcher.Invoke(Sub() content.Visibility = Windows.Visibility.Collapsed)
-            '返回用户选择
-            Return effect.GetAnswer
+            dispatcher.Invoke(Sub() hideEffect.Render())
+            hideEffect.Wait()
+            dispatcher.Invoke(Sub()
+                                  For Each tmpPanel In choiceList
+                                      content.Children.Remove(tmpPanel)
+                                  Next
+                                  content.Visibility = Windows.Visibility.Collapsed
+                              End Sub)
+            MessageAPI.SendSync("CHOICE_DISPLAY_AFTER")
+            Return waitEffect.GetAnswer
+        End Function
+
+        Public Function ShowByLua(choice As NLua.LuaTable, showEffectName As String, hideEffectName As String, waitFrame As Integer, Optional waitEffectName As String = "BaseProgress") As String
+            Dim choiceList() As String = (From tmpChoice In choice.Values Select CStr(tmpChoice)).ToArray
+            Return Show(choiceList, showEffectName, hideEffectName, waitFrame, waitEffectName)
         End Function
 
     End Class

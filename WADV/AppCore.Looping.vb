@@ -102,7 +102,7 @@ Namespace AppCore.Looping
                     gameDispatcher.Invoke(Sub() loopContent.Render(gameWindow))
                 End While
                 sleepTime = timeNow + Span - Now.Ticks
-                If sleepTime > 10 Then Thread.Sleep(sleepTime)
+                If sleepTime > 0 Then Thread.Sleep(sleepTime)
                 frameCount += 1
             End While
         End Sub

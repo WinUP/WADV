@@ -20,18 +20,18 @@ Namespace PluginInterface
     End Class
 
     Public Class Looping : Implements AppCore.Plugin.ILoopReceiver
-        Private Style As Effect.IEffect
+        Private ReadOnly _style As Effect.IProgressEffect
 
-        Public Sub New(style As Effect.IEffect)
-            Me.Style = style
+        Public Sub New(style As Effect.IProgressEffect)
+            Me._style = style
         End Sub
 
         Public Function Logic(frame As Integer) As Boolean Implements AppCore.Plugin.ILoopReceiver.Logic
-            Return Style.NextState()
+            Return _style.Logic()
         End Function
 
         Public Sub Render(window As Window) Implements AppCore.Plugin.ILoopReceiver.Render
-            Style.Render()
+            _style.Render()
         End Sub
 
     End Class

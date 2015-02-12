@@ -1,11 +1,29 @@
-﻿Imports System.Windows.Controls
+﻿Imports System.Reflection
+Imports System.Windows.Controls
 Imports System.Windows
+Imports System.Windows.Media.Animation
 
 Namespace Effect
 
-    Public Interface IEffect
+    Public Interface IShowEffect
 
-        Function NextState() As Boolean
+        Sub Render()
+
+        Sub Wait()
+
+    End Interface
+
+    Public Interface IHideEffect
+
+        Sub Render()
+
+        Sub Wait()
+
+    End Interface
+
+    Public Interface IProgressEffect
+
+        Function Logic() As Boolean
 
         Sub Render()
 
@@ -13,78 +31,120 @@ Namespace Effect
 
     End Interface
 
-    Public Class Initialiser
+    Friend NotInheritable Class Initialiser
         ''' <summary>
         ''' 待实例化的图像效果列表
         ''' </summary>
-        Protected Friend Shared EffectList As Dictionary(Of String, Type)
+        Friend Shared ShowEffectList, HideEffectList, ProgressEffectList As Dictionary(Of String, Type)
 
         ''' <summary>
         ''' 读取并缓存所有图像效果
         ''' </summary>
-        Protected Friend Shared Sub LoadEffect()
-            EffectList = New Dictionary(Of String, Type)
-            EffectList.Add("BaseEffect", GetType(BaseEffect))
+        Friend Shared Sub LoadEffect()
+            ShowEffectList = New Dictionary(Of String, Type)
+            HideEffectList = New Dictionary(Of String, Type)
+            ProgressEffectList = New Dictionary(Of String, Type)
+            ShowEffectList.Add("BaseShow", GetType(BaseShow))
+            HideEffectList.Add("BaseHide", GetType(BaseHide))
+            ProgressEffectList.Add("BaseProgress", GetType(BaseProgress))
             Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "ChoiceEffect\")
-            For Each file As String In System.IO.Directory.GetFiles(basePath, "*.dll")
-                Dim assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes()
-                For Each type As Type In assembly
-                    If type.GetInterface("IStyle") IsNot Nothing Then
-                        EffectList.Add(type.Name, type)
-                    End If
-                Next
+            For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Assembly.LoadFrom(file)))
+                                Select types = assemble.GetTypes
+                                From tmpType1 In types Select tmpType1
+                If tmpType.GetInterface("IShowEffect") IsNot Nothing Then ShowEffectList.Add(tmpType.Name, tmpType)
+                If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
+                If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
             Next
         End Sub
     End Class
 
-    Public Class BaseEffect : Implements IEffect
-        Protected choices() As TextBlock
-        Protected waitTime As Integer
-        Protected countBlock As TextBlock
-        Protected initFinished As Boolean
-        Private answer As String
+    Public Class BaseShow : Implements IShowEffect
+        Protected ReadOnly Choices() As Button
+        Protected IsOver As Boolean
 
-        Public Sub New(choices() As TextBlock, wait As Integer, Optional count As TextBlock = Nothing)
-            Me.choices = choices
-            waitTime = wait
-            countBlock = count
-            initFinished = False
-            For Each choice In choices
-                AddHandler choice.MouseLeftButtonDown, Sub()
-                                                           answer = choice.Text
-                                                           MessageAPI.SendSync("CHOICE_USER_CLICK")
-                                                       End Sub
-            Next
-            If countBlock IsNot Nothing AndAlso waitTime > -1 Then countBlock.Text = "∞"
-            MessageAPI.SendSync("CHOICE_BASEEFFECT_DECLARE")
+        Public Sub New(choices() As Button)
+            Me.Choices = choices
         End Sub
 
-        Public Function GetAnswer() As String Implements IEffect.GetAnswer
-            Return answer
+        Public Overridable Sub Render() Implements IShowEffect.Render
+            IsOver = True
+            SendMessage()
+        End Sub
+
+        Public Overridable Sub Wait() Implements IShowEffect.Wait
+            While True
+                MessageAPI.WaitSync("CHOICE_SHOW_FINISH")
+                If IsOver Then Exit While
+            End While
+        End Sub
+
+        Protected Sub SendMessage()
+            MessageAPI.SendSync("CHOICE_SHOW_FINISH")
+        End Sub
+
+    End Class
+
+    Public Class BaseHide : Implements IHideEffect
+        Protected ReadOnly Choices() As Button
+        Protected IsOver As Boolean
+
+        Public Sub New(choices() As Button)
+            Me.Choices = choices
+        End Sub
+
+        Public Overridable Sub Render() Implements IHideEffect.Render
+            For Each choice In Choices
+                choice.Visibility = Visibility.Hidden
+            Next
+            IsOver = True
+            SendMessage()
+        End Sub
+
+        Public Overridable Sub Wait() Implements IHideEffect.Wait
+            While True
+                MessageAPI.WaitSync("CHOICE_HIDE_FINISH")
+                If IsOver Then Exit While
+            End While
+        End Sub
+
+        Protected Sub SendMessage()
+            MessageAPI.SendSync("CHOICE_HIDE_FINISH")
+        End Sub
+
+    End Class
+
+    Public Class BaseProgress : Implements IProgressEffect
+        Protected ReadOnly Choices() As Button
+        Protected WaitFrame As Integer
+        Private _answer As String
+
+        Public Sub New(choices() As Button, waitFrame As Integer)
+            Me.Choices = choices
+            Me.WaitFrame = waitFrame
+            _answer = ""
+            choices(0).Dispatcher.Invoke(Sub()
+                                             For Each choice In choices
+                                                 AddHandler choice.Click, AddressOf Button_Click
+                                             Next
+                                         End Sub)
+        End Sub
+
+        Public Overridable Function Logic() As Boolean Implements IProgressEffect.Logic
+            If WaitFrame > 0 Then WaitFrame -= 1
+            If WaitFrame = 0 OrElse _answer <> "" Then Return False
+            Return True
         End Function
 
-        Public Function NextState() As Boolean Implements IEffect.NextState
-            If Not initFinished Then Return True
-            If waitTime = -1 Then Return True
-            waitTime -= 1
-            If waitTime >= 0 Then
-                Return True
-            Else
-                Return False
-            End If
+        Public Overridable Sub Render() Implements IProgressEffect.Render
+        End Sub
+
+        Public Function GetAnswer() As String Implements IProgressEffect.GetAnswer
+            Return _answer
         End Function
 
-        Public Overridable Sub Render() Implements IEffect.Render
-            If initFinished Then
-                If countBlock IsNot Nothing AndAlso waitTime > -1 Then
-                    countBlock.Text = waitTime
-                Else
-                    Exit Sub
-                End If
-            Else
-                initFinished = True
-                MessageAPI.SendSync("CHOICE_BASEEFFECT_SHOWFINISH")
-            End If
+        Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
+            _answer = TryCast(sender, Button).Content
+            MessageAPI.SendSync("CHOICE_USER_CLICKED")
         End Sub
 
     End Class
