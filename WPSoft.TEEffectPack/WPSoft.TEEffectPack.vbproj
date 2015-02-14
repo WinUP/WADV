@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\WADV\bin\Debug\resource\TEEffect\</OutputPath>
     <DocumentationFile>WPSoft.TEEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FadeIn.vb" />
+    <Compile Include="FadeOut.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -108,6 +109,11 @@
     <ProjectReference Include="..\WADV.TEModule\WADV.TEModule.vbproj">
       <Project>{ac75a201-4d9a-4652-8225-83d941d11c7e}</Project>
       <Name>WADV.TEModule</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\WADV\WADV.vbproj">
+      <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>
+      <Name>WADV</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

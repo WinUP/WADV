@@ -7,7 +7,7 @@ Namespace TEList
     ''' </summary>
     ''' <remarks></remarks>
     Public Class List
-        Private Shared _imageList As New Dictionary(Of Integer, Image)
+        Private Shared ReadOnly ImageList As New Dictionary(Of Integer, Panel)
         Private Shared _id As Integer = 0
 
         ''' <summary>
@@ -16,9 +16,9 @@ Namespace TEList
         ''' <param name="target"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Add(target As Image) As Integer
-            If _imageList.ContainsValue(target) Then Return (From tmpPare In _imageList Where tmpPare.Value Is target Select tmpPare.Key).FirstOrDefault
-            _imageList.Add(_id, target)
+        Public Shared Function Add(target As Panel) As Integer
+            If ImageList.ContainsValue(target) Then Return (From tmpPare In ImageList Where tmpPare.Value Is target Select tmpPare.Key).FirstOrDefault
+            ImageList.Add(_id, target)
             _id += 1
             Return _id - 1
         End Function
@@ -30,9 +30,13 @@ Namespace TEList
         ''' <param name="id">要获取的立绘的ID</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Item(id As Integer) As Image
-            If Not _imageList.ContainsKey(id) Then Return Nothing
-            Return _imageList(id)
+        Public Shared Function Item(id As Integer) As Panel
+            If Not Contains(id) Then Return Nothing
+            Return ImageList(id)
+        End Function
+
+        Public Shared Function Contains(id As Integer) As Boolean
+            Return ImageList.ContainsKey(id)
         End Function
 
         ''' <summary>
@@ -42,8 +46,8 @@ Namespace TEList
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Delete(id As Integer) As Boolean
-            If Not _imageList.ContainsKey(id) Then Return False
-            _imageList.Remove(id)
+            If Not Contains(id) Then Return False
+            ImageList.Remove(id)
             Return True
         End Function
 

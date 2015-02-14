@@ -36,7 +36,7 @@
 		<SolidColorBrush Color="Black" Opacity="0.5"/>
 	</Page.Background>
 	<Grid>
-		<TextBlock x:Name="LoadingText" HorizontalAlignment="Right" Margin="0,0,10.333,10.333" TextWrapping="Wrap" Text="Kaslad..." VerticalAlignment="Bottom" FontSize="36"/>
+		<TextBlock x:Name="LoadingText" HorizontalAlignment="Right" Margin="0,0,10.333,10.333" TextWrapping="Wrap" Text="KASLAD..." VerticalAlignment="Bottom" FontSize="36"/>
         <Border x:Name="CenterImage"  BorderThickness="1" HorizontalAlignment="Center" Height="491" Margin="0" VerticalAlignment="Center" Width="491">
         </Border>
 

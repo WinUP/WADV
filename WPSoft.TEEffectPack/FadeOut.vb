@@ -8,15 +8,15 @@ Imports WADV.AppCore.API
 ''' fadeTime, ease[circle, cubic, exp, quartic, quintic, sine, noease], easeMode[in, out, both]
 ''' </summary>
 ''' <remarks></remarks>
-Public Class FadeIn : Inherits WADV.TEModule.Effect.BaseEffect
+Public Class FadeOut : Inherits WADV.TEModule.Effect.BaseEffect
 
     Public Sub New(id As Integer, variable As Object())
         MyBase.New(id, variable)
-        WindowAPI.GetDispatcher.Invoke(Sub() ImageContent.Opacity = 0.0)
+        WindowAPI.GetDispatcher.Invoke(Sub() ImageContent.Opacity = 1.0)
     End Sub
 
     Public Overrides Sub Render()
-        Dim animation As New DoubleAnimation(1.0, New Duration(LoopingAPI.TranslateToTime(Params(0))))
+        Dim animation As New DoubleAnimation(0.0, New Duration(LoopingAPI.TranslateToTime(Params(0))))
         Dim ease As EasingFunctionBase
         Select Case CStr(Params(1))
             Case "circle"

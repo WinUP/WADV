@@ -4,7 +4,12 @@ Namespace Effect
 
     Public Interface IEffect
 
-        Sub Rendering()
+        Sub Render()
+
+        Sub Dispose()
+
+        Sub Wait()
+
 
     End Interface
 
@@ -26,39 +31,30 @@ Namespace Effect
     End Class
 
     Public Class BaseEffect : Implements IEffect
-        Private ReadOnly _imageContent As Image
-        Private ReadOnly _params() As String
-        Private ReadOnly _id As Integer
+        Protected ImageContent As Panel
+        Protected Params() As Object
+        Protected ReadOnly Id As Integer
 
-        Protected Friend ReadOnly Property ImageContent As Image
-            Get
-                Return _imageContent
-            End Get
-        End Property
-
-        Protected Friend ReadOnly Property Params As String()
-            Get
-                Return _params
-            End Get
-        End Property
-
-        Public ReadOnly Property ID As Integer
-            Get
-                Return _id
-            End Get
-        End Property
-
-        Public Sub New(id As Integer , Optional params As String() = Nothing)
-            _imageContent = TEList.List.Item(id)
-            _params = params
+        Public Sub New(id As Integer, params As Object())
+            ImageContent = TEList.List.Item(id)
+            Me.Id = id
+            Me.Params = params
         End Sub
 
-        Public Overridable Sub Rendering() Implements IEffect.Rendering
-            ImageContent.Visibility = Windows.Visibility.Visible
+        Public Overridable Sub Render() Implements IEffect.Render
         End Sub
 
-        Public Sub Dispose()
-            TEList.List.Delete(_id)
+        Public Sub Dispose() Implements IEffect.Dispose
+            ImageContent = Nothing
+            Params = Nothing
+        End Sub
+
+        Protected Sub Animation_Finished(sender As Object, e As EventArgs)
+            MessageAPI.SendSync("TE_EFFECT_FINISH")
+        End Sub
+
+        Public Overridable Sub Wait() Implements IEffect.Wait
+            MessageAPI.WaitSync("TE_EFFECT_FINISH")
         End Sub
 
     End Class
