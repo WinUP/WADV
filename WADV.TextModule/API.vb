@@ -11,13 +11,14 @@ Namespace API
     Public Class ConfigAPI
 
         Public Shared Sub Init(framsBetweenWord As Integer, framsBetweenSetence As Integer, auto As Boolean, ignoreReaded As Boolean)
+            Initialiser.LoadEffect()
             Config.ModuleConfig.Auto = auto
             Config.ModuleConfig.Clicked = False
             Config.ModuleConfig.Fast = False
             Config.ModuleConfig.Ignore = ignoreReaded
             SetWordFrame(framsBetweenWord)
             SetSentenceFrame(framsBetweenSetence)
-            MessageAPI.SendSync("TEXT_SCRIPT_INIT")
+            MessageAPI.SendSync("TEXT_INIT_ALLFINISH")
         End Sub
 
         ''' <summary>
@@ -185,7 +186,7 @@ Namespace API
             Dim effect As StandardEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {text, speaker, isRead})
             Config.ModuleConfig.Clicked = False
             '生成循环体
-            Dim loopContent As New PluginInterface.CustomizedLoop(effect)
+            Dim loopContent As New PluginInterface.LoopReceiver(effect)
             '开始循环
             MessageAPI.SendSync("TEXT_SHOW_BEFORE")
             LoopingAPI.AddLoopSync(loopContent)

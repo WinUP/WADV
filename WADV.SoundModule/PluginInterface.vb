@@ -12,7 +12,7 @@ Namespace PluginInterface
                 ScriptAPI.RunStringSync("api_media." + registerName + "={}")
                 ScriptAPI.RegisterSync(tmpApiClass, "api_media." + registerName)
             Next
-            MessageAPI.SendSync("MEDIA_INIT_FINISH")
+            MessageAPI.SendSync("MEDIA_INIT_LOADFINISH")
             Return True
         End Function
 

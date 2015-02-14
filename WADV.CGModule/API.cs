@@ -24,7 +24,7 @@ namespace WADV.CGModule.API
             Effect.IEffect effect = (Effect.BaseBGRA32)Activator.CreateInstance(Effect.Initialiser.EffectList[effectName], new object[] { fileName, duration });
             var content = WindowAPI.GetChildByName<Panel>(WindowAPI.GetWindow(), contentName);
             if (content == null) return false;
-            PluginInterface.ImageLoop loopContent = new PluginInterface.ImageLoop(effect, content);
+            PluginInterface.LoopReceiver loopContent = new PluginInterface.LoopReceiver(effect, content);
             MessageAPI.SendSync("CG_SHOW_BEFORE");
             LoopingAPI.AddLoopSync(loopContent);
             LoopingAPI.WaitLoopSync(loopContent);
@@ -58,7 +58,8 @@ namespace WADV.CGModule.API
         public static void Init(int dpi)
         {
             Config.DPI = dpi;
-            MessageAPI.SendSync("CG_SCRIPT_INIT");
+            Effect.Initialiser.LoadEffect();
+            MessageAPI.SendSync("CG_INIT_ALLFINISH");
         }
     }
 }

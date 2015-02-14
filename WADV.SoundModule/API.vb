@@ -20,7 +20,7 @@ Namespace API
             SetBackgroundVolume(bgmVolume)
             SetReadingVolume(readingVolume)
             SetEffectVolume(effectVolume)
-            MessageAPI.SendSync("MEDIA_INIT_FINISH")
+            MessageAPI.SendSync("MEDIA_INIT_ALLFINISH")
         End Sub
 
         ''' <summary>

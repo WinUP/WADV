@@ -17,16 +17,16 @@
 
     End Interface
 
-    Friend Class Initialiser
+    Friend NotInheritable Class Initialiser
         ''' <summary>
         ''' 待实例化的文字效果列表
         ''' </summary>
-        Protected Friend Shared EffectList As Dictionary(Of String, Type)
+        Friend Shared EffectList As Dictionary(Of String, Type)
 
         ''' <summary>
         ''' 读取并缓存所有文字效果
         ''' </summary>
-        Protected Friend Shared Sub LoadEffect()
+        Friend Shared Sub LoadEffect()
             EffectList = New Dictionary(Of String, Type)
             Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "TextEffect\")
             For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Reflection.Assembly.LoadFrom(file)))
@@ -34,6 +34,7 @@
                                 From tmpType1 In types Select tmpType1
                 EffectList.Add(tmpType.Name, tmpType)
             Next
+            MessageAPI.SendSync("TEXT_INIT_EFFECTFINISH")
         End Sub
     End Class
 
@@ -58,7 +59,6 @@
             AllOver = False
             SentenceOver = False
             _processLineIndex = 0
-            MessageAPI.SendSync("TEXT_BASEEFFECT_DECLARE")
         End Sub
 
 #Region "       表示当前句子的元素"

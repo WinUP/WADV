@@ -19,11 +19,13 @@ Namespace API
         ''' <param name="margin">选项间隔</param>
         ''' <remarks></remarks>
         Public Shared Sub Init(contentName As String, styleFile As String, margin As Double)
+            Initialiser.LoadEffect()
             Dim content = WindowAPI.SearchObject(Of Panel)(contentName)
             If content Is Nothing Then Return
             SetContent(content)
             SetStyle(styleFile)
             SetMargin(margin)
+            MessageAPI.SendSync("CHOICE_INIT_ALLFINISH")
         End Sub
 
         ''' <summary>
@@ -88,7 +90,7 @@ Namespace API
             Dim showEffect As IShowEffect = Activator.CreateInstance(Initialiser.ShowEffectList(showEffectName), New Object() {choiceList.ToArray})
             Dim hideEffect As IHideEffect = Activator.CreateInstance(Initialiser.HideEffectList(hideEffectName), New Object() {choiceList.ToArray})
             Dim waitEffect As IProgressEffect = Activator.CreateInstance(Initialiser.ProgressEffectList(waitEffectName), New Object() {choiceList.ToArray, waitFrame})
-            Dim loopContent As New PluginInterface.Looping(waitEffect)
+            Dim loopContent As New PluginInterface.LoopReceiver(waitEffect)
             MessageAPI.SendSync("CHOICE_DSIPLAY_BEFORE")
             dispatcher.Invoke(Sub()
                                   content.Visibility = Windows.Visibility.Visible

@@ -5,25 +5,22 @@ Imports System.Windows
 
 Namespace PluginInterface
 
-    Public Class Initialise : Implements Plugin.IInitialise
+    Public Class Initialiser : Implements Plugin.IInitialise
 
         Public Function Initialising() As Boolean Implements Plugin.IInitialise.Initialising
-            Config.ModuleConfig.Clicked = False
-            Config.ModuleConfig.Fast = False
-            Initialiser.LoadEffect()
             ScriptAPI.RunStringSync("api_text={}")
             For Each tmpApiClass In (From tmpClass In Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.TextModule.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
                 Dim registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower()
                 ScriptAPI.RunStringSync("api_text." + registerName + "={}")
                 ScriptAPI.RegisterSync(tmpApiClass, "api_text." + registerName)
             Next
-            MessageAPI.SendSync("TEXT_INIT_FINISH")
+            MessageAPI.SendSync("TEXT_INIT_LOADFINISH")
             Return True
         End Function
 
     End Class
 
-    Public Class CustomizedLoop : Implements Plugin.ILoopReceiver
+    Public Class LoopReceiver : Implements Plugin.ILoopReceiver
         Private ReadOnly _effect As ITextEffect
         Private _waitingCount As Integer = 0
         Private _renderingText As ITextEffect.SentenceInfo
@@ -78,6 +75,7 @@ Namespace PluginInterface
                 If _effect.IsSentenceOver Then Return True
                 text = _effect.GetNext
             End If
+            '!在实际执行过程中并不会出现空值的情况，请忽略这个警告
             _renderingText.Speaker = text.Speaker
             _renderingText.Text = text.Text
             Config.ModuleConfig.Clicked = False

@@ -38,6 +38,7 @@ Namespace API
                                                If Not showInBegin Then tmpImage.Opacity = 0.0
                                                UIConfig.ImagePanel.Children.Add(tmpImage)
                                            End Sub)
+            '!在实际执行过程中它一定不是空值，请忽略这个警告
             Return TEList.List.Add(tmpImage)
         End Function
 
@@ -63,9 +64,11 @@ Namespace API
             Dim effectType = TEModule.Effect.Initialiser.EffectList.Item(effectName)
             If effectType Is Nothing Then Return
             Dim effect As Effect.IEffect = Activator.CreateInstance(effectType, New Object() {id, params})
+            MessageAPI.SendSync("TE_EFFECT_BEFORE")
             WindowAPI.GetDispatcher.Invoke(Sub() effect.Render())
             If sync Then effect.Wait()
             effect.Dispose()
+            MessageAPI.SendSync("TE_EFFECT_AFTER")
         End Sub
 
         ''' <summary>
@@ -86,6 +89,7 @@ Namespace API
     Public Class ConfigAPI
 
         Public Shared Sub Init(Optional contentName As String = "")
+            Effect.Initialiser.LoadEffect()
             WindowAPI.GetDispatcher.Invoke(Sub()
                                                If contentName = "" Then
                                                    UIConfig.ImagePanel = WindowAPI.GetRoot(Of Grid)()
@@ -93,7 +97,7 @@ Namespace API
                                                    UIConfig.ImagePanel = WindowAPI.SearchObject(Of Grid)(contentName)
                                                End If
                                            End Sub)
-            MessageAPI.SendSync("TE_SCRIPT_INITFINISH")
+            MessageAPI.SendSync("TE_INIT_ALLFINISH")
         End Sub
 
     End Class

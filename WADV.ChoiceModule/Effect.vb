@@ -55,7 +55,9 @@ Namespace Effect
                 If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
                 If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
             Next
+            MessageAPI.SendSync("CHOICE_INIT_EFFECTFINISH")
         End Sub
+
     End Class
 
     Public Class BaseShow : Implements IShowEffect

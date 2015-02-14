@@ -26,6 +26,7 @@ Namespace Effect
                     If type.GetInterface("IEffect") <> Nothing Then EffectList.Add(type.Name, type)
                 Next
             Next
+            MessageAPI.SendSync("TE_INIT_EFFECTFINISH")
         End Sub
 
     End Class

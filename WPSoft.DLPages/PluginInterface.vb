@@ -3,7 +3,7 @@ Imports WADV.AppCore.Plugin
 
 Namespace PluginInterface
 
-    Public Class Initlizer : Implements IInitialise
+    Public Class Initialiser : Implements IInitialise
 
         Public Function Initialising() As Boolean Implements WADV.AppCore.Plugin.IInitialise.Initialising
             PageList.List.LoadPage()

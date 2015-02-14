@@ -11,11 +11,10 @@ using WADV.CGModule.Effect;
 
 namespace WADV.CGModule.PluginInterface
 {
-    public class Initialise : IInitialise
+    public class Initialiser : IInitialise
     {
 
         public bool Initialising() {
-            Initialiser.LoadEffect();
             ScriptAPI.RunStringSync("api_cg={}");
             foreach (var tmpApiClass in (from tmpClass in Assembly.GetExecutingAssembly().GetTypes() where tmpClass.Namespace == "WADV.CGModule.API" && tmpClass.IsClass && tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) == tmpClass.Name.Length - 3 select tmpClass))
             {
@@ -23,13 +22,13 @@ namespace WADV.CGModule.PluginInterface
                 ScriptAPI.RunStringSync("api_cg." + registerName + "={}");
                 ScriptAPI.RegisterSync(tmpApiClass, "api_cg." + registerName);
             }
-            MessageAPI.SendSync("CG_INIT_FINISH");
+            MessageAPI.SendSync("CG_INIT_LOADFINISH");
             return true;
         }
 
     }
 
-    public class ImageLoop : ILoopReceiver
+    public class LoopReceiver : ILoopReceiver
     {
         private IEffect effect;
         private Panel content;
@@ -39,7 +38,7 @@ namespace WADV.CGModule.PluginInterface
         private int width;
         private int height;
 
-        public ImageLoop(IEffect effect, Panel content)
+        public LoopReceiver(IEffect effect, Panel content)
         {
             this.effect = effect;
             this.content = content;
