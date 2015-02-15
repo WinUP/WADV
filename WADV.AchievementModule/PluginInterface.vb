@@ -20,7 +20,7 @@ Namespace PluginInterface
     Public Class GameClose : Implements AppCore.Plugin.IGameClose
 
         Public Sub DestructuringGame(e As ComponentModel.CancelEventArgs) Implements AppCore.Plugin.IGameClose.DestructuringGame
-            If Config.SaveFileName <> "" Then AchievementList.Save(Config.SaveFileName)
+            If Config.SaveFileFolder <> "" Then AchievementList.Save(Config.SaveFileFolder)
         End Sub
 
     End Class

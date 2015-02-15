@@ -83,6 +83,7 @@
     <Compile Include="AppCore.Looping.vb" />
     <Compile Include="AppCore.Message.vb" />
     <Compile Include="AppCore.Script.vb" />
+    <Compile Include="AppCore.Timer.vb" />
     <Compile Include="AppCore.UI.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>

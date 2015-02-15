@@ -1,15 +1,5 @@
 ﻿Namespace API
 
-    Public Class ConfigAPI
-
-        Public Sub Init(saveFile As String)
-            Config.SaveFileName = saveFile
-            AchievementList.Load(saveFile)
-            MessageAPI.SendSync("ACHIEVE_INIT_ALLFINISH")
-        End Sub
-
-    End Class
-
     Public Class AchieveAPI
 
         Public Function NewAchieve(name As String, substance As String) As Boolean
@@ -38,7 +28,8 @@
         Public Sub Earn(name As String)
             If Not AchievementList.Contains(name) Then Return
             Dim achieve = AchievementList.Item(name)
-            achieve.IsEarn = True
+            If achieve._IsEarn = True Then Return
+            achieve._IsEarn = True
             AchievementList.Change(name, achieve)
 
             '!在这里加入动画特效

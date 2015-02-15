@@ -1,5 +1,7 @@
 ﻿Friend Class Config
 
-    Friend Shared SaveFileName As String = ""
+    Friend Shared SaveFileFolder As String = ""
+
+    Friend Shared ReceiverFolder As String = ""
 
 End Class
