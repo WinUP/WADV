@@ -783,7 +783,7 @@ Namespace AppCore.API
         ''' <param name="filename">文件路径(从Script目录下开始)</param>
         ''' <remarks></remarks>
         Public Shared Sub RunFileSync(filename As String)
-            ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathAPI.Script, filename))
+            ScriptCore.GetInstance.RunFile(PathAPI.GetPath(PathFunction.PathType.Script, filename))
         End Sub
 
         ''' <summary>

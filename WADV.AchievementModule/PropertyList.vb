@@ -6,11 +6,11 @@ Imports WADV.AppCore.Path.PathFunction
 ''' 表示一个属性
 ''' </summary>
 ''' <remarks></remarks>
-Public Structure AchievementProperty
+<Serializable> Public Structure AchievementProperty
 
     Public Name As String
     Public Data As Integer
-    Public Triggle As List(Of IAchievement)
+    Public Triggle As List(Of Achievement)
 
 End Structure
 
@@ -31,7 +31,7 @@ Friend NotInheritable Class PropertyList
         Dim prop As New AchievementProperty
         prop.Name = name
         prop.Data = 0
-        prop.Triggle = New List(Of IAchievement)
+        prop.Triggle = New List(Of Achievement)
         _list.Add(prop.Name, prop)
         MessageAPI.SendSync("ACHIEVE_PROP_ADD")
     End Sub
@@ -57,7 +57,7 @@ Friend NotInheritable Class PropertyList
         Dim prop = _list.Item(name)
         prop.Data = data
         _list.Item(name) = prop
-        For Each tmpAchievement In prop.Triggle
+        For Each tmpAchievement In From tmpAchievement1 In prop.Triggle Where Not tmpAchievement1.IsEarn
             tmpAchievement.Check()
         Next
         MessageAPI.SendSync("ACHIEVE_PROP_SETDATA")
@@ -80,7 +80,7 @@ Friend NotInheritable Class PropertyList
     ''' <param name="name">属性的名字</param>
     ''' <param name="target">要关联的成就</param>
     ''' <remarks></remarks>
-    Friend Shared Sub Register(name As String, target As IAchievement)
+    Friend Shared Sub Register(name As String, target As Achievement)
         If Not Contains(name) Then Return
         Dim triggle = _list.Item(name).Triggle
         If Not triggle.Contains(target) Then
@@ -95,7 +95,7 @@ Friend NotInheritable Class PropertyList
     ''' <param name="name">属性的名字</param>
     ''' <param name="target">要取消关联的成就</param>
     ''' <remarks></remarks>
-    Friend Shared Sub Unregister(name As String, target As IAchievement)
+    Friend Shared Sub Unregister(name As String, target As Achievement)
         If Not Contains(name) Then Return
         Dim triggle = _list.Item(name).Triggle
         If triggle.Contains(target) Then
@@ -121,8 +121,11 @@ Friend NotInheritable Class PropertyList
     ''' <param name="fileName">要读取的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Load(fileName As String)
-        Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Open)
+        Dim path = PathAPI.GetPath(PathType.UserFile, fileName)
+        If Not My.Computer.FileSystem.FileExists(path) Then Return
+        Dim stream As New FileStream(path, FileMode.Open)
         Dim formatter As New BinaryFormatter
+        formatter.Binder = New DeserializationBinder
         _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, AchievementProperty))
         stream.Close()
         MessageAPI.SendSync("ACHIEVE_PROP_LOAD")
@@ -136,6 +139,7 @@ Friend NotInheritable Class PropertyList
     Friend Shared Sub Save(fileName As String)
         Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
         Dim formatter As New BinaryFormatter
+        formatter.Binder = New DeserializationBinder
         formatter.Serialize(stream, _list)
         stream.Close()
         MessageAPI.SendSync("ACHIEVE_PROP_SAVE")

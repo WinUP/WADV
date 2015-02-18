@@ -119,7 +119,7 @@ Namespace AppCore.Plugin
                 If tmpTypeName.GetInterface("IGameStart") <> Nothing Then
                     initFunction = Activator.CreateInstance(tmpTypeName)
                 End If
-                If tmpTypeName.GetInterface("IGameStop") <> Nothing Then
+                If tmpTypeName.GetInterface("IGameClose") <> Nothing Then
                     destructFunction = Activator.CreateInstance(tmpTypeName)
                 End If
             Next

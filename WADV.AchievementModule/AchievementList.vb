@@ -3,28 +3,10 @@ Imports System.Runtime.Serialization.Formatters.Binary
 Imports WADV.AppCore.Path.PathFunction
 
 ''' <summary>
-''' 表示一个成就
-''' </summary>
-''' <remarks></remarks>
-Public Interface IAchievement
-
-    Sub Register()
-
-    Sub Check()
-
-    Function GetName() As String
-
-    Function GetSubstance() As String
-
-    Function IsEarn() As Boolean
-
-End Interface
-
-''' <summary>
 ''' 一般成就的基类
 ''' </summary>
 ''' <remarks></remarks>
-Public MustInherit Class Achievement : Implements IAchievement
+<Serializable> Public MustInherit Class Achievement
     Private ReadOnly _name As String
     Private ReadOnly _substance As String
     Private _isEarn As Boolean
@@ -35,19 +17,19 @@ Public MustInherit Class Achievement : Implements IAchievement
         _isEarn = False
     End Sub
 
-    Public MustOverride Sub Check() Implements IAchievement.Check
+    Public MustOverride Sub Check()
 
-    Public MustOverride Sub Register() Implements IAchievement.Register
+    Public MustOverride Sub Register()
 
-    Public Function GetName() As String Implements IAchievement.GetName
+    Public Function GetName() As String
         Return _name
     End Function
 
-    Public Function GetSubstance() As String Implements IAchievement.GetSubstance
+    Public Function GetSubstance() As String
         Return _substance
     End Function
 
-    Public Function IsEarn() As Boolean Implements IAchievement.IsEarn
+    Public Function IsEarn() As Boolean
         Return _isEarn
     End Function
 
@@ -58,7 +40,7 @@ End Class
 ''' </summary>
 ''' <remarks></remarks>
 Friend Class AchievementList
-    Private Shared _list As Dictionary(Of String, Achievement)
+    Private Shared _list As New Dictionary(Of String, Achievement)
 
     ''' <summary>
     ''' 添加一个成就
@@ -111,6 +93,7 @@ Friend Class AchievementList
     Friend Shared Sub Save(fileName As String)
         Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
         Dim formatter As New BinaryFormatter
+        formatter.Binder = New DeserializationBinder
         formatter.Serialize(stream, _list)
         stream.Close()
         MessageAPI.SendSync("ACHIEVE_LIST_SAVE")
@@ -122,8 +105,11 @@ Friend Class AchievementList
     ''' <param name="fileName">要读取的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Load(fileName As String)
-        Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Open)
+        Dim path = PathAPI.GetPath(PathType.UserFile, fileName)
+        If Not My.Computer.FileSystem.FileExists(path) Then Return
+        Dim stream As New FileStream(path, FileMode.Open)
         Dim formatter As New BinaryFormatter
+        formatter.Binder = New DeserializationBinder
         _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, Achievement))
         stream.Close()
         MessageAPI.SendSync("ACHIEVE_LIST_LOAD")

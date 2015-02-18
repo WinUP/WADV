@@ -19,10 +19,11 @@ Public Class GameWindow
         AppCore.Path.PathConfig.UserFile = My.Settings.UserFileURL
         AppCore.UI.WindowConfig.BaseWindow = Me
         '注册脚本函数
-        ScriptAPI.RunStringSync("api_system={}")
+        Dim vm = AppCore.Script.ScriptCore.GetInstance.ScriptVM
+        vm.DoString("api_system={}")
         For Each tmpAPIClass In (From tmpClass In Reflection.Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.AppCore.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
             Dim registerName = tmpAPIClass.Name.Substring(0, tmpAPIClass.Name.Length - 3).ToLower
-            ScriptAPI.RunStringSync("api_system." & registerName & "={}")
+            vm.DoString("api_system." & registerName & "={}")
             ScriptAPI.RegisterSync(tmpAPIClass, "api_system." & registerName)
         Next
         '加载插件
@@ -30,15 +31,15 @@ Public Class GameWindow
         '执行插件初始化函数
         AppCore.Plugin.PluginFunction.InitialisingGame()
         '初始化环境变量
-        ScriptAPI.RunStringSync("env={}")
-        ScriptAPI.RunStringSync("env.version=""1.0""")
-        ScriptAPI.RunStringSync("env.path={}")
-        ScriptAPI.RunStringSync("env.path.game=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
-        ScriptAPI.RunStringSync("env.path.user=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile).Replace("\", "\\") & """")
-        ScriptAPI.RunStringSync("env.path.plugin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Plugin).Replace("\", "\\") & """")
-        ScriptAPI.RunStringSync("env.path.resource=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource).Replace("\", "\\") & """")
-        ScriptAPI.RunStringSync("env.path.script=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Script).Replace("\", "\\") & """")
-        ScriptAPI.RunStringSync("env.path.skin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Skin).Replace("\", "\\") & """")
+        vm.DoString("env={}")
+        vm.DoString("env.version=""1.0""")
+        vm.DoString("env.path={}")
+        vm.DoString("env.path.game=""" & My.Application.Info.DirectoryPath.Replace("\", "\\") & """")
+        vm.DoString("env.path.user=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.UserFile).Replace("\", "\\") & """")
+        vm.DoString("env.path.plugin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Plugin).Replace("\", "\\") & """")
+        vm.DoString("env.path.resource=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource).Replace("\", "\\") & """")
+        vm.DoString("env.path.script=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Script).Replace("\", "\\") & """")
+        vm.DoString("env.path.skin=""" & PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Skin).Replace("\", "\\") & """")
         '执行游戏逻辑
         ScriptAPI.RunFileAsync("init.lua")
     End Sub

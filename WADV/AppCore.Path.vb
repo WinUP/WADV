@@ -88,7 +88,7 @@
                 Case PathType.UserFile
                     typePath = PathConfig.UserFile
             End Select
-            Return System.IO.Path.Combine(My.Application.Info.DirectoryPath, typePath, filePath)
+            Return IO.Path.Combine(My.Application.Info.DirectoryPath, typePath, filePath)
         End Function
 
         ''' <summary>

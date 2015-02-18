@@ -23,7 +23,9 @@ Namespace AppCore.Script
         ''' 获取脚本核心的唯一实例
         ''' </summary>
         Protected Friend Shared Function GetInstance() As ScriptCore
-            If _self Is Nothing Then _self = New ScriptCore
+            If _self Is Nothing Then
+                _self = New ScriptCore
+            End If
             Return _self
         End Function
 
@@ -45,7 +47,6 @@ Namespace AppCore.Script
             MessageAPI.SendSync("SCRIPT_FILE_BEFOREDO")
             vm.DoFile(fileName)
             MessageAPI.SendSync("SCRIPT_FILE_AFTERDO")
-
         End Sub
 
         ''' <summary>

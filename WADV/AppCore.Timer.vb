@@ -9,7 +9,7 @@ Namespace AppCore.Timer
 
         Private Sub New()
             Status = False
-            Span = 33
+            Span = 60000
             _loopThread = New Thread(AddressOf TimerContent)
             _loopThread.IsBackground = True
             _loopThread.Name = "游戏计时线程"
