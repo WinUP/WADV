@@ -1,4 +1,6 @@
-﻿Public Interface IMessageAchievement
+﻿Imports WADV.AppCore.PluginInterface
+
+Public Interface IMessageAchievement
 
     Sub Refresh(message As String)
 
@@ -9,7 +11,7 @@ Friend NotInheritable Class ReceiverList
 
     Friend Shared Sub LoadReceiver()
         _receiver = New ScriptReceiver
-        Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Script, Config.ReceiverFolder)
+        Dim basePath As String = PathAPI.GetPath(PathType.Script, Config.ReceiverFolder)
         For Each tmpType In IO.Directory.GetFiles(basePath, "*.r.lua")
             _receiver.ScriptList.Add(tmpType)
         Next
@@ -25,7 +27,7 @@ Friend NotInheritable Class ReceiverList
 
 End Class
 
-Friend NotInheritable Class ScriptReceiver : Implements AppCore.Plugin.IMessageReceiver
+Friend NotInheritable Class ScriptReceiver : Implements IMessageReceiver
     Friend ReadOnly ScriptList As List(Of String)
     Private ReadOnly _vm As NLua.Lua
 
@@ -34,8 +36,8 @@ Friend NotInheritable Class ScriptReceiver : Implements AppCore.Plugin.IMessageR
         _vm = ScriptAPI.GetVm
     End Sub
 
-    Public Sub ReceivingMessage(message As String) Implements AppCore.Plugin.IMessageReceiver.ReceivingMessage
-        _vm.DoString("lastMessage=" & message)
+    Public Sub ReceivingMessage(message As String) Implements IMessageReceiver.ReceivingMessage
+        _vm.DoString("lastMessage=""" & message & """")
         For Each script In ScriptList
             _vm.DoFile(script)
         Next

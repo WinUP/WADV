@@ -74,6 +74,7 @@
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
+    <Import Include="WADV.AppCore" />
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>

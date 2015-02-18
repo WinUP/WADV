@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Controls;
-using System.Windows.Media;
 using WADV.AppCore.API;
 
 namespace WADV.CGModule.API
@@ -21,7 +20,7 @@ namespace WADV.CGModule.API
         public static bool Show(string fileName, string effectName, int duration, string contentName) {
             if (Config.DPI < 1) return false;
             if (!Effect.Initialiser.EffectList.ContainsKey(effectName)) return false;
-            Effect.IEffect effect = (Effect.BaseBGRA32)Activator.CreateInstance(Effect.Initialiser.EffectList[effectName], new object[] { fileName, duration });
+            Effect.IEffect effect = (Effect.BaseBgra32)Activator.CreateInstance(Effect.Initialiser.EffectList[effectName], new object[] { fileName, duration });
             var content = WindowAPI.GetChildByName<Panel>(WindowAPI.GetWindow(), contentName);
             if (content == null) return false;
             PluginInterface.LoopReceiver loopContent = new PluginInterface.LoopReceiver(effect, content);

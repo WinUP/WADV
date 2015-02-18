@@ -1,6 +1,5 @@
 ﻿Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
-Imports WADV.AppCore.Path.PathFunction
 
 ''' <summary>
 ''' 表示一个属性

@@ -44,7 +44,7 @@ Namespace API
         ''' <param name="styleFile">样式文件(放置在Skin目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetStyle(styleFile As String)
-            UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Skin, styleFile), Text.Encoding.Default)
+            UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Skin, styleFile), Text.Encoding.Default)
             MessageAPI.SendSync("CHOICE_STYLE_CHANGE")
         End Sub
 

@@ -1,13 +1,12 @@
 ﻿Imports System.Reflection
-Imports WADV.AppCore
 Imports WADV.TextModule.TextEffect
-Imports System.Windows
+Imports WADV.AppCore.PluginInterface
 
 Namespace PluginInterface
 
-    Public Class Initialiser : Implements Plugin.IInitialise
+    Public Class Initialiser : Implements IInitialise
 
-        Public Function Initialising() As Boolean Implements Plugin.IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements IInitialise.Initialising
             ScriptAPI.RunStringSync("api_text={}")
             For Each tmpApiClass In (From tmpClass In Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.TextModule.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
                 Dim registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower()
@@ -20,7 +19,7 @@ Namespace PluginInterface
 
     End Class
 
-    Public Class LoopReceiver : Implements Plugin.ILoopReceiver
+    Public Class LoopReceiver : Implements ILoopReceiver
         Private ReadOnly _effect As ITextEffect
         Private _waitingCount As Integer = 0
         Private _renderingText As ITextEffect.SentenceInfo
@@ -29,7 +28,7 @@ Namespace PluginInterface
             _effect = effect
         End Sub
 
-        Public Function Logic(frame As Integer) As Boolean Implements Plugin.ILoopReceiver.Logic
+        Public Function Logic(frame As Integer) As Boolean Implements ILoopReceiver.Logic
             If _waitingCount > 0 Then
                 _waitingCount -= 1
                 Return True
@@ -84,7 +83,7 @@ Namespace PluginInterface
             Return True
         End Function
 
-        Public Sub Render(window As Window) Implements Plugin.ILoopReceiver.Render
+        Public Sub Render() Implements ILoopReceiver.Render
             Config.UIConfig.TextArea.Text = _renderingText.Text
             Config.UIConfig.SpeakerArea.Text = _renderingText.Speaker
         End Sub

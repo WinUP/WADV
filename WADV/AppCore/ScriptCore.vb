@@ -1,40 +1,38 @@
-﻿Imports System.Reflection
-Imports System.Threading
+﻿Imports NLua
 Imports WADV.AppCore.API
-Imports NLua
 
-Namespace AppCore.Script
+Namespace AppCore
 
     ''' <summary>
     ''' 脚本引擎核心类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class ScriptCore
+    Friend NotInheritable Class ScriptCore
         Private Shared _self As ScriptCore
-        Private vm As Lua
+        Private ReadOnly _vm As Lua
+        Private ReadOnly _messanger As MessageService
 
         Private Sub New()
-            vm = New Lua
-            vm.LoadCLRPackage()
-            MessageAPI.SendSync("SCRIPT_INIT_FINISH")
+            _vm = New Lua
+            _vm.LoadCLRPackage()
+            _messanger = MessageService.GetInstance
+            _messanger.SendMessage("[SYSTEM]SCRIPT_INIT_FINISH")
         End Sub
 
         ''' <summary>
         ''' 获取脚本核心的唯一实例
         ''' </summary>
-        Protected Friend Shared Function GetInstance() As ScriptCore
-            If _self Is Nothing Then
-                _self = New ScriptCore
-            End If
+        Friend Shared Function GetInstance() As ScriptCore
+            If _self Is Nothing Then _self = New ScriptCore
             Return _self
         End Function
 
         ''' <summary>
         ''' 获取脚本主机实例
         ''' </summary>
-        Protected Friend ReadOnly Property ScriptVM As Lua
+        Friend ReadOnly Property ScriptVm As Lua
             Get
-                Return vm
+                Return _vm
             End Get
         End Property
 
@@ -43,10 +41,10 @@ Namespace AppCore.Script
         ''' </summary>
         ''' <param name="fileName">文件路径</param>
         ''' <remarks></remarks>
-        Protected Friend Sub RunFile(fileName As String)
-            MessageAPI.SendSync("SCRIPT_FILE_BEFOREDO")
-            vm.DoFile(fileName)
-            MessageAPI.SendSync("SCRIPT_FILE_AFTERDO")
+        Friend Sub RunFile(fileName As String)
+            _messanger.SendMessage("[SYSTEM]SCRIPTFILE_DO_BEFORE")
+            _vm.DoFile(fileName)
+            _messanger.SendMessage("[SYSTEM]SCRIPTFILE_DO_AFTER")
         End Sub
 
         ''' <summary>
@@ -54,10 +52,10 @@ Namespace AppCore.Script
         ''' </summary>
         ''' <param name="script">要执行的脚本</param>
         ''' <remarks></remarks>
-        Protected Friend Sub RunStrng(script As String)
-            MessageAPI.SendSync("SCRIPT_STRING_BEFOREDO")
-            vm.DoString(script)
-            MessageAPI.SendSync("SCRIPT_STRING_AFTERDO")
+        Friend Sub RunStrng(script As String)
+            _messanger.SendMessage("[SYSTEM]SCRIPT_DO_BEFORE")
+            _vm.DoString(script)
+            _messanger.SendMessage("[SYSTEM]SCRIPT_DO_AFTER")
         End Sub
 
         ''' <summary>
@@ -65,10 +63,10 @@ Namespace AppCore.Script
         ''' </summary>
         ''' <param name="fileName">文件路径</param>
         ''' <remarks></remarks>
-        Protected Friend Sub LoadFile(fileName As String)
-            MessageAPI.SendSync("SCRIPT_FILE_BEFORELOAD")
-            vm.LoadFile(fileName)
-            MessageAPI.SendSync("SCRIPT_FILE_AFTERLOAD")
+        Friend Sub LoadFile(fileName As String)
+            _messanger.SendMessage("[SYSTEM]SCRIPTFILE_LOAD_BEFORE")
+            _vm.LoadFile(fileName)
+            _messanger.SendMessage("[SYSTEM]SCRIPTFILE_LOAD_AFTER")
         End Sub
 
         ''' <summary>
@@ -78,12 +76,12 @@ Namespace AppCore.Script
         ''' <param name="params">参数列表</param>
         ''' <returns>函数返回值列表</returns>
         ''' <remarks></remarks>
-        Protected Friend Function RunFunction(functionName As String, params() As Object) As Object()
-            Dim tmpFunction = vm.GetFunction(functionName)
+        Friend Function RunFunction(functionName As String, params() As Object) As Object()
+            Dim tmpFunction = _vm.GetFunction(functionName)
             If tmpFunction Is Nothing Then Throw New MissingMethodException("当前脚本主机中不存在函数" & functionName & "，是否忘记执行包含它的文件？")
-            MessageAPI.SendSync("SCRIPT_METHOD_BEFOREDO")
+            _messanger.SendMessage("[SYSTEM]SCRIPTMETHOD_DO_BEFORE")
             Dim returnData() As Object = tmpFunction.Call(params)
-            MessageAPI.SendSync("SCRIPT_METHOD_AFTERDO")
+            _messanger.SendMessage("[SYSTEM]SCRIPTMETHOD_DO_AFTER")
             Return returnData
         End Function
 
@@ -93,8 +91,8 @@ Namespace AppCore.Script
         ''' <param name="name">变量名</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Protected Friend Function GetVariable(name As String) As Object
-            Return vm(name)
+        Friend Function GetVariable(name As String) As Object
+            Return _vm(name)
         End Function
 
         ''' <summary>
@@ -104,19 +102,19 @@ Namespace AppCore.Script
         ''' <param name="key">键名</param>
         ''' <returns>元素的值</returns>
         ''' <remarks></remarks>
-        Protected Friend Function GetVariableInTable(tableName As String, key As String) As Object
-            Dim tmpTable = vm.GetTable(tableName)
-            If tmpTable Is Nothing Then Throw New Exception("找不到表")
+        Friend Function GetVariableInTable(tableName As String, key As String) As Object
+            Dim tmpTable = _vm.GetTable(tableName)
+            If tmpTable Is Nothing Then Throw New MissingMemberException("找不到表")
             Return tmpTable.Item(key)
         End Function
 
     End Class
 
     ''' <summary>
-    ''' 脚本注册类
+    ''' 脚本引擎辅助类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class Register
+    Friend NotInheritable Class ScriptFunction
 
         ''' <summary>
         ''' 注册脚本接口函数
@@ -126,12 +124,11 @@ Namespace AppCore.Script
         ''' <param name="toLower">是否转换函数名为小写</param>
         ''' <remarks></remarks>
         Protected Friend Shared Sub RegisterFunction(instance As Type, prefix As String, toLower As Boolean)
-            Dim apiBaseName = instance.Name
             Dim apiBase = instance.Assembly.CreateInstance(instance.Namespace & "." & instance.Name)
             For Each tmpMethod In instance.GetMethods
-                ScriptCore.GetInstance.ScriptVM.RegisterFunction(prefix & "." & If(toLower, tmpMethod.Name.ToLower, tmpMethod.Name), apiBase, tmpMethod)
+                ScriptCore.GetInstance.ScriptVm.RegisterFunction(prefix & "." & If(toLower, tmpMethod.Name.ToLower, tmpMethod.Name), apiBase, tmpMethod)
             Next
-            MessageAPI.SendSync("SCRIPT_CONTENT_ADD")
+            MessageAPI.SendSync("[SYSTEM]SCRIPT_CONTENT_ADD")
         End Sub
 
     End Class

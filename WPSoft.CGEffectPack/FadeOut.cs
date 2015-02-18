@@ -6,7 +6,7 @@ namespace WPSoft.CGEffectPack
     /// <summary>
     /// BGRA32图像的渐隐效果
     /// </summary>
-    public class FadeOut : BaseBGRA32
+    public class FadeOut : BaseBgra32
     {
         private int opacityPerFrame;
 

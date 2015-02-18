@@ -6,7 +6,7 @@ namespace WPSoft.CGEffectPack
     /// <summary>
     /// BGRA32图像的渐显效果
     /// </summary>
-    public class FadeIn : BaseBGRA32
+    public class FadeIn : BaseBgra32
     {
         private int opacityPerFrame;
 

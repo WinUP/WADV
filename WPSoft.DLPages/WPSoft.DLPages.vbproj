@@ -94,6 +94,7 @@
     <Import Include="System.Windows.Media" />
     <Import Include="System.Windows.Media.Imaging" />
     <Import Include="System.Windows.Navigation" />
+    <Import Include="WADV.AppCore" />
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>

@@ -1,93 +1,24 @@
 ﻿Imports System.IO
-Imports WADV.AppCore.API
+Imports WADV.AppCore.PluginInterface
 
-Namespace AppCore.Plugin
-
-    ''' <summary>
-    ''' 逻辑循环接口
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Interface ILoopReceiver
-
-        ''' <summary>
-        ''' 执行一次循环
-        ''' </summary>
-        Function Logic(frame As Integer) As Boolean
-
-        ''' <summary>
-        ''' 执行一次渲染
-        ''' </summary>
-        ''' <remarks></remarks>
-        Sub Render(window As Window)
-
-    End Interface
-
-    ''' <summary>
-    ''' 消息循环接口
-    ''' </summary>
-    Public Interface IMessageReceiver
-
-        ''' <summary>
-        ''' 执行一次消息处理
-        ''' </summary>
-        ''' <param name="message">消息标识符</param>
-        Sub ReceivingMessage(message As String)
-
-    End Interface
-
-    ''' <summary>
-    ''' 初始化接口
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Interface IInitialise
-
-        ''' <summary>
-        ''' 开始初始化
-        ''' </summary>
-        Function Initialising() As Boolean
-
-    End Interface
-
-    ''' <summary>
-    ''' 游戏初始化接口
-    ''' </summary>
-    Public Interface IGameStart
-
-        ''' <summary>
-        ''' 开始初始化游戏
-        ''' </summary>
-        Sub InitialisingGame()
-
-    End Interface
-
-    ''' <summary>
-    ''' 游戏解构接口
-    ''' </summary>
-    Public Interface IGameClose
-
-        ''' <summary>
-        ''' 开始解构游戏
-        ''' <param name="e">可取消事件的数据</param>
-        ''' </summary>
-        Sub DestructuringGame(e As ComponentModel.CancelEventArgs)
-
-    End Interface
+Namespace AppCore
 
     ''' <summary>
     ''' 插件设定类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class PluginFunction
-        Private Shared pluginFileList As New List(Of String)
-        Private Shared initialiserList As New List(Of IGameStart)
-        Private Shared destructorList As New List(Of IGameClose)
+    Friend NotInheritable Class PluginFunction
+        Private Shared ReadOnly PluginFileList As New List(Of String)
+        Private Shared ReadOnly InitialiserList As New List(Of IGameStart)
+        Private Shared ReadOnly DestructorList As New List(Of IGameClose)
+        Private Shared ReadOnly Messanger As MessageService = MessageService.GetInstance
 
         ''' <summary>
         ''' 载入所有插件
         ''' </summary>
         ''' <remarks></remarks>
         Protected Friend Shared Sub InitialiseAllPlugins()
-            Dim tmpPluginFileList = Directory.GetDirectories(PathAPI.GetPath(Path.PathFunction.PathType.Plugin, ""))
+            Dim tmpPluginFileList = Directory.GetDirectories(PathFunction.GetFullPath(PathType.Plugin, ""))
             For Each fileName In tmpPluginFileList
                 Try
                     If Not AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\", StringComparison.Ordinal) + 1))) Then Throw New Exception("插件的初始化函数报告它失败了")
@@ -96,7 +27,7 @@ Namespace AppCore.Plugin
                     MessageBox.Show("插件" & My.Computer.FileSystem.GetName(fileName) & "初始化失败，这是详细信息：" & Environment.NewLine & ex.Message)
                 End Try
             Next
-            MessageAPI.SendSync("GAME_PLUGIN_INITFINISH")
+            Messanger.SendMessage("[SYSTEM]PLUGIN_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -111,22 +42,22 @@ Namespace AppCore.Plugin
             Dim initFunction As IGameStart = Nothing
             Dim destructFunction As IGameClose = Nothing
             For Each tmpTypeName In pluginTypes
-                If tmpTypeName.GetInterface("IInitialise") <> Nothing Then
-                    If Not TryCast(Activator.CreateInstance(tmpTypeName), Plugin.IInitialise).Initialising() Then
+                If tmpTypeName.GetInterface("WADV.AppCore.PluginInterface.IInitialise") <> Nothing Then
+                    If Not TryCast(Activator.CreateInstance(tmpTypeName), IInitialise).Initialising() Then
                         Return False
                     End If
                 End If
-                If tmpTypeName.GetInterface("IGameStart") <> Nothing Then
+                If tmpTypeName.GetInterface("WADV.AppCore.PluginInterface.IGameStart") <> Nothing Then
                     initFunction = Activator.CreateInstance(tmpTypeName)
                 End If
-                If tmpTypeName.GetInterface("IGameClose") <> Nothing Then
+                If tmpTypeName.GetInterface("WADV.AppCore.PluginInterface.IGameClose") <> Nothing Then
                     destructFunction = Activator.CreateInstance(tmpTypeName)
                 End If
             Next
-            If initFunction IsNot Nothing Then initialiserList.Add(initFunction)
+            If initFunction IsNot Nothing Then InitialiserList.Add(initFunction)
             If destructFunction IsNot Nothing Then destructorList.Add(destructFunction)
             pluginFileList.Add(fileName)
-            MessageAPI.SendSync("GAME_PLUGIN_ADD")
+            Messanger.SendMessage("[SYSTEM]PLUGIN_ADD")
             Return True
         End Function
 

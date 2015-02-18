@@ -29,7 +29,7 @@ Namespace API
                                                tmpImage.Height = height
                                                tmpImage.HorizontalAlignment = HorizontalAlignment.Left
                                                tmpImage.VerticalAlignment = VerticalAlignment.Top
-                                               Dim brush = New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, fileName))))
+                                               Dim brush = New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(PathType.Resource, fileName))))
                                                brush.Stretch = Stretch.Uniform
                                                brush.TileMode = TileMode.None
                                                tmpImage.Background = brush

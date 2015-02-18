@@ -1,7 +1,4 @@
-﻿Imports System.Windows.Media
-Imports System.Xml
-Imports WADV.MediaModule.AudioCore
-Imports System.Windows.Controls
+﻿Imports System.Windows.Controls
 
 Namespace Config
 
@@ -69,7 +66,7 @@ Namespace Config
                                                       VideoContent = New MediaElement
                                                       VideoContent.SetValue(Panel.ZIndexProperty, 10)
                                                       VideoContent.LoadedBehavior = MediaState.Manual
-                                                      VideoContent.Source = New Uri(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, fileName))
+                                                      VideoContent.Source = New Uri(PathAPI.GetPath(PathType.Resource, fileName))
                                                       VideoContent.Height = content.Height
                                                       VideoContent.Width = content.Width
                                                       VideoContent.Margin = New Windows.Thickness(0)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using WADV.AppCore;
 using WADV.AppCore.API;
 
 namespace WADV.CGModule.Effect
@@ -34,8 +35,8 @@ namespace WADV.CGModule.Effect
         internal static void LoadEffect()
         {
             EffectList = new Dictionary<string, Type>();
-            EffectList.Add("BaseEffect", typeof(BaseBGRA32));
-            string basePath = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "CGEffect\\");
+            EffectList.Add("BaseEffect", typeof(BaseBgra32));
+            string basePath = PathAPI.GetPath(PathType.Resource, "CGEffect\\");
             foreach(string file in System.IO.Directory.GetFiles(basePath,"*.dll"))
             {
                 var assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes();
@@ -61,7 +62,7 @@ namespace WADV.CGModule.Effect
     /// <summary>
     /// 提供BGRA32图像的基本参数和“立即显示”效果
     /// </summary>
-    public class BaseBGRA32 : ImageBase, IEffect
+    public class BaseBgra32 : ImageBase, IEffect
     {
         public virtual void GetNextImageState(int frame) { complete = true; }
         public bool IsFinished() { return complete; }
@@ -75,13 +76,13 @@ namespace WADV.CGModule.Effect
         /// <param name="filename">图像文件路径(Resource目录下)</param>
         /// <param name="duration">动画时长(单位为帧)</param>
         /// <remarks></remarks>
-        public BaseBGRA32(string filename, int duration)
+        public BaseBgra32(string filename, int duration)
         {
             FormatConvertedBitmap bitmapContent = new FormatConvertedBitmap();
             bitmapContent.BeginInit();
             bitmapContent.DestinationPalette = BitmapPalettes.WebPaletteTransparent;
             bitmapContent.DestinationFormat = PixelFormats.Bgra32;
-            bitmapContent.Source = new BitmapImage(new Uri(PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, filename)));
+            bitmapContent.Source = new BitmapImage(new Uri(PathAPI.GetPath(PathType.Resource, filename)));
             bitmapContent.EndInit();
             width = bitmapContent.PixelWidth;
             height = bitmapContent.PixelHeight;

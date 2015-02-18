@@ -1,11 +1,11 @@
 ﻿Imports System.Threading
-Imports WADV.AppCore.API
 
-Namespace AppCore.Timer
+Namespace AppCore
 
-    Public NotInheritable Class MainTimer
+    Friend NotInheritable Class MainTimer
         Private Shared _self As MainTimer
         Private ReadOnly _loopThread As Thread
+        Private ReadOnly _messager As MessageService
 
         Private Sub New()
             Status = False
@@ -14,7 +14,8 @@ Namespace AppCore.Timer
             _loopThread.IsBackground = True
             _loopThread.Name = "游戏计时线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            MessageAPI.SendSync("TIMER_INIT_FINISH")
+            _messager = MessageService.GetInstance
+            _messager.SendMessage("[SYSTEM]TIMER_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -23,7 +24,7 @@ Namespace AppCore.Timer
         ''' <value>新的状态</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property Status As Boolean
+        Friend Property Status As Boolean
 
         ''' <summary>
         ''' 获取或设置计时器两次计时之间的间隔(毫秒)
@@ -31,14 +32,14 @@ Namespace AppCore.Timer
         ''' <value>目标间隔</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property Span As Integer '!注意：对计时器的修改只能从下次计时开始生效
+        Friend Property Span As Integer '!注意：对计时器的间隔修改只能从下次计时开始生效
 
         ''' <summary>
-        ''' 获取逻辑循环的唯一实例
+        ''' 获取计时器的唯一实例
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetInstance() As MainTimer
+        Friend Shared Function GetInstance() As MainTimer
             If _self Is Nothing Then _self = New MainTimer
             Return _self
         End Function
@@ -47,7 +48,7 @@ Namespace AppCore.Timer
         ''' 启动计时器
         ''' </summary>
         ''' <remarks></remarks>
-        Public Sub StartTimer()
+        Friend Sub Start()
             If Not Status Then
                 Status = True
                 _loopThread.Start()
@@ -58,7 +59,7 @@ Namespace AppCore.Timer
         ''' 停止计时器
         ''' </summary>
         ''' <remarks></remarks>
-        Public Sub StopTimer()
+        Friend Sub Abort()
             If Status Then
                 Status = False
                 _loopThread.Abort()
@@ -71,7 +72,7 @@ Namespace AppCore.Timer
         ''' <remarks></remarks>
         Private Sub TimerContent()
             While (Status)
-                MessageAPI.SendSync("GAME_TIMER_TICK")
+                _messager.SendMessage("[SYSTEM]TIMER_TICK")
                 System.Threading.Thread.Sleep(Span)
             End While
         End Sub

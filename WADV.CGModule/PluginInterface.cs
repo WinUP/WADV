@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WADV.AppCore.API;
-using WADV.AppCore.Plugin;
+using WADV.AppCore.PluginInterface;
 using WADV.CGModule.Effect;
 
 namespace WADV.CGModule.PluginInterface
@@ -63,7 +63,7 @@ namespace WADV.CGModule.PluginInterface
             return true;
         }
 
-        public void Render(Window window)
+        public void Render()
         {
             image.WritePixels(imageRect, effect.GetPixel(), width * 4, 0);
         }

@@ -79,12 +79,26 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="AppCore.API.vb" />
-    <Compile Include="AppCore.Looping.vb" />
-    <Compile Include="AppCore.Message.vb" />
-    <Compile Include="AppCore.Script.vb" />
-    <Compile Include="AppCore.Timer.vb" />
-    <Compile Include="AppCore.UI.vb" />
+    <Compile Include="AppCore\API\LoopAPI.vb" />
+    <Compile Include="AppCore\API\MessageAPI.vb" />
+    <Compile Include="AppCore\API\PathAPI.vb" />
+    <Compile Include="AppCore\API\PluginAPI.vb" />
+    <Compile Include="AppCore\API\ResourceAPI.vb" />
+    <Compile Include="AppCore\API\ScriptAPI.vb" />
+    <Compile Include="AppCore\API\TimerAPI.vb" />
+    <Compile Include="AppCore\API\WindowAPI.vb" />
+    <Compile Include="AppCore\AppCore.FirstPlay.vb" />
+    <Compile Include="AppCore\MainLoop.vb" />
+    <Compile Include="AppCore\MessageService.vb" />
+    <Compile Include="AppCore\PluginFunction.vb" />
+    <Compile Include="AppCore\PluginInterface\IGameClose.vb" />
+    <Compile Include="AppCore\PluginInterface\IGameStart.vb" />
+    <Compile Include="AppCore\PluginInterface\IInitialise.vb" />
+    <Compile Include="AppCore\PluginInterface\ILoopReceiver.vb" />
+    <Compile Include="AppCore\PluginInterface\IMessageReceiver.vb" />
+    <Compile Include="AppCore\ScriptCore.vb" />
+    <Compile Include="AppCore\MainTimer.vb" />
+    <Compile Include="AppCore\Config.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -134,9 +148,8 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
-    <Compile Include="AppCore.Plugin.vb" />
     <None Include="app.config" />
-    <Compile Include="AppCore.Path.vb" />
+    <Compile Include="AppCore\PathFunction.vb" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

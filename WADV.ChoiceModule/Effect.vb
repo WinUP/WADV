@@ -1,7 +1,6 @@
 ﻿Imports System.Reflection
 Imports System.Windows.Controls
 Imports System.Windows
-Imports System.Windows.Media.Animation
 
 Namespace Effect
 
@@ -47,7 +46,7 @@ Namespace Effect
             ShowEffectList.Add("BaseShow", GetType(BaseShow))
             HideEffectList.Add("BaseHide", GetType(BaseHide))
             ProgressEffectList.Add("BaseProgress", GetType(BaseProgress))
-            Dim basePath As String = PathAPI.GetPath(AppCore.Path.PathFunction.PathType.Resource, "ChoiceEffect\")
+            Dim basePath As String = PathAPI.GetPath(PathType.Resource, "ChoiceEffect\")
             For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Assembly.LoadFrom(file)))
                                 Select types = assemble.GetTypes
                                 From tmpType1 In types Select tmpType1
