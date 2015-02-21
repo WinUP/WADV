@@ -32,7 +32,7 @@ Friend NotInheritable Class PropertyList
         prop.Data = 0
         prop.Triggle = New List(Of Achievement)
         _list.Add(prop.Name, prop)
-        MessageAPI.SendSync("ACHIEVE_PROP_ADD")
+        MessageAPI.SendSync("[ACHIEVE]PROP_ADD")
     End Sub
 
     ''' <summary>
@@ -59,7 +59,7 @@ Friend NotInheritable Class PropertyList
         For Each tmpAchievement In From tmpAchievement1 In prop.Triggle Where Not tmpAchievement1.IsEarn
             tmpAchievement.Check()
         Next
-        MessageAPI.SendSync("ACHIEVE_PROP_SETDATA")
+        MessageAPI.SendSync("[ACHIEVE]PROP_DATA_SET")
     End Sub
 
     ''' <summary>
@@ -84,7 +84,7 @@ Friend NotInheritable Class PropertyList
         Dim triggle = _list.Item(name).Triggle
         If Not triggle.Contains(target) Then
             triggle.Add(target)
-            MessageAPI.SendSync("ACHIEVE_PROP_ADDTRIGGLE")
+            MessageAPI.SendSync("[ACHIEVE]PROP_TRIGGLE_ADD")
         End If
     End Sub
 
@@ -99,7 +99,7 @@ Friend NotInheritable Class PropertyList
         Dim triggle = _list.Item(name).Triggle
         If triggle.Contains(target) Then
             triggle.Remove(target)
-            MessageAPI.SendSync("ACHIEVE_PROP_DELETETRIGGLE")
+            MessageAPI.SendSync("[ACHIEVE]PROP_TRIGGLE_DELETE")
         End If
     End Sub
 
@@ -111,7 +111,7 @@ Friend NotInheritable Class PropertyList
     Friend Shared Sub Delete(name As String)
         If Not Contains(name) Then Return
         _list.Remove(name)
-        MessageAPI.SendSync("ACHIEVE_PROP_DELETE")
+        MessageAPI.SendSync("[ACHIEVE]PROP_DELETE")
     End Sub
 
     ''' <summary>
@@ -127,7 +127,7 @@ Friend NotInheritable Class PropertyList
         formatter.Binder = New DeserializationBinder
         _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, AchievementProperty))
         stream.Close()
-        MessageAPI.SendSync("ACHIEVE_PROP_LOAD")
+        MessageAPI.SendSync("[ACHIEVE]PROP_LOAD")
     End Sub
 
     ''' <summary>
@@ -141,7 +141,7 @@ Friend NotInheritable Class PropertyList
         formatter.Binder = New DeserializationBinder
         formatter.Serialize(stream, _list)
         stream.Close()
-        MessageAPI.SendSync("ACHIEVE_PROP_SAVE")
+        MessageAPI.SendSync("[ACHIEVE]PROP_SAVE")
     End Sub
 
 End Class

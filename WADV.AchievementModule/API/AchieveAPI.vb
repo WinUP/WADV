@@ -2,7 +2,7 @@
 
     Public Class AchieveAPI
 
-        Public Function NewAchieve(target As Achievement) As Boolean
+        Public Shared Function NewAchieve(target As Achievement) As Boolean
             AchievementList.Add(target)
             Return True
         End Function

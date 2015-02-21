@@ -7,7 +7,7 @@ namespace WADV.CGModule.API
     /// <summary>
     /// 图像效果API类
     /// </summary>
-    public class ImageAPI {
+    public sealed class ImageAPI {
 
         /// <summary>
         /// 显示一个带效果的图像
@@ -24,10 +24,10 @@ namespace WADV.CGModule.API
             var content = WindowAPI.GetChildByName<Panel>(WindowAPI.GetWindow(), contentName);
             if (content == null) return false;
             PluginInterface.LoopReceiver loopContent = new PluginInterface.LoopReceiver(effect, content);
-            MessageAPI.SendSync("CG_SHOW_BEFORE");
-            LoopingAPI.AddLoopSync(loopContent);
-            LoopingAPI.WaitLoopSync(loopContent);
-            MessageAPI.SendSync("CG_SHOW_AFTER");
+            MessageAPI.SendSync("[CG]SHOW_BEFORE");
+            LoopAPI.AddLoopSync(loopContent);
+            LoopAPI.WaitLoopSync(loopContent);
+            MessageAPI.SendSync("[CG]SHOW_AFTER");
             return true;
         }
 
@@ -47,7 +47,7 @@ namespace WADV.CGModule.API
     /// <summary>
     /// 设置API类
     /// </summary>
-    public class ConfigAPI {
+    public sealed class ConfigAPI {
 
         /// <summary>
         /// 初始化CG模块
@@ -58,7 +58,7 @@ namespace WADV.CGModule.API
         {
             Config.DPI = dpi;
             Effect.Initialiser.LoadEffect();
-            MessageAPI.SendSync("CG_INIT_ALLFINISH");
+            MessageAPI.SendSync("[CG]INIT_FINISH");
         }
     }
 }

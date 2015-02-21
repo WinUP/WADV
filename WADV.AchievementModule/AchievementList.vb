@@ -49,7 +49,7 @@ Friend Class AchievementList
     Friend Shared Sub Add(achievement As Achievement)
         If Contains(achievement.GetName) Then Return
         _list.Add(achievement.GetName, achievement)
-        MessageAPI.SendSync("ACHIEVE_LIST_ADD")
+        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_ADD")
     End Sub
 
     ''' <summary>
@@ -70,7 +70,7 @@ Friend Class AchievementList
     Friend Shared Sub Delete(name As String)
         If Not Contains(name) Then Return
         _list.Remove(name)
-        MessageAPI.SendSync("ACHIEVE_LIST_DELETE")
+        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_DELETE")
     End Sub
 
     ''' <summary>
@@ -95,7 +95,7 @@ Friend Class AchievementList
         formatter.Binder = New DeserializationBinder
         formatter.Serialize(stream, _list)
         stream.Close()
-        MessageAPI.SendSync("ACHIEVE_LIST_SAVE")
+        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_SAVE")
     End Sub
 
     ''' <summary>
@@ -111,7 +111,7 @@ Friend Class AchievementList
         formatter.Binder = New DeserializationBinder
         _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, Achievement))
         stream.Close()
-        MessageAPI.SendSync("ACHIEVE_LIST_LOAD")
+        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_LOAD")
     End Sub
 
     ''' <summary>

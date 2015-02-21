@@ -54,7 +54,7 @@ Namespace Effect
                 If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
                 If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
             Next
-            MessageAPI.SendSync("CHOICE_INIT_EFFECTFINISH")
+            MessageAPI.SendSync("[CHOICE]INIT_EFFECT_FINISH")
         End Sub
 
     End Class
@@ -74,13 +74,13 @@ Namespace Effect
 
         Public Overridable Sub Wait() Implements IShowEffect.Wait
             While True
-                MessageAPI.WaitSync("CHOICE_SHOW_FINISH")
+                MessageAPI.WaitSync("[CHOICE]SHOW_FINISH")
                 If IsOver Then Exit While
             End While
         End Sub
 
         Protected Sub SendMessage()
-            MessageAPI.SendSync("CHOICE_SHOW_FINISH")
+            MessageAPI.SendSync("[CHOICE]SHOW_FINISH")
         End Sub
 
     End Class
@@ -103,13 +103,13 @@ Namespace Effect
 
         Public Overridable Sub Wait() Implements IHideEffect.Wait
             While True
-                MessageAPI.WaitSync("CHOICE_HIDE_FINISH")
+                MessageAPI.WaitSync("[CHOICE]HIDE_FINISH")
                 If IsOver Then Exit While
             End While
         End Sub
 
         Protected Sub SendMessage()
-            MessageAPI.SendSync("CHOICE_HIDE_FINISH")
+            MessageAPI.SendSync("[CHOICE]HIDE_FINISH")
         End Sub
 
     End Class
@@ -145,7 +145,7 @@ Namespace Effect
 
         Private Sub Button_Click(sender As Object, e As RoutedEventArgs)
             _answer = TryCast(sender, Button).Content
-            MessageAPI.SendSync("CHOICE_USER_CLICKED")
+            MessageAPI.SendSync("[CHOICE]USER_CLICKED")
         End Sub
 
     End Class

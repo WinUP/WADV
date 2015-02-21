@@ -2,14 +2,13 @@
 
     Public Class ConfigAPI
 
-        Public Sub Init(Optional saveFolder As String = "", Optional receiverFolder As String = "")
+        Public Shared Sub Init(Optional saveFolder As String = "", Optional fileName As String = "achievement.lua")
             Config.SaveFileFolder = saveFolder
-            Config.ReceiverFolder = receiverFolder
+            Config.FileName = fileName
             AchievementList.Load(IO.Path.Combine(saveFolder, "achievement.a.save"))
             PropertyList.Load(IO.Path.Combine(saveFolder, "achievement.p.save"))
-            ReceiverList.LoadReceiver()
             ReceiverList.RunReceiver()
-            MessageAPI.SendSync("ACHIEVE_INIT_ALLFINISH")
+            MessageAPI.SendSync("[ACHIEVE]INIT_ALLFINISH")
         End Sub
 
     End Class

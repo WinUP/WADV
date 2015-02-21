@@ -5,7 +5,7 @@ Namespace AppCore.API
     ''' <summary>
     ''' 消息API类
     ''' </summary>
-    Public Class MessageAPI
+    Public NotInheritable Class MessageAPI
 
         ''' <summary>
         ''' 添加一个接收器
@@ -43,6 +43,10 @@ Namespace AppCore.API
             Dim waiter As New WaitReceiver
             waiter.WaitMessage(message)
         End Sub
+
+        Public Shared Function LastMessage() As String
+            Return New String(MessageService.LastMessage)
+        End Function
 
     End Class
 

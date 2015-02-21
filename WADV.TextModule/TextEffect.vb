@@ -34,7 +34,7 @@
                                 From tmpType1 In types Select tmpType1
                 EffectList.Add(tmpType.Name, tmpType)
             Next
-            MessageAPI.SendSync("TEXT_INIT_EFFECTFINISH")
+            MessageAPI.SendSync("[TEXT]INIT_EFFECT_FINISH")
         End Sub
     End Class
 
@@ -157,7 +157,7 @@
             SentenceSpeaker = _speaker(_processLineIndex)
             SentenceLength = Sentence.Length
             SentenceOver = True
-            MessageAPI.SendSync("TEXT_SENTENCE_OVER")
+            MessageAPI.SendSync("[TEXT]SENTENCE_OVER")
         End Sub
 
         Public MustOverride Function GetNext() As ITextEffect.SentenceInfo Implements ITextEffect.GetNext

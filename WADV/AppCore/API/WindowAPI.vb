@@ -8,7 +8,7 @@ Namespace AppCore.API
     ''' 窗口API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class WindowAPI
+    Public NotInheritable Class WindowAPI
 
         ''' <summary>
         ''' 修改窗口标题
@@ -18,7 +18,7 @@ Namespace AppCore.API
         ''' <remarks></remarks>
         Public Shared Sub SetTitleSync(text As String)
             GetDispatcher.Invoke(Sub() GetWindow.Title = text)
-            MessageAPI.SendSync("WINDOW_TITLE_CHANGE")
+            MessageAPI.SendSync("[SYSTEM]WINDOW_TITLE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -29,7 +29,7 @@ Namespace AppCore.API
         ''' <remarks></remarks>
         Public Shared Sub ClearContentSync(content As Panel)
             content.Dispatcher.Invoke(Sub() content.Children.Clear())
-            MessageAPI.SendSync("PANEL_CONTENT_CLEAR")
+            MessageAPI.SendSync("[SYSTEM]PANEL_CONTENT_CLEAR")
         End Sub
 
         ''' <summary>
@@ -41,7 +41,7 @@ Namespace AppCore.API
         ''' <remarks></remarks>
         Public Shared Sub LoadElementSync(content As Panel, name As String)
             content.Dispatcher.Invoke(Sub() content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathType.Skin, name)))))
-            MessageAPI.SendSync("PANEL_CONTENT_CHANGE")
+            MessageAPI.SendSync("[SYSTEM]PANEL_CONTENT_CHANGE")
         End Sub
 
         ''' <summary>
@@ -55,7 +55,7 @@ Namespace AppCore.API
             content.Dispatcher.BeginInvoke(
                 Sub()
                     content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathType.Skin, name))))
-                    MessageAPI.SendSync("PANEL_CONTENT_CHANGE")
+                    MessageAPI.SendSync("[SYSTEM]PANEL_CONTENT_CHANGE")
                 End Sub)
         End Sub
 
@@ -126,7 +126,7 @@ Namespace AppCore.API
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoBack Then
                                          GetWindow.NavigationService.GoBack()
-                                         MessageAPI.SendSync("WINDOW_PAGE_GOBACK")
+                                         MessageAPI.SendSync("[SYSTEM]WINDOW_PAGE_GOBACK")
                                      End If
                                  End Sub)
         End Sub
@@ -139,7 +139,7 @@ Namespace AppCore.API
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoForward Then
                                          GetWindow.NavigationService.GoForward()
-                                         MessageAPI.SendSync("WINDOW_PAGE_GOFORWARD")
+                                         MessageAPI.SendSync("[SYSTEM]WINDOW_PAGE_GOFORWARD")
                                      End If
                                  End Sub)
         End Sub
@@ -152,7 +152,7 @@ Namespace AppCore.API
             GetDispatcher.Invoke(Sub()
                                      If GetWindow.NavigationService.CanGoBack Then
                                          GetWindow.NavigationService.RemoveBackEntry()
-                                         MessageAPI.SendSync("WINDOW_NAVIGATE_REMOVEONE")
+                                         MessageAPI.SendSync("[SYSTEM]WINDOW_NAVIGATE_REMOVE")
                                      End If
                                  End Sub)
         End Sub
@@ -166,7 +166,7 @@ Namespace AppCore.API
                                      While GetWindow.NavigationService.CanGoBack
                                          GetWindow.NavigationService.RemoveBackEntry()
                                      End While
-                                     MessageAPI.SendSync("WINDOW_NAVIGATE_REMOVEALL")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_NAVIGATE_REMOVEALL")
                                  End Sub)
         End Sub
 
@@ -179,7 +179,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByColorSync(color As Color)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(color)
-                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -194,7 +194,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByRGBSync(r As Byte, g As Byte, b As Byte)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b))
-                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -207,7 +207,7 @@ Namespace AppCore.API
         Public Shared Sub SetBackgroundByHexSync(hex As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex))
-                                     MessageAPI.SendSync("WINDOW_BACKGROUND_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
                                  End Sub)
         End Sub
 
@@ -220,7 +220,7 @@ Namespace AppCore.API
         Public Shared Sub SetWidthSync(width As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Width = width
-                                     MessageAPI.SendSync("WINDOW_WIDTH_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_WIDTH_CHANGE")
                                  End Sub)
         End Sub
 
@@ -233,7 +233,7 @@ Namespace AppCore.API
         Public Shared Sub SetHeightSync(height As Double)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Height = height
-                                     MessageAPI.SendSync("WINDOW_HEIGHT_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_HEIGHT_CHANGE")
                                  End Sub)
         End Sub
 
@@ -246,7 +246,7 @@ Namespace AppCore.API
         Public Shared Sub SetResizeModeSync(canResize As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize)
-                                     MessageAPI.SendSync("WINDOW_RESIZEMODE_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_RESIZEMODE_CHANGE")
                                  End Sub)
         End Sub
 
@@ -259,7 +259,7 @@ Namespace AppCore.API
         Public Shared Sub SetTopmostSync(isTopmost As Boolean)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Topmost = isTopmost
-                                     MessageAPI.SendSync("WINDOW_TOPMOST_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_TOPMOST_CHANGE")
                                  End Sub)
         End Sub
 
@@ -272,7 +272,7 @@ Namespace AppCore.API
         Public Shared Sub SetIconSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Icon = BitmapFrame.Create(New Uri(PathFunction.GetFullPath(PathType.Skin, fileName)))
-                                     MessageAPI.SendSync("WINDOW_ICON_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_ICON_CHANGE")
                                  End Sub)
         End Sub
 
@@ -285,7 +285,7 @@ Namespace AppCore.API
         Public Shared Sub SetCursorSync(fileName As String)
             GetDispatcher.Invoke(Sub()
                                      GetWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathType.Skin, fileName))
-                                     MessageAPI.SendSync("WINDOW_CURSOR_CHANGE")
+                                     MessageAPI.SendSync("[SYSTEM]WINDOW_CURSOR_CHANGE")
                                  End Sub)
         End Sub
 
@@ -387,7 +387,7 @@ Namespace AppCore.API
             Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
             image.Save(stream)
             stream.Close()
-            MessageAPI.SendSync("WINDOW_IMAGE_SAVE")
+            MessageAPI.SendSync("[SYSTEM]WINDOW_IMAGE_SAVE")
         End Sub
 
     End Class

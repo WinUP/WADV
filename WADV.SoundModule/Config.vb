@@ -76,7 +76,7 @@ Namespace Config
                                                       VideoContent.Play()
                                                   End Sub)
             IsPlayFinished = False
-            MessageAPI.SendSync("MEDIA_VIDEO_PLAY")
+            MessageAPI.SendSync("[MEDIA]VIDEO_PLAY")
         End Sub
 
         Protected Shared Sub Video_Click(sender As Object, e As Windows.Input.MouseButtonEventArgs)
@@ -84,13 +84,13 @@ Namespace Config
                 Video_Ended(VideoContent, New Windows.RoutedEventArgs)
                 MessageAPI.SendSync("MEDIA_VIDEO_SKIP")
             End If
-            MessageAPI.SendSync("MEDIA_VIDEO_CLICK")
+            MessageAPI.SendSync("[MEDIA]VIDEO_CLICK")
         End Sub
 
         Protected Shared Sub Video_Ended(sender As Object, e As Windows.RoutedEventArgs)
             VideoContent.Visibility = Windows.Visibility.Collapsed
             IsPlayFinished = True
-            MessageAPI.SendSync("MEDIA_VIDEO_END")
+            MessageAPI.SendSync("[MEDIA]VIDEO_END")
             VideoContent.Close()
         End Sub
 

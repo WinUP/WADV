@@ -20,7 +20,7 @@ Namespace TEList
             If ImageList.ContainsValue(target) Then Return (From tmpPare In ImageList Where tmpPare.Value Is target Select tmpPare.Key).FirstOrDefault
             ImageList.Add(_id, target)
             _id += 1
-            MessageAPI.SendSync("TE_IMAGE_ADD")
+            MessageAPI.SendSync("[TE]IMAGE_ADD")
             Return _id - 1
         End Function
 
@@ -49,7 +49,7 @@ Namespace TEList
         Public Shared Function Delete(id As Integer) As Boolean
             If Not Contains(id) Then Return False
             ImageList.Remove(id)
-            MessageAPI.SendSync("TE_IMAGE_DELETE")
+            MessageAPI.SendSync("[TE]IMAGE_DELETE")
             Return True
         End Function
 

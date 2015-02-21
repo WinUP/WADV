@@ -26,7 +26,7 @@ Namespace Effect
                     If type.GetInterface("IEffect") <> Nothing Then EffectList.Add(type.Name, type)
                 Next
             Next
-            MessageAPI.SendSync("TE_INIT_EFFECTFINISH")
+            MessageAPI.SendSync("[TE]INIT_EFFECT_FINISH")
         End Sub
 
     End Class
@@ -51,11 +51,11 @@ Namespace Effect
         End Sub
 
         Protected Sub Animation_Finished(sender As Object, e As EventArgs)
-            MessageAPI.SendSync("TE_EFFECT_FINISH")
+            MessageAPI.SendSync("[TE]EFFECT_PLAY_FINISH")
         End Sub
 
         Public Overridable Sub Wait() Implements IEffect.Wait
-            MessageAPI.WaitSync("TE_EFFECT_FINISH")
+            MessageAPI.WaitSync("[TE]EFFECT_PLAY_FINISH")
         End Sub
 
     End Class

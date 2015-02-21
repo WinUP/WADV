@@ -1,17 +1,14 @@
-﻿Imports System.Reflection
-Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.AppCore.PluginInterface
+Imports WADV.AchievementModule.API
 
 Namespace PluginInterface
 
     Public Class Initialiser : Implements IInitialise
 
         Public Function Initialising() As Boolean Implements IInitialise.Initialising
-            ScriptAPI.RunStringSync("api_achieve={}")
-            For Each tmpApiClass In (From tmpClass In Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.AchievementModule.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
-                Dim registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower()
-                ScriptAPI.RunStringSync("api_achieve." + registerName + "={}")
-                ScriptAPI.RegisterSync(tmpApiClass, "api_achieve." + registerName)
-            Next
+            ScriptAPI.RegisterInTableSync("api_achieve", "newAchieve", New Action(Of Achievement)(AddressOf AchieveAPI.NewAchieve), True)
+            '!API没写完
+            ScriptAPI.RegisterInTableSync("api_achieve", "init", New Action(Of String, String)(AddressOf ConfigAPI.Init))
             MessageAPI.SendSync("ACHIEVE_INIT_LOADFINISH")
             Return True
         End Function

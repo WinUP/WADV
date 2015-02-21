@@ -7,7 +7,7 @@ Namespace AppCore
     ''' <summary>
     ''' 游戏消息循环
     ''' </summary>
-    Friend NotInheritable Class MessageService
+    Public NotInheritable Class MessageService
         Friend Shared ReadOnly LastMessage(100) As Char
         Private Shared _self As MessageService
         Private ReadOnly _callList As List(Of IMessageReceiver)
@@ -18,7 +18,7 @@ Namespace AppCore
         ''' 添加一个接收器
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Friend Sub AddReceiver(receiver As IMessageReceiver)
+        Public Sub AddReceiver(receiver As IMessageReceiver)
             If _callList.Contains(receiver) Then Return
             _callList.Add(receiver)
         End Sub
@@ -27,7 +27,7 @@ Namespace AppCore
         ''' 删除一个接收器
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Friend Sub RemoveReceiver(receiver As IMessageReceiver)
+        Public Sub RemoveReceiver(receiver As IMessageReceiver)
             If Not _callList.Contains(receiver) Then Return
             _callList.Remove(receiver)
         End Sub
@@ -36,7 +36,7 @@ Namespace AppCore
         ''' 发送一条消息
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Friend Sub SendMessage(message As String)
+        Public Sub SendMessage(message As String)
             Monitor.Enter(_messageList)
             _messageList.Enqueue(message)
             Monitor.Pulse(_messageList)
@@ -81,7 +81,7 @@ Namespace AppCore
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend Shared Function GetInstance() As MessageService
+        Public Shared Function GetInstance() As MessageService
             If _self Is Nothing Then _self = New MessageService
             Return _self
         End Function
@@ -92,14 +92,14 @@ Namespace AppCore
     ''' 消息循环辅助类
     ''' </summary>
     ''' <remarks></remarks>
-    Friend NotInheritable Class WaitReceiver
+    Public NotInheritable Class WaitReceiver
 
         ''' <summary>
         ''' 等待指定消息的发出
         ''' </summary>
         ''' <param name="message">要等待的消息</param>
         ''' <remarks></remarks>
-        Friend Sub WaitMessage(message As String)
+        Public Sub WaitMessage(message As String)
             While True
                 SyncLock MessageService.LastMessage
                     For i As Integer = 0 To message.Length - 1

@@ -1,4 +1,5 @@
-﻿Imports System.Reflection
+﻿Imports System.Windows.Controls
+Imports WADV.ChoiceModule.API
 Imports WADV.AppCore.PluginInterface
 
 Namespace PluginInterface
@@ -6,12 +7,11 @@ Namespace PluginInterface
     Public Class Initialiser : Implements IInitialise
 
         Public Function Initialising() As Boolean Implements IInitialise.Initialising
-            ScriptAPI.RunStringSync("api_choice={}")
-            For Each tmpApiClass In (From tmpClass In Assembly.GetExecutingAssembly.GetTypes Where tmpClass.Namespace = "WADV.ChoiceModule.API" AndAlso tmpClass.IsClass AndAlso tmpClass.Name.LastIndexOf("API", StringComparison.Ordinal) = tmpClass.Name.Length - 3 Select tmpClass)
-                Dim registerName = tmpApiClass.Name.Substring(0, tmpApiClass.Name.Length - 3).ToLower()
-                ScriptAPI.RunStringSync("api_choice." + registerName + "={}")
-                ScriptAPI.RegisterSync(tmpApiClass, "api_choice." + registerName)
-            Next
+            ScriptAPI.RegisterInTableSync("api_choice", "init", New Action(Of String, String, Double)(AddressOf ConfigAPI.Init), True)
+            ScriptAPI.RegisterInTableSync("api_choice", "setContent", New Action(Of Panel)(AddressOf ConfigAPI.SetContent))
+            ScriptAPI.RegisterInTableSync("api_choice", "setStyle", New Action(Of String)(AddressOf ConfigAPI.SetStyle))
+            ScriptAPI.RegisterInTableSync("api_choice", "setMargin", New Action(Of Double)(AddressOf ConfigAPI.SetMargin))
+            ScriptAPI.RegisterInTableSync("api_choice", "show", New Action(Of Neo.IronLua.LuaTable, String, String, Integer, String)(AddressOf ChoiceAPI.ShowByLua))
             MessageAPI.SendSync("CHOICE_INIT_LOADFINISH")
             Return True
         End Function
@@ -22,7 +22,7 @@ Namespace PluginInterface
         Private ReadOnly _style As Effect.IProgressEffect
 
         Public Sub New(style As Effect.IProgressEffect)
-            Me._style = style
+            _style = style
         End Sub
 
         Public Function Logic(frame As Integer) As Boolean Implements ILoopReceiver.Logic

@@ -22,17 +22,17 @@ namespace WADV.CGModule.Effect
     /// <summary>
     /// 提供预加载所有图像效果的功能
     /// </summary>
-    internal sealed class Initialiser
+    public sealed class Initialiser
     {
         /// <summary>
         /// 待实例化的图像效果列表
         /// </summary>
-        internal static Dictionary<string, Type> EffectList;
+        public static Dictionary<string, Type> EffectList;
 
         /// <summary>
         /// 读取并缓存所有图像效果
         /// </summary>
-        internal static void LoadEffect()
+        public static void LoadEffect()
         {
             EffectList = new Dictionary<string, Type>();
             EffectList.Add("BaseEffect", typeof(BaseBgra32));
@@ -42,7 +42,7 @@ namespace WADV.CGModule.Effect
                 var assembly = System.Reflection.Assembly.LoadFrom(file).GetTypes();
                 foreach(Type type in assembly) if(type.GetInterface("IEffect")!=null) EffectList.Add(type.Name, type);
             }
-            MessageAPI.SendSync("CG_INIT_EFFECTFINISH");
+            MessageAPI.SendSync("[CG]INIT_EFFECT_FINISH");
         }
     }
 

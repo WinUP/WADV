@@ -3,10 +3,10 @@ using System.Windows.Media.Imaging;
 
 namespace WADV.CGModule
 {
-    class Config
+    public class Config
     {
 
-        protected static internal int DPI { get; set; }
+        public static int DPI { get; set; }
 
         /// <summary>
         /// 转换BGRA像素数组为图片

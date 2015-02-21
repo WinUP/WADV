@@ -1,6 +1,6 @@
 ﻿Imports System.Windows.Controls
 Imports WADV.TextModule.TextEffect
-Imports NLua
+Imports Neo.IronLua
 
 Namespace API
 
@@ -18,7 +18,7 @@ Namespace API
             Config.ModuleConfig.Ignore = ignoreReaded
             SetWordFrame(framsBetweenWord)
             SetSentenceFrame(framsBetweenSetence)
-            MessageAPI.SendSync("TEXT_INIT_ALLFINISH")
+            MessageAPI.SendSync("[TEXT]INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -64,7 +64,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetWordFrame(frame As Integer)
             Config.ModuleConfig.WordFrame = frame
-            MessageAPI.SendSync("TEXT_WORDFRAME_CHANGE")
+            MessageAPI.SendSync("[TEXT]WORDFRAME_CHANGE")
         End Sub
 
         ''' <summary>
@@ -74,7 +74,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetSentenceFrame(frame As Integer)
             Config.ModuleConfig.SetenceFrame = frame
-            MessageAPI.SendSync("TEXT_SENTENCEFRAME_CHANGE")
+            MessageAPI.SendSync("[TEXT]SENTENCEFRAME_CHANGE")
         End Sub
 
         ''' <summary>
@@ -84,7 +84,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetAutoMode(auto As Boolean)
             Config.ModuleConfig.Auto = auto
-            MessageAPI.SendSync("TEXT_AUTOMODE_CHANGE")
+            MessageAPI.SendSync("[TEXT]AUTOMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -94,7 +94,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetIgnoreMode(ignore As Boolean)
             Config.ModuleConfig.Ignore = ignore
-            MessageAPI.SendSync("TEXT_IGNOREMODE_CHANGE")
+            MessageAPI.SendSync("[TEXT]IGNOREMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -105,7 +105,7 @@ Namespace API
         Public Shared Sub SetTextArea(areaName As String)
             Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
             Config.UIConfig.TextArea = area
-            MessageAPI.SendSync("TEXT_TEXTAREA_CHANGE")
+            MessageAPI.SendSync("[TEXT]TEXTAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -116,7 +116,7 @@ Namespace API
         Public Shared Sub SetSpeakerArea(areaName As String)
             Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
             Config.UIConfig.SpeakerArea = area
-            MessageAPI.SendSync("TEXT_SPEAKERAREA_CHANGE")
+            MessageAPI.SendSync("[TEXT]SPEAKERAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -127,7 +127,7 @@ Namespace API
         Public Shared Sub SetMainArea(areaName As String)
             Dim area = WindowAPI.SearchObject(Of Windows.FrameworkElement)(areaName)
             Config.UIConfig.FrameArea = area
-            MessageAPI.SendSync("TEXT_MAINAREA_CHANGE")
+            MessageAPI.SendSync("[TEXT]MAINAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -137,7 +137,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetVisibility(visible As Boolean)
             WindowAPI.GetDispatcher.Invoke(Sub() Config.UIConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
-            MessageAPI.SendSync("TEXT_VISIBLE_CHANGE")
+            MessageAPI.SendSync("[TEXT]VISIBILITY_CHANGE")
         End Sub
 
         ''' <summary>
@@ -148,7 +148,7 @@ Namespace API
             AddHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
             AddHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             AddHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
-            MessageAPI.SendSync("TEXT_EVENT_REGISTER")
+            MessageAPI.SendSync("[TEXT]EVENT_REGISTER")
         End Sub
 
         ''' <summary>
@@ -159,7 +159,7 @@ Namespace API
             RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf Core.TextCore.Ctrl_Down
             RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf Core.TextCore.Ctrl_Up
             RemoveHandler Config.UIConfig.TextArea.MouseLeftButtonDown, AddressOf Core.TextCore.TextArea_Click
-            MessageAPI.SendSync("TEXT_EVENT_UNREGISTER")
+            MessageAPI.SendSync("[TEXT]EVENT_UNREGISTER")
         End Sub
 
     End Class
@@ -188,18 +188,18 @@ Namespace API
             '生成循环体
             Dim loopContent As New PluginInterface.LoopReceiver(effect)
             '开始循环
-            MessageAPI.SendSync("TEXT_SHOW_BEFORE")
-            LoopingAPI.AddLoopSync(loopContent)
+            MessageAPI.SendSync("[TEXT]SHOW_STANDBY")
+            LoopAPI.AddLoopSync(loopContent)
             '等待结束
-            LoopingAPI.WaitLoopSync(loopContent)
-            MessageAPI.SendSync("TEXT_SHOW_AFTER")
+            LoopAPI.WaitLoopSync(loopContent)
+            MessageAPI.SendSync("[TEXT]SHOW_FINISH")
             Return True
         End Function
 
         Public Shared Function ShowByLua(content As LuaTable, effectName As String) As Boolean
             Dim text, speaker As New List(Of String)
             Dim isRead As New List(Of Boolean)
-            For Each record As LuaTable In content.Values
+            For Each record As LuaTable In content.ArrayList
                 text.Add(CStr(record("content")))
                 speaker.Add(CStr(record("speaker")))
                 isRead.Add(CBool(record("isread")))

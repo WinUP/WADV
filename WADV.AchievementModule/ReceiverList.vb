@@ -1,4 +1,5 @@
 ﻿Imports WADV.AppCore.PluginInterface
+Imports Neo.IronLua
 
 Public Interface IMessageAchievement
 
@@ -7,15 +8,7 @@ Public Interface IMessageAchievement
 End Interface
 
 Friend NotInheritable Class ReceiverList
-    Private Shared _receiver As ScriptReceiver
-
-    Friend Shared Sub LoadReceiver()
-        _receiver = New ScriptReceiver
-        Dim basePath As String = PathAPI.GetPath(PathType.Script, Config.ReceiverFolder)
-        For Each tmpType In IO.Directory.GetFiles(basePath, "*.r.lua")
-            _receiver.ScriptList.Add(tmpType)
-        Next
-    End Sub
+    Private Shared _receiver As New ScriptReceiver
 
     Friend Shared Sub RunReceiver()
         MessageAPI.AddSync(_receiver)
@@ -27,19 +20,17 @@ Friend NotInheritable Class ReceiverList
 
 End Class
 
-Friend NotInheritable Class ScriptReceiver : Implements IMessageReceiver
-    Friend ReadOnly ScriptList As List(Of String)
-    Private ReadOnly _vm As NLua.Lua
+Public NotInheritable Class ScriptReceiver : Implements IMessageReceiver
+    Private ReadOnly _script As LuaChunk
+    Private ReadOnly _env As LuaGlobal
 
     Public Sub New()
-        ScriptList = New List(Of String)
-        _vm = ScriptAPI.GetVm
+        _env = ScriptAPI.GetEnv
+        _script = ScriptAPI.GetVm.CompileChunk(PathAPI.GetPath(PathType.Script, Config.FileName), New LuaCompileOptions)
     End Sub
 
     Public Sub ReceivingMessage(message As String) Implements IMessageReceiver.ReceivingMessage
-        _vm.DoString("lastMessage=""" & message & """")
-        For Each script In ScriptList
-            _vm.DoFile(script)
-        Next
+        _env.DoChunk(_script)
     End Sub
+
 End Class

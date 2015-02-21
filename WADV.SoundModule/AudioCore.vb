@@ -151,7 +151,7 @@ Namespace AudioCore
             Dim tmpPlayer As New Player(fileName, type, cycle, count, nextId)
             soundList.Add(nextId, tmpPlayer)
             nextId += 1
-            MessageAPI.SendSync("MEDIA_SOUND_ADD")
+            MessageAPI.SendSync("[MEDIA]SOUND_ADD")
             Return tmpPlayer
         End Function
 
@@ -165,7 +165,7 @@ Namespace AudioCore
                 Debug.WriteLine("--ERROR: " & ex.Message)
             End Try
             soundList.Remove(id)
-            MessageAPI.SendSync("MEDIA_SOUND_REMOVE")
+            MessageAPI.SendSync("[MEDIA]SOUND_REMOVE")
         End Sub
 
         Protected Friend Shared Function GetPlayer(id As Integer) As Player
@@ -177,7 +177,7 @@ Namespace AudioCore
             For Each tmpSound In (From singleSound In soundList.Values Where singleSound.Type = type Select singleSound)
                 tmpSound.Volume = value
             Next
-            MessageAPI.SendSync("MEDIA_SOUND_CHANGEVOLUME")
+            MessageAPI.SendSync("[MEDIA]SOUND_VOLUME_CHANGE")
         End Sub
 
         Protected Friend Shared Sub CheckEnding()
@@ -187,12 +187,12 @@ Namespace AudioCore
                 If player.Duration = player.Position Then
                     If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then
                         DeletePlayer(player.ID)
-                        MessageAPI.SendSync("MEDIA_SOUND_END")
+                        MessageAPI.SendSync("[MEDIA]SOUND_END")
                     Else
                         player.Position = 0.0
                         player.Play()
                         If player.CycleCount > 0 Then player.CycleCount -= 1
-                        MessageAPI.SendSync("MEDIA_SOUND_CYCLE")
+                        MessageAPI.SendSync("[MEDIA]SOUND_CYCLE")
                     End If
                 End If
             Next

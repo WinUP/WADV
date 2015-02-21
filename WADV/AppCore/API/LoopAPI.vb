@@ -6,7 +6,7 @@ Namespace AppCore.API
     ''' 循环API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class LoopingAPI
+    Public NotInheritable Class LoopAPI
 
         ''' <summary>
         ''' 设置理想帧率
@@ -67,7 +67,7 @@ Namespace AppCore.API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub StartMainLoopSync()
+        Public Shared Sub StartSync()
             MainLoop.GetInstance.Start()
         End Sub
 
@@ -76,7 +76,7 @@ Namespace AppCore.API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub StopMainLoopSync()
+        Public Shared Sub StopSync()
             MainLoop.GetInstance.Abort()
         End Sub
 

@@ -64,11 +64,11 @@ Namespace API
             Dim effectType = TEModule.Effect.Initialiser.EffectList.Item(effectName)
             If effectType Is Nothing Then Return
             Dim effect As Effect.IEffect = Activator.CreateInstance(effectType, New Object() {id, params})
-            MessageAPI.SendSync("TE_EFFECT_BEFORE")
+            MessageAPI.SendSync("[TE]EFFECT_STANDBY")
             WindowAPI.GetDispatcher.Invoke(Sub() effect.Render())
             If sync Then effect.Wait()
             effect.Dispose()
-            MessageAPI.SendSync("TE_EFFECT_AFTER")
+            MessageAPI.SendSync("[TE]EFFECT_FINISH")
         End Sub
 
         ''' <summary>
@@ -77,7 +77,7 @@ Namespace API
         ''' <param name="id"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Hide(id As Integer) As Boolean
+        Public Shared Function Hide(id As Integer) As Boolean
             Dim tmpImage = TEList.List.Item(id)
             If tmpImage Is Nothing Then Return False
             UIConfig.ImagePanel.Dispatcher.Invoke(Sub() UIConfig.ImagePanel.Children.Remove(tmpImage))
@@ -97,7 +97,7 @@ Namespace API
                                                    UIConfig.ImagePanel = WindowAPI.SearchObject(Of Grid)(contentName)
                                                End If
                                            End Sub)
-            MessageAPI.SendSync("TE_INIT_ALLFINISH")
+            MessageAPI.SendSync("[TE]INIT_FINISH")
         End Sub
 
     End Class

@@ -16,7 +16,7 @@ Public Class FadeIn : Inherits WADV.TEModule.Effect.BaseEffect
     End Sub
 
     Public Overrides Sub Render()
-        Dim animation As New DoubleAnimation(1.0, New Duration(LoopingAPI.TranslateToTime(Params(0))))
+        Dim animation As New DoubleAnimation(1.0, New Duration(LoopAPI.TranslateToTime(Params(0))))
         Dim ease As EasingFunctionBase
         Select Case CStr(Params(1))
             Case "circle"

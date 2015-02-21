@@ -2,6 +2,6 @@
 
     Friend Shared SaveFileFolder As String = ""
 
-    Friend Shared ReceiverFolder As String = ""
+    Friend Shared FileName As String = ""
 
 End Class

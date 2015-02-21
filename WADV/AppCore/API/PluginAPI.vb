@@ -10,7 +10,7 @@ Namespace AppCore.API
     ''' 插件API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class PluginAPI
+    Public NotInheritable Class PluginAPI
 
         ''' <summary>
         ''' 加载一个插件
@@ -30,7 +30,7 @@ Namespace AppCore.API
         ''' <param name="fileName">文件路径(从Resource目录下开始)</param>
         ''' <returns>编译得到的程序集</returns>
         ''' <remarks></remarks>
-        Public Shared Function CompileCode(fileName As String, Optional options As String = "") As Reflection.Assembly
+        Public Shared Function Compile(fileName As String, Optional options As String = "") As Reflection.Assembly
             Dim codeProvider As CodeDomProvider
             Dim codeFile = New FileInfo(PathAPI.GetPath(PathType.Resource, fileName))
             If codeFile.Extension.ToLower = ".vb" Then
@@ -65,7 +65,7 @@ Namespace AppCore.API
                 MessageBox.Show("编译" & fileName & "时没有通过：" & Environment.NewLine & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
                 Return Nothing
             End If
-            MessageAPI.SendSync("GAME_CODE_COMPILE")
+            MessageAPI.SendSync("[SYSTEM]CODE_COMPILE")
             Return result.CompiledAssembly
         End Function
 
@@ -76,12 +76,12 @@ Namespace AppCore.API
         ''' <param name="fileName">文件路径(从游戏主目录下开始)</param>
         ''' <returns>编译得到的程序集</returns>
         ''' <remarks></remarks>
-        Public Shared Function LoadLibrary(fileName As String) As Reflection.Assembly
+        Public Shared Function Load(fileName As String) As Reflection.Assembly
             Dim filePath = PathAPI.GetPath(PathType.Game, fileName)
             If Not My.Computer.FileSystem.FileExists(filePath) Then
                 Throw New FileNotFoundException("找不到要载入的动态链接库文件")
             End If
-            MessageAPI.SendSync("GAME_ASSEMBLE_LOAD")
+            MessageAPI.SendSync("[SYSTEM]ASSEMBLE_LOAD_STANDBY")
             Return Reflection.Assembly.LoadFrom(filePath)
         End Function
 

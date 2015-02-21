@@ -4,7 +4,7 @@
     ''' 计时器API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class TimerAPI
+    Public NotInheritable Class TimerAPI
 
         ''' <summary>
         ''' 启动计时器
@@ -20,7 +20,7 @@
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub StopTimerSync()
+        Public Shared Sub StopSync()
             MainTimer.GetInstance.Abort()
         End Sub
 
@@ -39,7 +39,7 @@
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function GetTick() As Integer
+        Public Shared Function GetTick() As Integer
             Return MainTimer.GetInstance.Span
         End Function
 
@@ -48,7 +48,7 @@
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function GetStatus() As Boolean
+        Public Shared Function GetStatus() As Boolean
             Return MainTimer.GetInstance.Status
         End Function
 

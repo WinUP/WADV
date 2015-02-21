@@ -10,7 +10,7 @@
         ''' 游戏主窗口
         ''' </summary>
         ''' <remarks></remarks>
-        Protected Friend Shared BaseWindow As NavigationWindow
+        Friend Shared BaseWindow As NavigationWindow
 
         ''' <summary>
         ''' 获取或设置插件路径

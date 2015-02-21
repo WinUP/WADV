@@ -14,7 +14,7 @@ Namespace Core
 
         Public Shared Sub TextArea_Click(sender As Object, e As MouseButtonEventArgs)
             Config.ModuleConfig.Clicked = True
-            MessageAPI.SendSync("TEXT_USER_CLICK")
+            MessageAPI.SendSync("[TEXT]USER_CLICK")
         End Sub
 
     End Class

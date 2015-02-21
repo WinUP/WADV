@@ -2,6 +2,7 @@
 Imports System.Windows.Markup
 Imports WADV.ChoiceModule.Config
 Imports WADV.ChoiceModule.Effect
+Imports Neo.IronLua
 
 Namespace API
 
@@ -25,7 +26,7 @@ Namespace API
             SetContent(content)
             SetStyle(styleFile)
             SetMargin(margin)
-            MessageAPI.SendSync("CHOICE_INIT_ALLFINISH")
+            MessageAPI.SendSync("[CHOICE]INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -35,7 +36,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetContent(content As Panel)
             UIConfig.ChoiceContent = content
-            MessageAPI.SendSync("CHOICE_CONTENT_CHANGE")
+            MessageAPI.SendSync("[CHOICE]CONTENT_CHANGE")
         End Sub
 
         ''' <summary>
@@ -45,7 +46,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetStyle(styleFile As String)
             UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Skin, styleFile), Text.Encoding.Default)
-            MessageAPI.SendSync("CHOICE_STYLE_CHANGE")
+            MessageAPI.SendSync("[CHOICE]STYLE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -55,7 +56,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub SetMargin(margin As Double)
             UIConfig.ChoiceMargin = margin
-            MessageAPI.SendSync("CHOICE_MARGIN_CHANGE")
+            MessageAPI.SendSync("[CHOICE]MARGIN_CHANGE")
         End Sub
 
     End Class
@@ -91,14 +92,14 @@ Namespace API
             Dim hideEffect As IHideEffect = Activator.CreateInstance(Initialiser.HideEffectList(hideEffectName), New Object() {choiceList.ToArray})
             Dim waitEffect As IProgressEffect = Activator.CreateInstance(Initialiser.ProgressEffectList(waitEffectName), New Object() {choiceList.ToArray, waitFrame})
             Dim loopContent As New PluginInterface.LoopReceiver(waitEffect)
-            MessageAPI.SendSync("CHOICE_DSIPLAY_BEFORE")
+            MessageAPI.SendSync("[CHOICE]DSIPLAY_STANDBY")
             dispatcher.Invoke(Sub()
                                   content.Visibility = Windows.Visibility.Visible
                                   showEffect.Render()
                               End Sub)
             showEffect.Wait()
-            LoopingAPI.AddLoopSync(loopContent)
-            LoopingAPI.WaitLoopSync(loopContent)
+            LoopAPI.AddLoopSync(loopContent)
+            LoopAPI.WaitLoopSync(loopContent)
             dispatcher.Invoke(Sub() hideEffect.Render())
             hideEffect.Wait()
             dispatcher.Invoke(Sub()
@@ -107,12 +108,12 @@ Namespace API
                                   Next
                                   content.Visibility = Windows.Visibility.Collapsed
                               End Sub)
-            MessageAPI.SendSync("CHOICE_DISPLAY_AFTER")
+            MessageAPI.SendSync("[CHOICE]DISPLAY_FINISH")
             Return waitEffect.GetAnswer
         End Function
 
-        Public Function ShowByLua(choice As NLua.LuaTable, showEffectName As String, hideEffectName As String, waitFrame As Integer, Optional waitEffectName As String = "BaseProgress") As String
-            Dim choiceList() As String = (From tmpChoice In choice.Values Select CStr(tmpChoice)).ToArray
+        Public Shared Function ShowByLua(choice As LuaTable, showEffectName As String, hideEffectName As String, waitFrame As Integer, Optional waitEffectName As String = "BaseProgress") As String
+            Dim choiceList() As String = (From tmpChoice In choice.ArrayList Select CStr(tmpChoice)).ToArray
             Return Show(choiceList, showEffectName, hideEffectName, waitFrame, waitEffectName)
         End Function
 

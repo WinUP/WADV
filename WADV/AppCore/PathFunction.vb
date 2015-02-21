@@ -13,14 +13,14 @@
     ''' 路径辅助类
     ''' </summary>
     ''' <remarks></remarks>
-    Friend NotInheritable Class PathFunction
+    Public NotInheritable Class PathFunction
         ''' <summary>
         ''' 获取文件的绝对路径
         ''' </summary>
         ''' <param name="type">路径类型</param>
         ''' <param name="filePath">从类型后开始的文件路径</param>
         ''' <returns>文件的绝对路径</returns>
-        Protected Friend Shared Function GetFullPath(type As PathType, Optional filePath As String = "") As String
+        Public Shared Function GetFullPath(type As PathType, Optional filePath As String = "") As String
             Dim typePath As String = ""
             Select Case type
                 Case PathType.Plugin
@@ -44,7 +44,7 @@
         ''' <param name="filePath">从类型开始后的文件路径</param>
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
-        Protected Friend Shared Function GetFullUri(type As PathType, Optional filePath As String = "") As Uri
+        Public Shared Function GetFullUri(type As PathType, Optional filePath As String = "") As Uri
             Return New Uri(GetFullPath(type, filePath))
         End Function
 

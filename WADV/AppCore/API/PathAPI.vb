@@ -4,7 +4,7 @@
     ''' 路径API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class PathAPI
+    Public NotInheritable Class PathAPI
 
         ''' <summary>
         ''' 获取程序资源文件的存放路径
