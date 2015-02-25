@@ -47,10 +47,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.cs" />
+    <Compile Include="API\ConfigAPI.cs" />
+    <Compile Include="API\ImageAPI.cs" />
+    <Compile Include="BaseBgra32.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="PluginInterface.cs" />
+    <Compile Include="IEffect.cs" />
+    <Compile Include="Initialiser.cs" />
+    <Compile Include="PluginInterface\Initialiser.cs" />
+    <Compile Include="PluginInterface\LoopReceiver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

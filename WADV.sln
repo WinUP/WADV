@@ -29,6 +29,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.TextEffectPack", "WP
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.DLPages", "WPSoft.DLPages\WPSoft.DLPages.vbproj", "{9E975B7A-AF5D-4F27-B342-829DD678021D}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.DLAchievements", "WPSoft.DLAchievements\WPSoft.DLAchievements.vbproj", "{72C88546-AB11-4B2C-BF82-689047B13081}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,16 @@ Global
 		{9E975B7A-AF5D-4F27-B342-829DD678021D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9E975B7A-AF5D-4F27-B342-829DD678021D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9E975B7A-AF5D-4F27-B342-829DD678021D}.Release|Win32.ActiveCfg = Release|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{72C88546-AB11-4B2C-BF82-689047B13081}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

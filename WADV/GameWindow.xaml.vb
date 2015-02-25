@@ -1,25 +1,39 @@
-﻿Imports System.Windows.Media.Animation
+﻿Imports System.Threading
+Imports System.Windows.Media.Animation
 Imports Neo.IronLua
 Imports WADV.AppCore
 Imports WADV.AppCore.API
 Imports WADV.AppCore.PluginInterface
 
 Public Class GameWindow
-    Private _allowDirectNavigation = False
+    Private _directNavigation = False
 
+    ''' <summary>
+    ''' 游戏解构函数
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
         PluginFunction.DestructuringGame(e)
+        If Not e.Cancel Then
+            MainTimer.GetInstance.Stop()
+            MainLoop.GetInstance.Stop()
+            MessageService.GetInstance.Stop()
+        End If
     End Sub
 
+    ''' <summary>
+    ''' 游戏启动函数
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub GameWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         '绑定事件
         AddHandler NavigationService.LoadCompleted, Sub() MessageAPI.SendSync("[SYSTEM]WINDOW_PAGE_CHANGE")
         '设定参数
-        Config.PluginPath = My.Settings.PluginURL
-        Config.ResourcePath = My.Settings.ResourceURL
-        Config.ScriptPath = My.Settings.ScriptURL
-        Config.SkinPath = My.Settings.SkinURL
-        Config.UserFilePath = My.Settings.UserFileURL
+        Config.PluginPath = IO.Path.Combine(Config.GamePath, My.Settings.PluginURL)
+        Config.ResourcePath = IO.Path.Combine(Config.GamePath, My.Settings.ResourceURL)
+        Config.ScriptPath = IO.Path.Combine(Config.GamePath, My.Settings.ScriptURL)
+        Config.SkinPath = IO.Path.Combine(Config.GamePath, My.Settings.SkinURL)
+        Config.UserFilePath = IO.Path.Combine(Config.GamePath, My.Settings.UserFileURL)
         Config.BaseWindow = Me
         '注册脚本函数
         RegisterScript()
@@ -28,49 +42,123 @@ Public Class GameWindow
         '执行插件初始化函数
         PluginFunction.InitialisingGame()
         MessageService.GetInstance.SendMessage("[SYSTEM]GAME_INIT_FINISH")
-        '执行游戏逻辑
-        ScriptAPI.RunFileAsync("init.lua")
+        '判断是否是第一次启动
+        If My.Computer.FileSystem.FileExists(PathFunction.GetFullPath(PathType.UserFile, "first_run")) Then
+            '第一次启动要执行的逻辑
+            Dim tmpThread As New Thread(CType(Sub()
+                                                  ScriptAPI.RunFileSync("init.lua")
+                                                  My.Computer.FileSystem.DeleteFile(PathFunction.GetFullPath(PathType.UserFile, "first_run"), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently)
+                                                  ScriptAPI.RunFileAsync("game.lua")
+                                              End Sub, ThreadStart))
+            tmpThread.IsBackground = False
+            tmpThread.Name = "游戏初始化承载线程"
+            tmpThread.Priority = ThreadPriority.Normal
+            tmpThread.Start()
+        Else
+            '其他情况要执行的逻辑
+            ScriptAPI.RunFileAsync("game.lua")
+        End If
     End Sub
 
     ''' <summary>
-    ''' 页面转场动画处理函数
+    ''' 页面转场处理函数
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
     ''' <remarks></remarks>
     Private Sub GameWindow_Navigating(sender As Object, e As NavigatingCancelEventArgs) Handles Me.Navigating
-        If Content Is Nothing OrElse _allowDirectNavigation Then Return
-        e.Cancel = True
+        '重置导航状态
+        If _directNavigation OrElse Content Is Nothing Then
+            _directNavigation = False
+            Return
+        End If
+        '执行所有接收器
+        For Each tmpReceiver In PluginFunction.NavigaionReceiverList
+            tmpReceiver.RecevingNavigate(e)
+        Next
+        '判断导航是否已被取消
+        If e.Cancel Then Exit Sub
+        '处理窗口属性
+        _directNavigation = True
         IsHitTestVisible = False
-        Dim fadeOut As New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(700)))
-        fadeOut.EasingFunction = New QuinticEase
-        AddHandler fadeOut.Completed, Sub()
-                                          IsHitTestVisible = True
-                                          Select Case e.NavigationMode
-                                              Case NavigationMode.Back
-                                                  NavigationService.GoBack()
-                                              Case NavigationMode.Forward
-                                                  NavigationService.GoForward()
-                                              Case NavigationMode.Refresh
-                                                  NavigationService.Refresh()
-                                              Case NavigationMode.New
-                                                  If e.Uri Is Nothing Then
-                                                      NavigationService.Navigate(e.Content)
-                                                  Else
-                                                      NavigationService.Navigate(e.Uri)
-                                                  End If
-                                          End Select
-                                          _allowDirectNavigation = False
-                                          Dispatcher.BeginInvoke(Sub()
-                                                                     Dim fadeIn As New DoubleAnimation(1.0, New Duration(TimeSpan.FromMilliseconds(700)))
-                                                                     fadeIn.EasingFunction = New QuinticEase
-                                                                     BeginAnimation(OpacityProperty, fadeIn)
-                                                                 End Sub)
-                                      End Sub
-        BeginAnimation(OpacityProperty, fadeOut)
-        _allowDirectNavigation = True
+        e.Cancel = True
+        '处理导航标志
+        Dim data = DirectCast(e.ExtraData, NavigateOperation)
+        Select Case data
+            Case NavigateOperation.Normal, NavigateOperation.FadeOutAndNavigate, NavigateOperation.FadeOutAndShow, NavigateOperation.OnlyFadeOut
+                Dim fadeOut As New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(540)))
+                fadeOut.EasingFunction = New QuarticEase With {.EasingMode = EasingMode.EaseOut}
+                AddHandler fadeOut.Completed, Sub() FadeOutComplete(e)
+                BeginAnimation(OpacityProperty, fadeOut)
+                Exit Sub
+            Case NavigateOperation.NavigateAndFadeIn
+                CustomizedNavigate(e)
+                FadeIn()
+            Case NavigateOperation.NavigateAndHide
+                e.Cancel = False
+                Opacity = 0.0
+            Case NavigateOperation.OnlyFadeIn
+                FadeIn()
+            Case NavigateOperation.NoEffect
+                e.Cancel = False
+        End Select
     End Sub
 
+    ''' <summary>
+    ''' 页面淡入处理函数
+    ''' </summary>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub FadeOutComplete(e As NavigatingCancelEventArgs)
+        Dim data = DirectCast(e.ExtraData, NavigateOperation)
+        IsHitTestVisible = True
+        Select Case data
+            Case NavigateOperation.Normal
+                CustomizedNavigate(e)
+                FadeIn()
+            Case NavigateOperation.FadeOutAndNavigate
+                CustomizedNavigate(e)
+            Case NavigateOperation.FadeOutAndShow
+                CustomizedNavigate(e)
+                Opacity = 1.0
+        End Select
+    End Sub
+
+    ''' <summary>
+    ''' 自定义导航数据处理函数
+    ''' </summary>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Private Sub CustomizedNavigate(e As NavigatingCancelEventArgs)
+        Select Case e.NavigationMode
+            Case NavigationMode.Back
+                NavigationService.GoBack()
+            Case NavigationMode.Forward
+                NavigationService.GoForward()
+            Case NavigationMode.Refresh
+                NavigationService.Refresh()
+            Case NavigationMode.New
+                If e.Uri Is Nothing Then
+                    NavigationService.Navigate(e.Content)
+                Else
+                    NavigationService.Navigate(e.Uri)
+                End If
+        End Select
+    End Sub
+
+    ''' <summary>
+    ''' 页面淡出处理函数
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub FadeIn()
+        Opacity = 0.0
+        Dim fadeIn As New DoubleAnimation(1.0, New Duration(TimeSpan.FromMilliseconds(540)))
+        fadeIn.EasingFunction = New QuinticEase With {.EasingMode = EasingMode.EaseOut}
+        BeginAnimation(OpacityProperty, fadeIn)
+    End Sub
+
+    ''' <summary>
+    ''' 系统脚本注册函数
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub RegisterScript()
         Dim system, script As LuaTable
         ScriptCore.GetInstance.Environment("api_system") = New LuaTable
@@ -86,6 +174,7 @@ Public Class GameWindow
         script("addLoop") = New Action(Of ILoopReceiver)(AddressOf LoopAPI.AddLoopSync)
         script("waitLoop") = New Action(Of ILoopReceiver)(AddressOf LoopAPI.WaitLoopSync)
         script("currentFrame") = New Func(Of Integer)(AddressOf LoopAPI.CurrentFrame)
+        script("getStatus") = New Func(Of Boolean)(AddressOf LoopAPI.GetStatus)
         script("translateToTime") = New Func(Of Integer, TimeSpan)(AddressOf LoopAPI.TranslateToTime)
         script("translateToFrame") = New Func(Of TimeSpan, Integer)(AddressOf LoopAPI.TranslateToFrame)
         'Message
@@ -110,7 +199,7 @@ Public Class GameWindow
         'Plugin
         system("plugin") = New LuaTable
         script = system("plugin")
-        script("add") = New Func(Of String, Boolean)(AddressOf PluginAPI.Add)
+        script("add") = New Action(Of String)(AddressOf PluginAPI.Add)
         script("compile") = New Func(Of String, String, Reflection.Assembly)(AddressOf PluginAPI.Compile)
         script("load") = New Func(Of String, Reflection.Assembly)(AddressOf PluginAPI.Load)
         'Resource
@@ -138,19 +227,23 @@ Public Class GameWindow
         script("setTick") = New Action(Of Integer)(AddressOf TimerAPI.SetTickSync)
         script("getTick") = New Func(Of Integer)(AddressOf TimerAPI.GetTick)
         script("getStatus") = New Func(Of Boolean)(AddressOf TimerAPI.GetStatus)
-        'Window[不包括GetChildByName SearchObject GetRoot这些泛型API]
+        'Window[不包括GetChildByName SearchObject GetRoot InvokeSync InvokeAsync这些涉及委托或泛型的API]
         system("window") = New LuaTable
         script = system("window")
         script("setTitle") = New Action(Of String)(AddressOf WindowAPI.SetTitleSync)
         script("clearContent") = New Action(Of Panel)(AddressOf WindowAPI.ClearContentSync)
         script("loadElement") = New Action(Of Panel, String)(AddressOf WindowAPI.LoadElementSync)
         script("loadElementA") = New Action(Of Panel, String)(AddressOf WindowAPI.LoadElementAsync)
-        script("loadPage") = New Action(Of String)(AddressOf WindowAPI.LoadPageSync)
-        script("loadPageA") = New Action(Of String)(AddressOf WindowAPI.LoadPageAsync)
-        script("loadObject") = New Action(Of Page)(AddressOf WindowAPI.LoadObjectSync)
-        script("loadObjectA") = New Action(Of Page)(AddressOf WindowAPI.LoadObjectAsync)
-        script("loadUri") = New Action(Of String)(AddressOf WindowAPI.LoadUriSync)
-        script("loadUriA") = New Action(Of String)(AddressOf WindowAPI.LoadUriAsync)
+        script("loadPage") = New Action(Of String, NavigateOperation)(AddressOf WindowAPI.LoadPageSync)
+        script("loadPageA") = New Action(Of String, NavigateOperation)(AddressOf WindowAPI.LoadPageAsync)
+        script("loadObject") = New Action(Of Page, NavigateOperation)(AddressOf WindowAPI.LoadObjectSync)
+        script("loadObjectA") = New Action(Of Page, NavigateOperation)(AddressOf WindowAPI.LoadObjectAsync)
+        script("loadUri") = New Action(Of Uri, NavigateOperation)(AddressOf WindowAPI.LoadUriSync)
+        script("loadUriA") = New Action(Of Uri, NavigateOperation)(AddressOf WindowAPI.LoadUriAsync)
+        script("fadeOutPage") = New Action(Of Integer)(AddressOf WindowAPI.FadeOutPageSync)
+        script("fadeOutPageA") = New Action(Of Integer)(AddressOf WindowAPI.FadeOutPageAsync)
+        script("fadeInPage") = New Action(Of Integer)(AddressOf WindowAPI.FadeInPageSync)
+        script("fadeInPageA") = New Action(Of Integer)(AddressOf WindowAPI.FadeInPageAsync)
         script("goBack") = New Action(AddressOf WindowAPI.GoBackSync)
         script("goForward") = New Action(AddressOf WindowAPI.GoForwardSync)
         script("removeOneBack") = New Action(AddressOf WindowAPI.RemoveOneBackSync)
@@ -176,11 +269,11 @@ Public Class GameWindow
         system("path") = New LuaTable
         script = system("path")
         script("game") = My.Application.Info.DirectoryPath
-        script("user") = PathFunction.GetFullPath(PathType.UserFile)
-        script("plugin") = PathFunction.GetFullPath(PathType.Plugin)
-        script("resource") = PathFunction.GetFullPath(PathType.Resource)
-        script("script") = PathFunction.GetFullPath(PathType.Script)
-        script("skin") = PathFunction.GetFullPath(PathType.Skin)
+        script("user") = Config.UserFilePath
+        script("plugin") = Config.PluginPath
+        script("resource") = Config.ResourcePath
+        script("script") = Config.ScriptPath
+        script("skin") = Config.SkinPath
     End Sub
 
 End Class

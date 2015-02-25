@@ -5,4 +5,5 @@
         image.Stretch = Stretch.Uniform
         CenterImage.Background = image
     End Sub
+
 End Class

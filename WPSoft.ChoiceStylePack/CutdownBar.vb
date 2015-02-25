@@ -1,6 +1,6 @@
 ﻿Imports System.Windows.Controls
 
-Public Class CutdownBar : Inherits WADV.ChoiceModule.Effect.BaseProgress
+Public Class CutdownBar : Inherits WADV.ChoiceModule.BaseProgress
     Private _bar As ProgressBar
     Private ReadOnly _parent As Panel
 

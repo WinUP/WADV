@@ -13,7 +13,7 @@ Namespace PluginInterface
             ScriptAPI.RegisterInTableSync("api_te", "register", New Func(Of Panel, Integer)(AddressOf ImageAPI.Register))
             ScriptAPI.RegisterInTableSync("api_te", "effect", New Action(Of Integer, String, Boolean, Object())(AddressOf ImageAPI.Effect))
             ScriptAPI.RegisterInTableSync("api_te", "hide", New Func(Of Integer, Boolean)(AddressOf ImageAPI.Hide))
-            MessageAPI.SendSync("TE_INIT_LOADFINISH")
+            MessageAPI.SendSync("[TE]INIT_LOAD_FINISH")
             Return True
         End Function
 

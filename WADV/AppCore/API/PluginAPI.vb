@@ -17,11 +17,10 @@ Namespace AppCore.API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="fileName">插件文件路径(从Plugin目录下开始)</param>
-        ''' <returns>是否加载成功</returns>
         ''' <remarks></remarks>
-        Public Shared Function Add(fileName As String) As Boolean
-            Return PluginFunction.AddPlugin(PathAPI.GetPath(PathType.Plugin, fileName))
-        End Function
+        Public Shared Sub Add(fileName As String)
+            PluginFunction.AddPlugin(PathAPI.GetPath(PathType.Plugin, fileName))
+        End Sub
 
         ''' <summary>
         ''' 编译一个代码文件
@@ -62,7 +61,7 @@ Namespace AppCore.API
                 For Each tmpError As CompilerError In result.Errors
                     errorString.Append(Environment.NewLine & tmpError.ErrorText)
                 Next
-                MessageBox.Show("编译" & fileName & "时没有通过：" & Environment.NewLine & errorString.ToString, "错误", MessageBoxButton.OK, MessageBoxImage.Error)
+                MessageBox.Show(errorString.ToString, "编译" & fileName & "时没有通过", MessageBoxButton.OK, MessageBoxImage.Error)
                 Return Nothing
             End If
             MessageAPI.SendSync("[SYSTEM]CODE_COMPILE")

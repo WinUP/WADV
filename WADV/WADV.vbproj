@@ -84,7 +84,7 @@
     <Compile Include="AppCore\API\ScriptAPI.vb" />
     <Compile Include="AppCore\API\TimerAPI.vb" />
     <Compile Include="AppCore\API\WindowAPI.vb" />
-    <Compile Include="AppCore\AppCore.FirstPlay.vb" />
+    <Compile Include="AppCore\Enumerations.vb" />
     <Compile Include="AppCore\MainLoop.vb" />
     <Compile Include="AppCore\MessageService.vb" />
     <Compile Include="AppCore\PluginFunction.vb" />
@@ -93,6 +93,7 @@
     <Compile Include="AppCore\PluginInterface\IInitialise.vb" />
     <Compile Include="AppCore\PluginInterface\ILoopReceiver.vb" />
     <Compile Include="AppCore\PluginInterface\IMessageReceiver.vb" />
+    <Compile Include="AppCore\PluginInterface\INavigationReceiver.vb" />
     <Compile Include="AppCore\ScriptCore.vb" />
     <Compile Include="AppCore\MainTimer.vb" />
     <Compile Include="AppCore\Config.vb" />

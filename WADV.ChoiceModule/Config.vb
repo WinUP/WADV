@@ -1,12 +1,9 @@
 ﻿Imports System.Windows.Controls
 
-Namespace Config
+Friend NotInheritable Class UIConfig
 
-    Public Class UIConfig
-        Protected Friend Shared ChoiceContent As Panel
-        Protected Friend Shared ChoiceStyle As String
-        Protected Friend Shared ChoiceMargin As Double
+    Friend Shared ChoiceContent As Panel
+    Friend Shared ChoiceStyle As String
+    Friend Shared ChoiceMargin As Double
 
-    End Class
-
-End Namespace
+End Class

@@ -9,24 +9,25 @@ Namespace AppCore.API
     Public NotInheritable Class LoopAPI
 
         ''' <summary>
-        ''' 设置理想帧率
+        ''' 设置理想执行周期
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="frame">新的次数</param>
+        ''' <param name="frame">执行周期(毫秒)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetFrameSync(frame As Integer)
-            If frame < 1 Then Throw New ValueUnavailableException("帧率最低不得低于1")
-            LoopFunction.Frame = frame
+            If frame < 1 Then Throw New ValueUnavailableException("理想执行周期最低不得低于1毫秒")
+            MainLoop.GetInstance.Span = frame
+            MessageService.GetInstance.SendMessage("[SYSTEM]LOOP_FRAME_CHANGE")
         End Sub
 
         ''' <summary>
-        ''' 获取理想帧率
+        ''' 获取理想执行周期
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <returns>循环次数</returns>
+        ''' <returns>执行周期</returns>
         ''' <remarks></remarks>
         Public Shared Function GetFrame() As Integer
-            Return LoopFunction.Frame
+            Return MainLoop.GetInstance.Span
         End Function
 
         ''' <summary>
@@ -36,7 +37,7 @@ Namespace AppCore.API
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Public Shared Sub AddLoopSync(loopContent As ILoopReceiver)
-            MainLoop.GetInstance.AddLoop(loopContent)
+            LoopList.Add(loopContent)
         End Sub
 
         ''' <summary>
@@ -46,8 +47,10 @@ Namespace AppCore.API
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Public Shared Sub WaitLoopSync(loopContent As ILoopReceiver)
-            Dim receiver As New LoopFunction
-            receiver.Wait(loopContent)
+            While True
+                MessageAPI.WaitSync("[SYSTEM]LOOP_CONTENT_REMOVE")
+                If Not LoopList.Contains(loopContent) Then Exit While
+            End While
         End Sub
 
         ''' <summary>
@@ -77,7 +80,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopSync()
-            MainLoop.GetInstance.Abort()
+            MainLoop.GetInstance.Stop()
         End Sub
 
         ''' <summary>
@@ -87,6 +90,10 @@ Namespace AppCore.API
         ''' <returns></returns>
         Public Shared Function CurrentFrame() As Integer
             Return MainLoop.GetInstance.CurrentFrame
+        End Function
+
+        Public Shared Function GetStatus() As Boolean
+            Return MainLoop.GetInstance.Status
         End Function
 
         ''' <summary>

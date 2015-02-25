@@ -21,7 +21,7 @@
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopSync()
-            MainTimer.GetInstance.Abort()
+            MainTimer.GetInstance.Stop()
         End Sub
 
         ''' <summary>

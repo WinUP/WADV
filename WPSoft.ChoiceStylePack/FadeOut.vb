@@ -2,7 +2,7 @@
 Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
 
-Public Class FadeOut : Inherits WADV.ChoiceModule.Effect.BaseHide
+Public Class FadeOut : Inherits WADV.ChoiceModule.BaseHide
 
     Public Sub New(choices() As Button)
         MyBase.New(choices)

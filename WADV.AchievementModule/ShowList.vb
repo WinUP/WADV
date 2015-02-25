@@ -1,0 +1,84 @@
+﻿Imports System.Threading
+Imports System.Windows
+Imports System.Windows.Markup
+Imports System.Windows.Controls
+Imports System.Windows.Threading
+Imports System.Collections.Concurrent
+Imports System.Windows.Media.Animation
+
+Friend NotInheritable Class ShowList
+    Private Shared _mainStoryBoard As Storyboard
+    Private Shared _showingWindow As Border
+    Private Shared _list As ConcurrentQueue(Of Achievement)
+    Private Shared _showThread As Thread
+    Private Shared _dispatcher As Dispatcher
+    Private Shared _isShowing As Boolean
+
+    Friend Shared ReadOnly Property IsShowing As Boolean
+        Get
+            Return _isShowing
+        End Get
+    End Property
+
+    Friend Shared Sub Initialise()
+        _list = New ConcurrentQueue(Of Achievement)
+        _dispatcher = WindowAPI.GetDispatcher
+        _dispatcher.Invoke(New Action(AddressOf SetStoryboard))
+        _showThread = New Thread(AddressOf ShowContent)
+        _showThread.Name = "成就显示线程"
+        _showThread.IsBackground = True
+        _showThread.Priority = ThreadPriority.BelowNormal
+    End Sub
+
+    Private Shared Sub SetStoryboard()
+        _mainStoryBoard = New Storyboard
+        Dim ease As EasingFunctionBase = New QuarticEase
+        ease.EasingMode = EasingMode.EaseOut
+        Dim fade As New DoubleAnimation(1.0, New Duration(TimeSpan.FromMilliseconds(600)))
+        fade.EasingFunction = ease
+        _mainStoryBoard.Children.Add(fade)
+        Storyboard.SetTargetProperty(fade, New PropertyPath(Border.OpacityProperty))
+        fade = New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(600)))
+        fade.EasingFunction = ease
+        fade.BeginTime = TimeSpan.FromMilliseconds(3600)
+        _mainStoryBoard.Children.Add(fade)
+        Storyboard.SetTargetProperty(fade, New PropertyPath(Border.OpacityProperty))
+        AddHandler _mainStoryBoard.Completed, AddressOf Storyboard_Complete
+    End Sub
+
+    Private Shared Sub Storyboard_Complete(sender As Object, e As EventArgs)
+        WindowAPI.GetRoot(Of Grid).Children.Remove(_showingWindow)
+        MessageAPI.SendSync("[ACHIEVE]SHOW_FINISH")
+    End Sub
+
+    Private Shared Sub ShowContent()
+        While True
+            _isShowing = True
+            Dim target As Achievement
+            '!已进行异常处理，此处不会引用空值，请忽略警告
+            If Not _list.TryDequeue(target) Then Throw New Exception("从等待队列中获取成就失败")
+            _dispatcher.Invoke(New Action(Of Achievement)(AddressOf ShowWindow), target)
+            If _list.Count = 0 Then
+                _isShowing = False
+                Exit While
+            End If
+            MessageAPI.WaitSync("[ACHIEVE]SHOW_FINISH")
+        End While
+    End Sub
+
+    Private Shared Sub ShowWindow(target As Achievement)
+        _showingWindow = XamlReader.Parse(Config.WindowStyle)
+        _showingWindow.Opacity = 0.0
+        WindowAPI.GetRoot(Of Grid).Children.Add(_showingWindow)
+        WindowAPI.GetChildByName(Of TextBlock)(_showingWindow, "AchievementTitle").Text = target.GetName
+        _showingWindow.BeginStoryboard(_mainStoryBoard)
+    End Sub
+
+    Friend Shared Sub Add(target As Achievement)
+        If Not _list.Contains(target) Then
+            _list.Enqueue(target)
+            If Not _showThread.IsAlive Then _showThread.Start()
+        End If
+    End Sub
+
+End Class

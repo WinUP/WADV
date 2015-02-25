@@ -1,4 +1,0 @@
-﻿Namespace AppCore
-
-
-End Namespace

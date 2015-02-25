@@ -15,6 +15,5 @@
                 <TextBlock x:Name="MainCharacter" Foreground="White" FontSize="18" Margin="0" TextAlignment="Center"/>
             </Border>
         </Grid>
-
     </Grid>
 </Page>

@@ -47,19 +47,19 @@
     <Reference Include="Neo.Lua">
       <HintPath>..\packages\NeoLua.0.9.12\lib\net4\Neo.Lua.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
@@ -70,6 +70,7 @@
     <Compile Include="AchievementList.vb" />
     <Compile Include="API\AchieveAPI.vb" />
     <Compile Include="API\ConfigAPI.vb" />
+    <Compile Include="API\PropertyAPI.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="DeserializationBinder.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -87,9 +88,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PluginInterface.vb" />
+    <Compile Include="PluginInterface\GameClose.vb" />
+    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="PluginInterface\NavigationReceiver.vb" />
+    <Compile Include="PluginInterface\ScriptMessageReceiver.vb" />
     <Compile Include="PropertyList.vb" />
     <Compile Include="ReceiverList.vb" />
+    <Compile Include="ShowList.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

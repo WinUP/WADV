@@ -70,24 +70,24 @@
         ''' 获取完整路径
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="urlType">资源路径类型</param>
-        ''' <param name="fileURL">从资源目录开始的文件相对路径</param>
+        ''' <param name="pathType">资源路径类型</param>
+        ''' <param name="filePath">从资源目录开始的文件相对路径</param>
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetPath(urlType As PathType, Optional fileURL As String = "") As String
-            Return PathFunction.GetFullPath(urlType, fileURL)
+        Public Shared Function GetPath(pathType As PathType, Optional filePath As String = "") As String
+            Return PathFunction.GetFullPath(pathType, filePath)
         End Function
 
         ''' <summary>
         ''' 获取完整路径的URI表示形式
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="urlType">资源路径类型</param>
-        ''' <param name="fileURL">从资源目录开始的文件相对路径</param>
+        ''' <param name="pathType">资源路径类型</param>
+        ''' <param name="filePath">从资源目录开始的文件相对路径</param>
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
-        Public Shared Function GetUri(urlType As PathType, Optional fileURL As String = "") As Uri
-            Return New Uri(PathFunction.GetFullPath(urlType, fileURL))
+        Public Shared Function GetUri(pathType As PathType, Optional filePath As String = "") As Uri
+            Return PathFunction.GetFullUri(pathType, filePath)
         End Function
 
     End Class

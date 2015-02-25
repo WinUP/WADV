@@ -1,4 +1,5 @@
-﻿Imports WADV.AppCore.PluginInterface
+﻿Imports System.Threading
+Imports WADV.AppCore.PluginInterface
 
 Namespace AppCore.API
 
@@ -13,7 +14,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
         Public Shared Sub AddSync(receiver As IMessageReceiver)
-            MessageService.GetInstance.AddReceiver(receiver)
+            ReceiverList.Add(receiver)
         End Sub
 
         ''' <summary>
@@ -22,7 +23,7 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
         Public Shared Sub DeleteSync(receiver As IMessageReceiver)
-            MessageService.GetInstance.RemoveReceiver(receiver)
+            ReceiverList.Delete(receiver)
         End Sub
 
         ''' <summary>
@@ -40,12 +41,21 @@ Namespace AppCore.API
         ''' </summary>
         ''' <param name="message">消息内容</param>
         Public Shared Sub WaitSync(message As String)
-            Dim waiter As New WaitReceiver
-            waiter.WaitMessage(message)
+            While True
+                SyncLock MessageService.LastMessage
+                    For i As Integer = 0 To message.Length - 1
+                        If message(i) <> MessageService.LastMessage(i) Then
+                            Monitor.Wait(MessageService.LastMessage)
+                            Continue While
+                        End If
+                    Next
+                    Exit While
+                End SyncLock
+            End While
         End Sub
 
         Public Shared Function LastMessage() As String
-            Return New String(MessageService.LastMessage)
+            Return New String(MessageService.LastMessage).ToString.Trim(ChrW(0))
         End Function
 
     End Class

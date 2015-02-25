@@ -32,13 +32,19 @@ Imports System.Runtime.Serialization.Formatters.Binary
         Return _isEarn
     End Function
 
+    Protected Sub SetEarn()
+        _isEarn = True
+        ShowList.Add(Me)
+        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_EARN")
+    End Sub
+
 End Class
 
 ''' <summary>
 ''' 成就存储类
 ''' </summary>
 ''' <remarks></remarks>
-Friend Class AchievementList
+Friend NotInheritable Class AchievementList
     Private Shared _list As New Dictionary(Of String, Achievement)
 
     ''' <summary>
@@ -49,6 +55,7 @@ Friend Class AchievementList
     Friend Shared Sub Add(achievement As Achievement)
         If Contains(achievement.GetName) Then Return
         _list.Add(achievement.GetName, achievement)
+        achievement.Register()
         MessageAPI.SendSync("[ACHIEVE]ACHIEVE_ADD")
     End Sub
 

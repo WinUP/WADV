@@ -7,7 +7,7 @@ Imports System.Windows.Media.Animation
 ''' 渐显显示效果
 ''' </summary>
 ''' <remarks></remarks>
-Public Class FadeIn : Inherits Effect.BaseShow
+Public Class FadeIn : Inherits BaseShow
 
 
     Public Sub New(choices() As Button)

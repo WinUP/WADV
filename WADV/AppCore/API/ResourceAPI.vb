@@ -10,26 +10,26 @@
         ''' 加载资源到游戏全局
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="fileName">资源文件路径(从Skin目录下开始)</param>
+        ''' <param name="filePath">资源文件路径(从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadToGameSync(fileName As String)
+        Public Shared Sub LoadToGameSync(filePath As String)
             Dim tmpDictionart As New ResourceDictionary
-            tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathType.Skin, fileName))
+            tmpDictionart.Source = PathFunction.GetFullUri(PathType.Skin, filePath)
             Application.Current.Resources.MergedDictionaries.Add(tmpDictionart)
-            MessageAPI.SendSync("[SYSTEM]GAME_RESOURCE_ADD")
+            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
         ''' 加载资源到主窗口
         ''' 同步方法|调用线程
         ''' </summary>
-        ''' <param name="fileName">资源文件路径(从Skin目录下开始)</param>
+        ''' <param name="filePath">资源文件路径(从Skin目录下开始)</param>
         ''' <remarks></remarks>
-        Public Shared Sub LoadToWindowSync(fileName As String)
+        Public Shared Sub LoadToWindowSync(filePath As String)
             Dim tmpDictionart As New ResourceDictionary
-            tmpDictionart.Source = New Uri(PathFunction.GetFullPath(PathType.Skin, fileName))
-            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
-            MessageAPI.SendSync("[SYSTEM]WINDOW_RESOURCE_ADD")
+            tmpDictionart.Source = PathFunction.GetFullUri(PathType.Skin, filePath)
+            WindowAPI.InvokeSync(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Add(tmpDictionart))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
@@ -39,7 +39,7 @@
         ''' <remarks></remarks>
         Public Shared Sub ClearGameSync()
             Application.Current.Resources.MergedDictionaries.Clear()
-            MessageAPI.SendSync("[SYSTEM]GAME_RESOURCE_CLEAR")
+            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
@@ -48,8 +48,8 @@
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub ClearWindowSync()
-            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
-            MessageAPI.SendSync("[SYSTEM]WINDOW_RESOURCE_CLEAR")
+            WindowAPI.InvokeSync(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Clear())
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
@@ -60,7 +60,7 @@
         ''' <remarks></remarks>
         Public Shared Sub RemoveFromGameSync(resource As ResourceDictionary)
             Application.Current.Resources.MergedDictionaries.Remove(resource)
-            MessageAPI.SendSync("[SYSTEM]GAME_RESOURCE_REMOVE")
+            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>
@@ -70,8 +70,8 @@
         ''' <param name="resource">要清除的资源对象</param>
         ''' <remarks></remarks>
         Public Shared Sub RemoveFromWindowSync(resource As ResourceDictionary)
-            WindowAPI.GetDispatcher.Invoke(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
-            MessageAPI.SendSync("[SYSTEM]WINDOW_RESOURCE_REMOVE")
+            WindowAPI.InvokeSync(Sub() WindowAPI.GetWindow.Resources.MergedDictionaries.Remove(resource))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>

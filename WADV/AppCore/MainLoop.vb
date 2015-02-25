@@ -1,41 +1,101 @@
 ﻿Imports System.Threading
-Imports WADV.AppCore.API
 Imports WADV.AppCore.PluginInterface
 
 Namespace AppCore
 
     ''' <summary>
+    ''' 循环体列表
+    ''' </summary>
+    ''' <remarks></remarks>
+    Friend Class LoopList
+        Private Shared ReadOnly List As New List(Of ILoopReceiver)
+        Private Shared ReadOnly Messager As MessageService = MessageService.GetInstance
+
+        ''' <summary>
+        ''' 添加一个循环体
+        ''' </summary>
+        ''' <param name="target">要添加的循环函数</param>
+        ''' <remarks></remarks>
+        Friend Shared Sub Add(target As ILoopReceiver)
+            If Not Contains(target) Then
+                List.Add(target)
+                Messager.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' 确定指定循环体是否已存在
+        ''' </summary>
+        ''' <param name="content">要检查的循环体</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function Contains(content As ILoopReceiver) As Boolean
+            Return List.Contains(content)
+        End Function
+
+        ''' <summary>
+        ''' 获得一个循环体
+        ''' </summary>
+        ''' <param name="i">目标索引</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function [Get](i As Integer) As ILoopReceiver
+            Return List(i)
+        End Function
+
+        ''' <summary>
+        ''' 删除一个循环体
+        ''' </summary>
+        ''' <param name="i">目标索引</param>
+        ''' <remarks></remarks>
+        Friend Shared Sub Delete(i As Integer)
+            List.RemoveAt(i)
+            Messager.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
+        End Sub
+
+        ''' <summary>
+        ''' 删除一个循环体
+        ''' </summary>
+        ''' <param name="content">目标循环体</param>
+        ''' <remarks></remarks>
+        Friend Shared Sub Delete(content As ILoopReceiver)
+            If Contains(content) Then
+                List.Remove(content)
+                Messager.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' 获取已注册的循环体的数目
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function Count() As Integer
+            Return List.Count
+        End Function
+
+    End Class
+
+    ''' <summary>
     ''' 游戏循环
     ''' </summary>
     ''' <remarks></remarks>
-    Public NotInheritable Class MainLoop
+    Friend NotInheritable Class MainLoop
         Private Shared _self As MainLoop
         Private _loopListCount As Integer
         Private _frameCount As Integer
         Private ReadOnly _loopThread As Thread
         Private ReadOnly _messager As MessageService
-        Friend ReadOnly LoopList As New List(Of ILoopReceiver)
-
-        ''' <summary>
-        ''' 添加一个循环体
-        ''' </summary>
-        ''' <param name="loopContent">循环函数</param>
-        ''' <remarks></remarks>
-        Public Sub AddLoop(loopContent As ILoopReceiver)
-            If Not LoopList.Contains(loopContent) Then
-                LoopList.Add(loopContent)
-                _messager.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
-            End If
-        End Sub
+        Private ReadOnly _deletagte As Action(Of ILoopReceiver)
 
         Private Sub New()
             Status = False
             Span = 33
             _loopThread = New Thread(AddressOf LoopingContent)
             _loopThread.IsBackground = True
-            _loopThread.Name = "游戏循环线程"
+            _loopThread.Name = "[系统]游戏循环线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            _frameCount = 0
+            _deletagte = New Action(Of ILoopReceiver)(Sub(tmploop As ILoopReceiver) tmploop.Render())
             _messager = MessageService.GetInstance
             _messager.SendMessage("[SYSTEM]LOOP_INIT_FINISH")
         End Sub
@@ -46,7 +106,7 @@ Namespace AppCore
         ''' <value>新的状态</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property Status As Boolean
+        Friend Property Status As Boolean
 
         ''' <summary>
         ''' 获取或设置两次逻辑循环间的时间间隔(毫秒)
@@ -54,13 +114,13 @@ Namespace AppCore
         ''' <value>新的间隔</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Property Span As Integer
+        Friend Property Span As Integer
 
         ''' <summary>
         ''' 获取当前的帧计数
         ''' </summary>
         ''' <returns></returns>
-        Public ReadOnly Property CurrentFrame As Integer
+        Friend ReadOnly Property CurrentFrame As Integer
             Get
                 Return _frameCount
             End Get
@@ -71,7 +131,7 @@ Namespace AppCore
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetInstance() As MainLoop
+        Friend Shared Function GetInstance() As MainLoop
             If _self Is Nothing Then _self = New MainLoop
             Return _self
         End Function
@@ -88,15 +148,14 @@ Namespace AppCore
                 i = 0
                 _loopListCount = LoopList.Count
                 While i < _loopListCount
-                    loopContent = LoopList(i)
+                    loopContent = LoopList.Get(i)
                     If loopContent.Logic(_frameCount) Then
                         i += 1
                     Else
-                        LoopList.Remove(loopContent)
-                        _messager.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
+                        LoopList.Delete(i)
                         _loopListCount -= 1
                     End If
-                    gameDispatcher.Invoke(Sub(ByRef tmploop As ILoopReceiver) tmploop.Render(), loopContent)
+                    gameDispatcher.Invoke(_deletagte, loopContent)
                 End While
                 sleepTime = timeNow + Span - Now.Ticks
                 If sleepTime > 0 Then Thread.Sleep(sleepTime)
@@ -109,7 +168,7 @@ Namespace AppCore
         ''' 启动逻辑循环
         ''' </summary>
         ''' <remarks></remarks>
-        Public Sub Start()
+        Friend Sub Start()
             If Status Then Return
             Status = True
             _loopThread.Start()
@@ -120,47 +179,9 @@ Namespace AppCore
         ''' 终止逻辑循环
         ''' </summary>
         ''' <remarks></remarks>
-        Public Sub Abort()
+        Friend Sub [Stop]()
             Status = False
         End Sub
-
-    End Class
-
-    ''' <summary>
-    ''' 循环辅助类
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public NotInheritable Class LoopFunction
-        Private Shared _frame As Integer = 30
-
-        ''' <summary>
-        ''' 等待指定循环的结束
-        ''' </summary>
-        ''' <param name="loopContent">循环体</param>
-        ''' <remarks></remarks>
-        Public Sub Wait(loopContent As ILoopReceiver)
-            Dim loopList = MainLoop.GetInstance.LoopList
-            While True
-                MessageAPI.WaitSync("[SYSTEM]LOOP_CONTENT_REMOVE")
-                If Not loopList.Contains(loopContent) Then Exit While
-            End While
-        End Sub
-
-        ''' <summary>
-        ''' 获取或设置逻辑循环每秒的理想执行次数
-        ''' </summary>
-        ''' <value>执行次数</value>
-        ''' <returns></returns>
-        Public Shared Property Frame As Integer
-            Get
-                Return _frame
-            End Get
-            Set(value As Integer)
-                _frame = value
-                MainLoop.GetInstance.Span = 1000 / Frame
-                MessageAPI.SendSync("[SYSTEM]LOOP_FRAME_CHANGE")
-            End Set
-        End Property
 
     End Class
 
