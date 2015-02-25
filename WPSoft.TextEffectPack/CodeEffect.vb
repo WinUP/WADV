@@ -1,4 +1,4 @@
-﻿Imports WADV.TextModule.TextEffect
+﻿Imports WADV.TextModule
 
 Public Class CodeEffect : Inherits StandardEffect
     Private _existSentencePart As String

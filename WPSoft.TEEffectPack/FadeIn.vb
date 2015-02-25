@@ -8,7 +8,7 @@ Imports WADV.AppCore.API
 ''' fadeTime, ease[circle, cubic, exp, quartic, quintic, sine, noease], easeMode[in, out, both]
 ''' </summary>
 ''' <remarks></remarks>
-Public Class FadeIn : Inherits WADV.TEModule.Effect.BaseEffect
+Public Class FadeIn : Inherits WADV.TEModule.BaseEffect
 
     Public Sub New(id As Integer, variable As Object())
         MyBase.New(id, variable)

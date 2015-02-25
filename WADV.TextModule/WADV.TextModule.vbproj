@@ -70,10 +70,14 @@
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.vb" />
-    <Compile Include="Config.vb" />
-    <Compile Include="Core.vb" />
-    <Compile Include="PluginInterface.vb" />
+    <Compile Include="API\ConfigAPI.vb" />
+    <Compile Include="API\TextAPI.vb" />
+    <Compile Include="Initialiser.vb" />
+    <Compile Include="ITextEffect.vb" />
+    <Compile Include="ModuleConfig.vb" />
+    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="TextCore.vb" />
+    <Compile Include="PluginInterface\PluginInterface.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -89,7 +93,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="TextEffect.vb" />
+    <Compile Include="StandardEffect.vb" />
+    <Compile Include="UiConfig.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

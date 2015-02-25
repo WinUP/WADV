@@ -1,11 +1,10 @@
-﻿Imports System.Reflection
-Imports System.Windows.Controls
+﻿Imports System.Windows.Controls
 Imports WADV.AppCore.PluginInterface
 Imports WADV.TEModule.API
 
 Namespace PluginInterface
 
-    Public Class Initialiser : Implements IInitialise
+    Friend NotInheritable Class Initialiser : Implements IInitialise
 
         Public Function Initialising() As Boolean Implements IInitialise.Initialising
             ScriptAPI.RegisterInTableSync("api_te", "init", New Action(Of String)(AddressOf ConfigAPI.Init), True)

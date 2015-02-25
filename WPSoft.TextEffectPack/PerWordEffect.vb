@@ -1,4 +1,4 @@
-﻿Imports WADV.TextModule.TextEffect
+﻿Imports WADV.TextModule
 
 Public Class PerWordEffect : Inherits StandardEffect
     Private _currentProcessLength As Integer

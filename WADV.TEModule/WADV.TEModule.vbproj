@@ -70,9 +70,12 @@
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.vb" />
-    <Compile Include="Config.vb" />
-    <Compile Include="Effect.vb" />
+    <Compile Include="API\ImageAPI.vb" />
+    <Compile Include="API\ConfigAPI.vb" />
+    <Compile Include="BaseEffect.vb" />
+    <Compile Include="IEffect.vb" />
+    <Compile Include="UiConfig.vb" />
+    <Compile Include="Initialiser.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -88,8 +91,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PluginInterface.vb" />
-    <Compile Include="TEList.vb" />
+    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="TeList.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
