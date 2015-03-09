@@ -24,20 +24,20 @@ Friend NotInheritable Class VideoConfig
                                                VideoContent = Nothing
                                            End Sub)
         End If
-        WindowAPI.GetWindow.Dispatcher.Invoke(Sub()
-                                                  Dim content = WindowAPI.GetRoot(Of Grid)()
-                                                  VideoContent = New MediaElement
-                                                  VideoContent.SetValue(Panel.ZIndexProperty, 10)
-                                                  VideoContent.LoadedBehavior = MediaState.Manual
-                                                  VideoContent.Source = New Uri(PathAPI.GetPath(PathType.Resource, fileName))
-                                                  VideoContent.Height = content.Height
-                                                  VideoContent.Width = content.Width
-                                                  VideoContent.Margin = New Windows.Thickness(0)
-                                                  AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
-                                                  AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
-                                                  content.Children.Add(VideoContent)
-                                                  VideoContent.Play()
-                                              End Sub)
+        WindowAPI.InvokeSync(Sub()
+                                 Dim content = WindowAPI.GetRoot(Of Grid)()
+                                 VideoContent = New MediaElement
+                                 VideoContent.SetValue(Panel.ZIndexProperty, 10)
+                                 VideoContent.LoadedBehavior = MediaState.Manual
+                                 VideoContent.Source = New Uri(PathAPI.GetPath(PathType.Resource, fileName))
+                                 VideoContent.Height = content.Height
+                                 VideoContent.Width = content.Width
+                                 VideoContent.Margin = New Windows.Thickness(0)
+                                 AddHandler VideoContent.MediaEnded, AddressOf Video_Ended
+                                 AddHandler VideoContent.MouseLeftButtonDown, AddressOf Video_Click
+                                 content.Children.Add(VideoContent)
+                                 VideoContent.Play()
+                             End Sub)
         IsPlayFinished = False
         MessageAPI.SendSync("[MEDIA]VIDEO_PLAY")
     End Sub

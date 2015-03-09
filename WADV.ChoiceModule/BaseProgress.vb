@@ -19,7 +19,11 @@ Public Class BaseProgress : Implements IProgressEffect
 
     Public Overridable Function Logic() As Boolean Implements IProgressEffect.Logic
         If WaitFrame > 0 Then WaitFrame -= 1
-        If WaitFrame = 0 OrElse _answer <> "" Then Return False
+        If WaitFrame = 0 Then
+            MessageAPI.SendSync("[CHOICE]USER_OVERTIME")
+            Return False
+        End If
+        If _answer <> "" Then Return False
         Return True
     End Function
 

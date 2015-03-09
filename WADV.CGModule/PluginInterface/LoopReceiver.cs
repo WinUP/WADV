@@ -22,12 +22,12 @@ namespace WADV.CGModule.PluginInterface
             _effect.GetNextImageState(LoopAPI.CurrentFrame());
             _width = effect.GetWidth();
             _height = effect.GetHeight();
-            WindowAPI.GetDispatcher().Invoke((Action)(() =>
+            WindowAPI.InvokeSync(() =>
             {
                 _image = new WriteableBitmap(Config.ConvertToImage(_width, _height, effect.GetPixel()));
                 _imageRect = new Int32Rect(0, 0, _width, _height);
                 content.Background = new ImageBrush { ImageSource = _image, Stretch = Stretch.Uniform };
-            }));
+            });
         }
 
         public bool Logic(int frame)

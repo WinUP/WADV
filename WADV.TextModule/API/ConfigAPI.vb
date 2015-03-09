@@ -134,7 +134,7 @@ Namespace API
         ''' <param name="visible">是否可见</param>
         ''' <remarks></remarks>
         Public Shared Sub SetVisibility(visible As Boolean)
-            WindowAPI.GetDispatcher.Invoke(Sub() UiConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
+            WindowAPI.InvokeSync(Sub() UiConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
             MessageAPI.SendSync("[TEXT]VISIBILITY_CHANGE")
         End Sub
 

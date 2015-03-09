@@ -12,7 +12,7 @@ Public Class FadeIn : Inherits WADV.TEModule.BaseEffect
 
     Public Sub New(id As Integer, variable As Object())
         MyBase.New(id, variable)
-        WindowAPI.GetDispatcher.Invoke(Sub() ImageContent.Opacity = 0.0)
+        WindowAPI.InvokeSync(Sub() ImageContent.Opacity = 0.0)
     End Sub
 
     Public Overrides Sub Render()

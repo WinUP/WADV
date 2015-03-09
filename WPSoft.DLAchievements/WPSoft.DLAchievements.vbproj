@@ -65,7 +65,10 @@
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="A_成就制霸.vb" />
+    <Compile Include="A_我要干什么来着.vb" />
     <Compile Include="A_系统初始化.vb" />
+    <Compile Include="A_设置狂人.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
