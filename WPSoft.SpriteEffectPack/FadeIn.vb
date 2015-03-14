@@ -8,10 +8,10 @@ Imports WADV.AppCore.API
 ''' fadeTime, ease[circle, cubic, exp, quartic, quintic, sine, noease], easeMode[in, out, both]
 ''' </summary>
 ''' <remarks></remarks>
-Public Class FadeIn : Inherits WADV.TEModule.BaseEffect
+Public Class FadeIn : Inherits WADV.SpriteModule.BaseEffect
 
-    Public Sub New(id As Integer, variable As Object())
-        MyBase.New(id, variable)
+    Public Sub New(name As String, variable As Object())
+        MyBase.New(name, variable)
         WindowAPI.InvokeSync(Sub() ImageContent.Opacity = 0.0)
     End Sub
 

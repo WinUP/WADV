@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{619E9F18-B496-48A6-A693-DD430B33B9F7}</ProjectGuid>
+    <ProjectGuid>{490EE212-CA5E-43AF-8115-B6971DA139F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>WADV.SpriteModule</RootNamespace>
     <AssemblyName>WADV.SpriteModule</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -65,10 +64,15 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
-    <Import Include="System.Threading.Tasks" />
+    <Import Include="WADV.AppCore" />
     <Import Include="WADV.AppCore.API" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\ConfigAPI.vb" />
+    <Compile Include="API\SpriteAPI.vb" />
+    <Compile Include="BaseEffect.vb" />
+    <Compile Include="IEffect.vb" />
+    <Compile Include="Initialiser.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -84,6 +88,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="SpriteList.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

@@ -97,6 +97,7 @@
     <Compile Include="AppCore\ScriptCore.vb" />
     <Compile Include="AppCore\MainTimer.vb" />
     <Compile Include="AppCore\Config.vb" />
+    <Compile Include="AppCore\UiOperation.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>

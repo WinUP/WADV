@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WADV.SpriteModule")> 
+<Assembly: AssemblyTitle("WADV.HudModule")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WADV.SpriteModule")> 
+<Assembly: AssemblyProduct("WADV.HudModule")> 
 <Assembly: AssemblyCopyright("Copyright ©  2015")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 '如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-<Assembly: Guid("7c303e52-eb59-4865-b989-7efa8af8ae25")> 
+<Assembly: Guid("cbb6b399-062b-4a54-891d-09122a6db6ba")> 
 
 ' 程序集的版本信息由下面四个值组成: 
 '

@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Windows.Controls.Primitives
 Imports System.Windows.Markup
 Imports System.Windows.Media.Animation
 Imports System.Xml
@@ -218,8 +219,8 @@ Namespace AppCore.API
                                   While Config.BaseWindow.NavigationService.CanGoBack
                                       Config.BaseWindow.NavigationService.RemoveBackEntry()
                                   End While
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVEALL")
                               End Sub)
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVEALL")
         End Sub
 
         ''' <summary>
@@ -229,10 +230,8 @@ Namespace AppCore.API
         ''' <param name="color">颜色对象</param>
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundByColorSync(color As Color)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Background = New SolidColorBrush(color)
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(color))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -244,10 +243,8 @@ Namespace AppCore.API
         ''' <param name="b">蓝色值</param>
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundByRgbSync(r As Byte, g As Byte, b As Byte)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b))
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b)))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -257,10 +254,8 @@ Namespace AppCore.API
         ''' <param name="hex">16进制颜色值</param>
         ''' <remarks></remarks>
         Public Shared Sub SetBackgroundByHexSync(hex As String)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex))
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex)))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -270,10 +265,8 @@ Namespace AppCore.API
         ''' <param name="width">新的宽度</param>
         ''' <remarks></remarks>
         Public Shared Sub SetWidthSync(width As Double)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Width = width
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_WIDTH_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Width = width)
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_WIDTH_CHANGE")
         End Sub
 
         ''' <summary>
@@ -283,10 +276,8 @@ Namespace AppCore.API
         ''' <param name="height">新的高度</param>
         ''' <remarks></remarks>
         Public Shared Sub SetHeightSync(height As Double)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Height = height
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_HEIGHT_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Height = height)
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_HEIGHT_CHANGE")
         End Sub
 
         ''' <summary>
@@ -296,10 +287,8 @@ Namespace AppCore.API
         ''' <param name="canResize">是否能够调整大小</param>
         ''' <remarks></remarks>
         Public Shared Sub SetResizeModeSync(canResize As Boolean)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize)
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESIZEMODE_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub()  Config.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESIZEMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -309,10 +298,8 @@ Namespace AppCore.API
         ''' <param name="isTopmost">是否保持最前</param>
         ''' <remarks></remarks>
         Public Shared Sub SetTopmostSync(isTopmost As Boolean)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Topmost = isTopmost
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_TOPMOST_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub()  Config.BaseWindow.Topmost = isTopmost)
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_TOPMOST_CHANGE")
         End Sub
 
         ''' <summary>
@@ -322,10 +309,8 @@ Namespace AppCore.API
         ''' <param name="filePath">图标文件路径(ICO格式且从Skin目录下开始)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetIconSync(filePath As String)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Icon = BitmapFrame.Create(PathFunction.GetFullUri(PathType.Skin, filePath))
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Icon = BitmapFrame.Create(PathFunction.GetFullUri(PathType.Skin, filePath)))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE")
         End Sub
 
         ''' <summary>
@@ -335,10 +320,8 @@ Namespace AppCore.API
         ''' <param name="filePath">指针文件名称(ANI或CUR格式且从Skin目录下开始)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetCursorSync(filePath As String)
-            Dispatcher.Invoke(Sub()
-                                  Config.BaseWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathType.Skin, filePath))
-                                  MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE")
-                              End Sub)
+            Dispatcher.Invoke(Sub() Config.BaseWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathType.Skin, filePath)))
+            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE")
         End Sub
 
         ''' <summary>
@@ -351,20 +334,7 @@ Namespace AppCore.API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function GetChildByName(Of T As FrameworkElement)(obj As DependencyObject, name As String) As T
-            Return obj.Dispatcher.Invoke(Function()
-                                             Dim child As DependencyObject
-                                             Dim grandChild As T
-                                             For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
-                                                 child = VisualTreeHelper.GetChild(obj, i)
-                                                 If (TypeOf child Is T) AndAlso (name = "" OrElse DirectCast(child, T).Name = name) Then
-                                                     Return DirectCast(child, T)
-                                                 Else
-                                                     grandChild = GetChildByName(Of T)(child, name)
-                                                     If grandChild IsNot Nothing Then Return grandChild
-                                                 End If
-                                             Next
-                                             Return Nothing
-                                         End Function)
+            Return obj.Dispatcher.Invoke(Function() UiOperation.GetChildByName(Of T)(obj, name))
         End Function
 
         ''' <summary>
@@ -387,9 +357,11 @@ Namespace AppCore.API
         ''' <returns>根元素的实例</returns>
         ''' <remarks></remarks>
         Public Shared Function GetRoot(Of T As FrameworkElement)() As T
-            If Config.BaseWindow.Content Is Nothing Then Return Nothing
-            Dim contentPage As Page = Config.BaseWindow.Content
-            Return DirectCast(contentPage.Content, T)
+            Return Dispatcher.Invoke(Function()
+                                         If Config.BaseWindow.Content Is Nothing Then Return Nothing
+                                         Dim contentPage As Page = Config.BaseWindow.Content
+                                         Return DirectCast(contentPage.Content, T)
+                                     End Function)
         End Function
 
         ''' <summary>
@@ -416,11 +388,23 @@ Namespace AppCore.API
         ''' 在UI线程上执行一个无参委托
         ''' 同步方法|UI线程
         ''' </summary>
-        ''' <param name="content"></param>
+        ''' <param name="target">要执行的委托</param>
         ''' <remarks></remarks>
-        Public Shared Sub InvokeSync(content As Action)
-            Dispatcher.Invoke(content)
+        Public Shared Sub InvokeSync(target As Action)
+            Dispatcher.Invoke(target)
         End Sub
+
+        ''' <summary>
+        ''' 在UI线程上执行一个有一个参数且具有返回值的委托
+        ''' </summary>
+        ''' <param name="target">要执行的委托</param>
+        ''' <param name="params">要传递的参数</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function InvokeFunction(target As Func(Of Object, Object), params As Object) As Object
+            'Public Shared Function InvokeFunction(target As Func(Of Object, Object), params As Object) As Object
+            Return Dispatcher.Invoke(Function() target.Invoke(params))
+        End Function
 
         ''' <summary>
         ''' 在UI线程执行一个无参委托
@@ -461,6 +445,42 @@ Namespace AppCore.API
             stream.Close()
             MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_IMAGE_SAVE")
         End Sub
+
+        ''' <summary>
+        ''' 添加一个控件到当前页面
+        ''' </summary>
+        ''' <param name="type">控件类型</param>
+        ''' <param name="name">控件名称</param>
+        ''' <param name="x">控件左上角水平坐标</param>
+        ''' <param name="y">控件左上角垂直坐标</param>
+        ''' <param name="width">控件宽度</param>
+        ''' <param name="height">控件高度</param>
+        ''' <param name="parentName">控件父容器名称(留空则添加到根容器)</param>
+        ''' <returns>添加完成的控件</returns>
+        ''' <remarks></remarks>
+        Public Shared Function AddElement(type As String, name As String, x As Double, y As Double, width As Double, height As Double, Optional parentName As String = "") As Object
+            Dim target As FrameworkElement = Dispatcher.Invoke(Function() UiOperation.GenerateElement(type))
+            If target Is Nothing Then
+                Return Nothing
+            Else
+                target.Name = name
+                target.Width = width
+                target.Height = height
+                target.Margin = New Thickness(x, y, 0, 0)
+                Dim parent As Panel
+                If parentName = "" Then
+                    parent = GetRoot(Of Panel)()
+                Else
+                    parent = SearchObject(Of Panel)(parentName)
+                End If
+                If parent Is Nothing Then
+                    Return Nothing
+                Else
+                    Dispatcher.Invoke(Sub() parent.Children.Add(target))
+                End If
+                Return target
+            End If
+        End Function
 
     End Class
 

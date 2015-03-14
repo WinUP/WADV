@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{026EBB7B-5D90-49FD-8997-E78F20BC4A24}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WPSoft.TEEffectPack</RootNamespace>
-    <AssemblyName>WPSoft.TEEffectPack</AssemblyName>
+    <RootNamespace>WPSoft.SpriteEffectPack</RootNamespace>
+    <AssemblyName>WPSoft.SpriteEffectPack</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -18,8 +18,8 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\WADV\bin\Debug\resource\TEEffect\</OutputPath>
-    <DocumentationFile>WPSoft.TEEffectPack.xml</DocumentationFile>
+    <OutputPath>..\WADV\bin\Debug\resource\SpriteEffect\</OutputPath>
+    <DocumentationFile>WPSoft.SpriteEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WPSoft.TEEffectPack.xml</DocumentationFile>
+    <DocumentationFile>WPSoft.SpriteEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -106,9 +106,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WADV.TEModule\WADV.TEModule.vbproj">
-      <Project>{ac75a201-4d9a-4652-8225-83d941d11c7e}</Project>
-      <Name>WADV.TEModule</Name>
+    <ProjectReference Include="..\WADV.SpriteModule\WADV.SpriteModule.vbproj">
+      <Project>{490ee212-ca5e-43af-8115-b6971da139f9}</Project>
+      <Name>WADV.SpriteModule</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\WADV\WADV.vbproj">

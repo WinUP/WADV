@@ -227,7 +227,7 @@ Public Class GameWindow
         script("setTick") = New Action(Of Integer)(AddressOf TimerAPI.SetTickSync)
         script("getTick") = New Func(Of Integer)(AddressOf TimerAPI.GetTick)
         script("getStatus") = New Func(Of Boolean)(AddressOf TimerAPI.GetStatus)
-        'Window[不包括GetChildByName SearchObject GetRoot InvokeSync InvokeAsync这些涉及委托或泛型的API]
+        'Window[不包括GetChildByName InvokeSync InvokeAsync这些涉及委托或泛型的API]
         system("window") = New LuaTable
         script = system("window")
         script("setTitle") = New Action(Of String)(AddressOf WindowAPI.SetTitleSync)
@@ -257,8 +257,11 @@ Public Class GameWindow
         script("setTopmost") = New Action(Of Boolean)(AddressOf WindowAPI.SetTopmostSync)
         script("setIcon") = New Action(Of String)(AddressOf WindowAPI.SetIconSync)
         script("setCursor") = New Action(Of String)(AddressOf WindowAPI.SetCursorSync)
+        script("searchObject") = New Func(Of String, FrameworkElement)(AddressOf WindowAPI.SearchObject(Of FrameworkElement))
+        script("getRoot") = New Func(Of Panel)(AddressOf WindowAPI.GetRoot(Of Panel))
         script("getDispatcher") = New Func(Of Windows.Threading.Dispatcher)(AddressOf WindowAPI.GetDispatcher)
         script("getWindow") = New Func(Of NavigationWindow)(AddressOf WindowAPI.GetWindow)
+        script("invokeFunction") = New Func(Of Func(Of Object, Object), Object, Object)(AddressOf WindowAPI.InvokeFunction)
         script("getImage") = New Func(Of JpegBitmapEncoder)(AddressOf WindowAPI.GetImage)
         script("saveImage") = New Action(Of String)(AddressOf WindowAPI.SaveImage)
         '环境变量
@@ -269,11 +272,11 @@ Public Class GameWindow
         system("path") = New LuaTable
         script = system("path")
         script("game") = My.Application.Info.DirectoryPath
-        script("user") = Config.UserFilePath
-        script("plugin") = Config.PluginPath
-        script("resource") = Config.ResourcePath
-        script("script") = Config.ScriptPath
-        script("skin") = Config.SkinPath
+        script("user") = PathFunction.GetFullPath(PathType.UserFile)
+        script("plugin") = PathFunction.GetFullPath(PathType.Plugin)
+        script("resource") = PathFunction.GetFullPath(PathType.Resource)
+        script("script") = PathFunction.GetFullPath(PathType.Script)
+        script("skin") = PathFunction.GetFullPath(PathType.Skin)
     End Sub
 
 End Class

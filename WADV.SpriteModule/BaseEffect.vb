@@ -3,11 +3,9 @@
 Public Class BaseEffect : Implements IEffect
     Protected ImageContent As Panel
     Protected Params() As Object
-    Protected ReadOnly Id As Integer
 
-    Public Sub New(id As Integer, params As Object())
-        ImageContent = TeList.Item(id)
-        Me.Id = id
+    Public Sub New(name As String, params As Object())
+        ImageContent = SpriteList.Item(name)
         Me.Params = params
     End Sub
 
@@ -20,11 +18,11 @@ Public Class BaseEffect : Implements IEffect
     End Sub
 
     Protected Sub Animation_Finished(sender As Object, e As EventArgs)
-        MessageAPI.SendSync("[TE]EFFECT_PLAY_FINISH")
+        MessageAPI.SendSync("[SPRITE]EFFECT_PLAY_FINISH")
     End Sub
 
     Public Overridable Sub Wait() Implements IEffect.Wait
-        MessageAPI.WaitSync("[TE]EFFECT_PLAY_FINISH")
+        MessageAPI.WaitSync("[SPRITE]EFFECT_PLAY_FINISH")
     End Sub
 
 End Class
