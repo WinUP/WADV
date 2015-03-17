@@ -30,6 +30,7 @@ Namespace API
             LoopAPI.AddLoopSync(loopContent)
             '等待结束
             LoopAPI.WaitLoopSync(loopContent)
+            MessageAPI.WaitSync("[TEXT]USER_CLICK")
             MessageAPI.SendSync("[TEXT]SHOW_FINISH")
             Return True
         End Function

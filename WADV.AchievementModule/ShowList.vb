@@ -52,18 +52,14 @@ Friend NotInheritable Class ShowList
     End Sub
 
     Private Shared Sub ShowContent()
-        While True
+        While _list.Count > 0
             _isShowing = True
-            Dim target As Achievement
-            '!已进行异常处理，此处不会引用空值，请忽略警告
+            Dim target As Achievement = Nothing
             If Not _list.TryDequeue(target) Then Throw New Exception("从等待队列中获取成就失败")
             _dispatcher.Invoke(New Action(Of Achievement)(AddressOf ShowWindow), target)
-            If _list.Count = 0 Then
-                _isShowing = False
-                Exit While
-            End If
             MessageAPI.WaitSync("[ACHIEVE]SHOW_FINISH")
         End While
+        _isShowing = False
     End Sub
 
     Private Shared Sub ShowWindow(target As Achievement)

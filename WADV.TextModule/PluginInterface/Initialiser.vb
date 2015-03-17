@@ -1,11 +1,11 @@
-﻿Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 Imports WADV.TextModule.API
 
 Namespace PluginInterface
 
-    Friend NotInheritable Class Initialiser : Implements IInitialise
+    Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
 
-        Friend Function Initialising() As Boolean Implements IInitialise.Initialising
+        Friend Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             ScriptAPI.RegisterInTableSync("api_text", "init", New Action(Of Integer, Integer, Boolean, Boolean)(AddressOf ConfigAPI.Init), True)
             ScriptAPI.RegisterInTableSync("api_text", "getWordFrame", New Func(Of Integer)(AddressOf ConfigAPI.GetWordFrame))
             ScriptAPI.RegisterInTableSync("api_text", "getSetenceFrame", New Func(Of Integer)(AddressOf ConfigAPI.GetSetenceFrame))

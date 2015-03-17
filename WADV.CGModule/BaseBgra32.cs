@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WADV.AppCore;
-using WADV.AppCore.API;
+using WADV.Core;
+using WADV.Core.API;
 
 namespace WADV.CGModule
 {

@@ -31,6 +31,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.HudModule", "WADV.HudM
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.SpriteModule", "WADV.SpriteModule\WADV.SpriteModule.vbproj", "{490EE212-CA5E-43AF-8115-B6971DA139F9}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.Core", "WADV.Core\WADV.Core.vbproj", "{C0B62E00-90C8-44A7-8134-EF91AD01B50F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -181,6 +183,16 @@ Global
 		{490EE212-CA5E-43AF-8115-B6971DA139F9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{490EE212-CA5E-43AF-8115-B6971DA139F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{490EE212-CA5E-43AF-8115-B6971DA139F9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C0B62E00-90C8-44A7-8134-EF91AD01B50F}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

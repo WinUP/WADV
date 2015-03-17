@@ -1,12 +1,12 @@
 ﻿Imports System.Windows.Controls
-Imports WADV.AppCore.PluginInterface
+Imports WADV.Core.PluginInterface
 Imports WADV.SpriteModule.API
 
 Namespace PluginInterface
 
-    Friend NotInheritable Class Initialiser : Implements IInitialise
+    Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
 
-        Public Function Initialising() As Boolean Implements IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             ScriptAPI.RegisterInTableSync("api_sprite", "init", New Action(Of String)(AddressOf ConfigAPI.Init), True)
             ScriptAPI.RegisterInTableSync("api_sprite", "new", New Func(Of String, Canvas)(AddressOf SpriteAPI.[New]))
             ScriptAPI.RegisterInTableSync("api_sprite", "show", New Func(Of String, Panel, Boolean)(AddressOf SpriteAPI.Show))

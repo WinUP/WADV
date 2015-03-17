@@ -1,11 +1,11 @@
 ﻿Imports WADV.AchievementModule.API
-Imports WADV.AppCore.PluginInterface
+Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 
-    Friend NotInheritable Class Initialiser : Implements IInitialise
+    Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
 
-        Public Function Initialising() As Boolean Implements IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             ScriptAPI.RegisterInTableSync("api_achieve", "init", New Action(Of String, String, String)(AddressOf ConfigAPI.Init), True)
             ScriptAPI.RegisterInTableSync("api_achieve", "setStyle", New Action(Of String)(AddressOf ConfigAPI.SetStyle))
             ScriptAPI.RegisterInTableSync("api_achieve", "addAchieve", New Action(Of Achievement)(AddressOf AchieveAPI.Add))

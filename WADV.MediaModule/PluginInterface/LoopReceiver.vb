@@ -1,4 +1,4 @@
-﻿Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
     Friend NotInheritable Class LoopReceiver : Implements ILoopReceiver

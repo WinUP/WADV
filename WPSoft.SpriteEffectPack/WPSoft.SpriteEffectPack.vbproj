@@ -66,8 +66,10 @@
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
+    <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CenterScale.vb" />
     <Compile Include="FadeIn.vb" />
     <Compile Include="FadeOut.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -106,14 +108,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
+      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
+      <Name>WADV.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\WADV.SpriteModule\WADV.SpriteModule.vbproj">
       <Project>{490ee212-ca5e-43af-8115-b6971da139f9}</Project>
       <Name>WADV.SpriteModule</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\WADV\WADV.vbproj">
-      <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>
-      <Name>WADV</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

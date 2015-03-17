@@ -15,13 +15,14 @@ Namespace API
         ''' <param name="styleFile">样式文件</param>
         ''' <param name="margin">选项间隔</param>
         ''' <remarks></remarks>
-        Public Shared Sub Init(contentName As String, styleFile As String, margin As Double)
+        Public Shared Sub Init(contentName As String, styleFile As String, margin As Double, index As Integer)
             Initialiser.LoadEffect()
             Dim content = WindowAPI.SearchObject(Of Panel)(contentName)
             If content Is Nothing Then Return
             SetContent(content)
             SetStyle(styleFile)
             SetMargin(margin)
+            SetZIndex(index)
             MessageAPI.SendSync("[CHOICE]INIT_FINISH")
         End Sub
 
@@ -31,7 +32,7 @@ Namespace API
         ''' <param name="content">目标容器</param>
         ''' <remarks></remarks>
         Public Shared Sub SetContent(content As Panel)
-            UIConfig.ChoiceContent = content
+            Config.ChoiceContent = content
             MessageAPI.SendSync("[CHOICE]CONTENT_CHANGE")
         End Sub
 
@@ -41,7 +42,7 @@ Namespace API
         ''' <param name="styleFile">样式文件(放置在Skin目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub SetStyle(styleFile As String)
-            UIConfig.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Skin, styleFile), Text.Encoding.Default)
+            Config.ChoiceStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Skin, styleFile), Text.Encoding.Default)
             MessageAPI.SendSync("[CHOICE]STYLE_CHANGE")
         End Sub
 
@@ -51,8 +52,13 @@ Namespace API
         ''' <param name="margin">新的间隔</param>
         ''' <remarks></remarks>
         Public Shared Sub SetMargin(margin As Double)
-            UIConfig.ChoiceMargin = margin
+            Config.ChoiceMargin = margin
             MessageAPI.SendSync("[CHOICE]MARGIN_CHANGE")
+        End Sub
+
+        Public Shared Sub SetZIndex(index As Integer)
+            Config.ChoiceZIndex = index
+            MessageAPI.SendSync("[CHOICE]ZINDEX_CHANGE")
         End Sub
 
     End Class

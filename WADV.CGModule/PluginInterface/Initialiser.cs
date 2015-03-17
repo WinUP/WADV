@@ -1,11 +1,11 @@
 ﻿using System;
-using WADV.AppCore.API;
-using WADV.AppCore.PluginInterface;
+using WADV.Core.API;
 using WADV.CGModule.API;
+using WADV.Core.PluginInterface;
 
 namespace WADV.CGModule.PluginInterface
 {
-    internal sealed class Initialiser : IInitialise
+    internal sealed class PluginInitialise : IPluginInitialise
     {
 
         public bool Initialising()

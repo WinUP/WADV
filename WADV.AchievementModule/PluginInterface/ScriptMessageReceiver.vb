@@ -1,5 +1,5 @@
 ﻿Imports Neo.IronLua
-Imports WADV.AppCore.PluginInterface
+Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 

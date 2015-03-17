@@ -1,10 +1,10 @@
-﻿Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 
-    Friend NotInheritable Class GameClose : Implements IGameClose
+    Friend NotInheritable Class GameClose : Implements IGameDestructorReceiver
 
-        Public Sub DestructuringGame(e As ComponentModel.CancelEventArgs) Implements IGameClose.DestructuringGame
+        Public Sub DestructuringGame(e As ComponentModel.CancelEventArgs) Implements IGameDestructorReceiver.DestructuringGame
             AchievementList.Save(IO.Path.Combine(Config.SaveFileFolder, "achievement.a.save"))
             PropertyList.Save(IO.Path.Combine(Config.SaveFileFolder, "achievement.p.save"))
         End Sub

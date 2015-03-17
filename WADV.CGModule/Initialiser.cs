@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using WADV.AppCore;
-using WADV.AppCore.API;
+using WADV.Core;
+using WADV.Core.API;
 
 namespace WADV.CGModule
 {

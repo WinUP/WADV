@@ -46,15 +46,14 @@
   <ItemGroup>
     <Reference Include="Neo.Lua">
       <HintPath>..\packages\NeoLua.0.9.12\lib\net4\Neo.Lua.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -62,12 +61,11 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
-    <Import Include="WADV.AppCore" />
-    <Import Include="WADV.AppCore.API" />
+    <Import Include="WADV.Core" />
+    <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ConfigAPI.vb" />
@@ -117,9 +115,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WADV\WADV.vbproj">
-      <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>
-      <Name>WADV</Name>
+    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
+      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
+      <Name>WADV.Core</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

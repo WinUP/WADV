@@ -1,11 +1,11 @@
 ﻿Imports WADV.MediaModule.API
-Imports WADV.AppCore.PluginInterface
+Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 
-    Friend NotInheritable Class Initialiser : Implements IInitialise
+    Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
 
-        Public Function Initialising() As Boolean Implements IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             ScriptAPI.RegisterInTableSync("api_media", "init", New Action(Of Integer, Integer, Integer)(AddressOf ConfigAPI.Init), True)
             ScriptAPI.RegisterInTableSync("api_media", "startReceiver", New Action(AddressOf ConfigAPI.StartReceiver))
             ScriptAPI.RegisterInTableSync("api_media", "stopReceiver", New Action(AddressOf ConfigAPI.StopReceiver))

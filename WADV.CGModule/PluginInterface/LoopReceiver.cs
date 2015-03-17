@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using WADV.AppCore.API;
-using WADV.AppCore.PluginInterface;
+using WADV.Core.API;
+using WADV.Core.PluginInterface;
 
 namespace WADV.CGModule.PluginInterface
 {

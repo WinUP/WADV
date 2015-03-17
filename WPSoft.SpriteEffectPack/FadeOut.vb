@@ -1,7 +1,6 @@
 ﻿Imports System.Windows
 Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
-Imports WADV.AppCore.API
 
 ''' <summary>
 ''' 渐显效果

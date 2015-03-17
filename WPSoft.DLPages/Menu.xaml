@@ -50,7 +50,7 @@
 				<Button Content="系统设置" HorizontalAlignment="Left" Height="40" Margin="648,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
 			</Grid>
 		</Grid>
-		<Canvas x:Name="ChainImage" HorizontalAlignment="Left" Height="60" Margin="-100,0,0,0" VerticalAlignment="Top" Width="1380"/>
+		<Canvas x:Name="ChainImage" HorizontalAlignment="Left" Height="60" Margin="-96,0,0,0" VerticalAlignment="Top" Width="1380"/>
 		<TextBlock x:Name="Logo" HorizontalAlignment="Right" Margin="0,20,20,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="62" Width="301" FontSize="40" RenderTransformOrigin="0.5,0.5" Foreground="{x:Null}">
 			<TextBlock.Effect>
 				<DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="15" Color="White"/>

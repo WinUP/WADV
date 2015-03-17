@@ -1,4 +1,4 @@
-﻿using WADV.AppCore.API;
+﻿using WADV.Core.API;
 
 namespace WADV.CGModule.API
 {

@@ -1,14 +1,14 @@
 ﻿Imports WADV.AchievementModule.PluginInterface
 
 Friend NotInheritable Class ReceiverList
-    Private Shared _receiver As New ScriptmessageReceiver
+    Private Shared ReadOnly Receiver As New ScriptMessageReceiver
 
     Friend Shared Sub RunReceiver()
-        MessageAPI.AddSync(_receiver)
+        MessageAPI.AddSync(Receiver)
     End Sub
 
     Friend Shared Sub StopReceiver()
-        MessageAPI.DeleteSync(_receiver)
+        MessageAPI.DeleteSync(Receiver)
     End Sub
 
 End Class

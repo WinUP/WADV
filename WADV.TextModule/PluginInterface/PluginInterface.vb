@@ -1,4 +1,4 @@
-﻿Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 
@@ -17,7 +17,7 @@ Namespace PluginInterface
                 Return True
             End If
             If _effect.IsAllOver Then Return False
-            Dim text As ITextEffect.SentenceInfo
+            Dim text As ITextEffect.SentenceInfo = Nothing
             '快进状态或略过已读
             If ModuleConfig.Fast OrElse (ModuleConfig.Ignore AndAlso _effect.IsRead) Then
                 text = _effect.GetNext
@@ -57,7 +57,6 @@ Namespace PluginInterface
                 If _effect.IsSentenceOver Then Return True
                 text = _effect.GetNext
             End If
-            '!在实际执行过程中并不会出现空值的情况，请忽略这个警告
             _renderingText.Speaker = text.Speaker
             _renderingText.Text = text.Text
             ModuleConfig.Clicked = False

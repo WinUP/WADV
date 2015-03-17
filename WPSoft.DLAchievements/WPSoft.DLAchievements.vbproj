@@ -62,7 +62,7 @@
     <Import Include="System.Xml.Linq" />
     <Import Include="WADV.AchievementModule" />
     <Import Include="WADV.AchievementModule.API" />
-    <Import Include="WADV.AppCore.API" />
+    <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="A_成就制霸.vb" />
@@ -112,9 +112,9 @@
       <Name>WADV.AchievementModule</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\WADV\WADV.vbproj">
-      <Project>{0d72e99f-faf2-4010-b958-85d44cd21cc6}</Project>
-      <Name>WADV</Name>
+    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
+      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
+      <Name>WADV.Core</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

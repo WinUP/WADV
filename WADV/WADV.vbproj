@@ -76,28 +76,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="AppCore\API\LoopAPI.vb" />
-    <Compile Include="AppCore\API\MessageAPI.vb" />
-    <Compile Include="AppCore\API\PathAPI.vb" />
-    <Compile Include="AppCore\API\PluginAPI.vb" />
-    <Compile Include="AppCore\API\ResourceAPI.vb" />
-    <Compile Include="AppCore\API\ScriptAPI.vb" />
-    <Compile Include="AppCore\API\TimerAPI.vb" />
-    <Compile Include="AppCore\API\WindowAPI.vb" />
-    <Compile Include="AppCore\Enumerations.vb" />
-    <Compile Include="AppCore\MainLoop.vb" />
-    <Compile Include="AppCore\MessageService.vb" />
-    <Compile Include="AppCore\PluginFunction.vb" />
-    <Compile Include="AppCore\PluginInterface\IGameClose.vb" />
-    <Compile Include="AppCore\PluginInterface\IGameStart.vb" />
-    <Compile Include="AppCore\PluginInterface\IInitialise.vb" />
-    <Compile Include="AppCore\PluginInterface\ILoopReceiver.vb" />
-    <Compile Include="AppCore\PluginInterface\IMessageReceiver.vb" />
-    <Compile Include="AppCore\PluginInterface\INavigationReceiver.vb" />
-    <Compile Include="AppCore\ScriptCore.vb" />
-    <Compile Include="AppCore\MainTimer.vb" />
-    <Compile Include="AppCore\Config.vb" />
-    <Compile Include="AppCore\UiOperation.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -148,7 +126,6 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
     <None Include="app.config" />
-    <Compile Include="AppCore\PathFunction.vb" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -156,6 +133,12 @@
     </None>
     <AppDesigner Include="My Project\" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
+      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
+      <Name>WADV.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

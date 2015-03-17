@@ -1,11 +1,10 @@
-﻿Imports System.Reflection
-Imports WADV.AppCore.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 
 Namespace PluginInterface
 
-    Public Class Initialiser : Implements IInitialise
+    Public Class Initialiser : Implements IPluginInitialise
 
-        Public Function Initialising() As Boolean Implements IInitialise.Initialising
+        Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             PageList.List.LoadPage()
             ScriptAPI.RegisterInTableSync("api_page", "getPage", New Func(Of String, Page)(AddressOf API.ObjectAPI.GetPage), True)
             Return True
