@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV", "WADV\WADV.vbproj", "{0D72E99F-FAF2-4010-B958-85D44CD21CC6}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Deus Legem", "Deus Legem\Deus Legem.vbproj", "{0D72E99F-FAF2-4010-B958-85D44CD21CC6}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.TextModule", "WADV.TextModule\WADV.TextModule.vbproj", "{67F83B68-5996-4AF6-B596-FDA9BEFD9A4C}"
 EndProject

@@ -11,10 +11,11 @@
         EffectList = New Dictionary(Of String, Type)
         Dim basePath As String = PathAPI.GetPath(PathType.Resource, "TextEffect\")
         For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Reflection.Assembly.LoadFrom(file)))
-                            Select types = assemble.GetTypes.Where(Function(e) e.GetInterface("ITextEffect") IsNot Nothing)
+                            Select types = assemble.GetTypes.Where(Function(e) e.GetInterface("IEffect") IsNot Nothing)
                             From tmpType1 In types Select tmpType1
             EffectList.Add(tmpType.Name, tmpType)
         Next
         MessageAPI.SendSync("[TEXT]INIT_EFFECT_FINISH")
     End Sub
+
 End Class

@@ -1,6 +1,7 @@
 ﻿Imports System.Windows.Input
+Imports WADV.TextModule.Config
 
-Friend NotInheritable Class TextCore
+Friend NotInheritable Class Events
 
     Friend Shared Sub Ctrl_Down(sender As Object, e As KeyEventArgs)
         If e.Key = Key.LeftCtrl Then ModuleConfig.Fast = True

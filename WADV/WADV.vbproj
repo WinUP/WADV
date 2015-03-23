@@ -51,8 +51,11 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Neo.Lua">
-      <HintPath>..\packages\NeoLua.0.9.12\lib\net4\Neo.Lua.dll</HintPath>
+    <Reference Include="KeraLua">
+      <HintPath>..\packages\NLua.1.3.2.1\lib\net40\KeraLua.dll</HintPath>
+    </Reference>
+    <Reference Include="NLua">
+      <HintPath>..\packages\NLua.1.3.2.1\lib\net40\NLua.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +79,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Compile Include="AppCore.API.vb" />
+    <Compile Include="AppCore.Looping.vb" />
+    <Compile Include="AppCore.Message.vb" />
+    <Compile Include="AppCore.Script.vb" />
+    <Compile Include="AppCore.UI.vb" />
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -125,7 +133,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
+    <Compile Include="AppCore.Plugin.vb" />
     <None Include="app.config" />
+    <Compile Include="AppCore.Path.vb" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -134,15 +144,9 @@
     <AppDesigner Include="My Project\" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
-      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
-      <Name>WADV.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-    </PostBuildEvent>
+xcopy /s /y "C:\Users\博\Documents\Visual Studio 2013\Projects\WADV\packages\NLua.1.3.2.1\lib\native\*.*" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

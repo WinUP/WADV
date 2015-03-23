@@ -1,4 +1,5 @@
 ﻿Imports Neo.IronLua
+Imports WADV.TextModule.Config
 
 Namespace API
 
@@ -11,17 +12,15 @@ Namespace API
         ''' <summary>
         ''' 显示文本
         ''' </summary>
-        ''' <param name="text">对话内容</param>
-        ''' <param name="speaker">说话者</param>
+        ''' <param name="name">句子组ID</param>
         ''' <param name="effectName">效果类的名字</param>
-        ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function Show(text() As String, speaker() As String, isRead() As Boolean, effectName As String) As Boolean
+        Public Shared Sub Show(name As String, effectName As String)
             '检查状态
-            If UiConfig.TextArea Is Nothing Then Return False
+            If UiConfig.TextArea Is Nothing Then Exit Sub
             '查找特效
-            If Not Initialiser.EffectList.ContainsKey(effectName) Then Return ""
-            Dim effect As StandardEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {text, speaker, isRead})
+            If Not Initialiser.EffectList.ContainsKey(effectName) Then Exit Sub
+            Dim effect As IEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {name})
             ModuleConfig.Clicked = False
             '生成循环体
             Dim loopContent As New PluginInterface.LoopReceiver(effect)
@@ -30,21 +29,28 @@ Namespace API
             LoopAPI.AddLoopSync(loopContent)
             '等待结束
             LoopAPI.WaitLoopSync(loopContent)
-            MessageAPI.WaitSync("[TEXT]USER_CLICK")
             MessageAPI.SendSync("[TEXT]SHOW_FINISH")
-            Return True
-        End Function
+        End Sub
 
-        Public Shared Function ShowByLua(content As LuaTable, effectName As String) As Boolean
-            Dim text, speaker As New List(Of String)
-            Dim isRead As New List(Of Boolean)
+        Public Shared Sub AddSentences(name As String, content As LuaTable)
+            If SentenceList.Contains(name) Then Exit Sub
+            Dim tmpArray As New List(Of Sentence)
             For Each record As LuaTable In content.ArrayList
-                text.Add(CStr(record("content")))
-                speaker.Add(CStr(record("speaker")))
-                isRead.Add(CBool(record("isread")))
+                Dim target As Sentence
+                target.Content = record("content")
+                target.Speaker = record("speaker")
+                target.IsRead = record("isread")
+                target.VoiceFile = record("voice")
+                tmpArray.Add(target)
             Next
-            Return Show(text.ToArray, speaker.ToArray, isRead.ToArray, effectName)
-        End Function
+            SentenceList.DirectAdd(name, tmpArray.ToArray)
+        End Sub
+
+        Public Shared Sub AddSentences(name As String, content As Sentence())
+            If Not SentenceList.Contains(name) Then
+                SentenceList.DirectAdd(name, content)
+            End If
+        End Sub
 
     End Class
 

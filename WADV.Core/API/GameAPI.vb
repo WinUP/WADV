@@ -16,12 +16,14 @@ Namespace API
         ''' </summary>
         ''' <param name="baseWindow">游戏主窗口</param>
         ''' <remarks></remarks>
-        Public Shared Sub StartGame(baseWindow As NavigationWindow)
+        Public Shared Sub StartGame(baseWindow As NavigationWindow, frame As Integer, tick As Integer)
             Config.BaseWindow = baseWindow
             RegisterScript()
             PluginFunction.InitialiseAllPlugins()
             MessageService.GetInstance.Start()
+            MainTimer.GetInstance.Span = tick
             MainTimer.GetInstance.Start()
+            MainLoop.GetInstance.Span = frame
             MainLoop.GetInstance.Start()
             ReceiverList.InitialiserReceiverList.InitialisingGame()
             MessageService.GetInstance.SendMessage("[SYSTEM]GAME_INIT_FINISH")

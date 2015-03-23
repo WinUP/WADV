@@ -1,4 +1,5 @@
 ﻿Imports System.Windows.Controls
+Imports WADV.TextModule.Config
 
 Namespace API
 
@@ -143,9 +144,9 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub RegisterEvent()
-            AddHandler WindowAPI.GetWindow.KeyDown, AddressOf TextCore.Ctrl_Down
-            AddHandler WindowAPI.GetWindow.KeyUp, AddressOf TextCore.Ctrl_Up
-            AddHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf TextCore.TextArea_Click
+            AddHandler WindowAPI.GetWindow.KeyDown, AddressOf Events.Ctrl_Down
+            AddHandler WindowAPI.GetWindow.KeyUp, AddressOf Events.Ctrl_Up
+            AddHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf Events.TextArea_Click
             MessageAPI.SendSync("[TEXT]EVENT_REGISTER")
         End Sub
 
@@ -154,9 +155,9 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub UnregisterEvent()
-            RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf TextCore.Ctrl_Down
-            RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf TextCore.Ctrl_Up
-            RemoveHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf TextCore.TextArea_Click
+            RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf Events.Ctrl_Down
+            RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf Events.Ctrl_Up
+            RemoveHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf Events.TextArea_Click
             MessageAPI.SendSync("[TEXT]EVENT_UNREGISTER")
         End Sub
 

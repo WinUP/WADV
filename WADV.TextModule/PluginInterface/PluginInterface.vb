@@ -1,14 +1,16 @@
 ﻿Imports WADV.Core.PluginInterface
+Imports WADV.TextModule.Config
 
 Namespace PluginInterface
 
     Friend NotInheritable Class LoopReceiver : Implements ILoopReceiver
-        Private ReadOnly _effect As ITextEffect
+        Private ReadOnly _effect As IEffect
         Private _waitingCount As Integer = 0
-        Private _renderingText As ITextEffect.SentenceInfo
+        Private _playVoice As Boolean
 
-        Public Sub New(effect As ITextEffect)
+        Public Sub New(effect As IEffect)
             _effect = effect
+            _playVoice = False
         End Sub
 
         Public Function Logic(frame As Integer) As Boolean Implements ILoopReceiver.Logic
@@ -17,57 +19,59 @@ Namespace PluginInterface
                 Return True
             End If
             If _effect.IsAllOver Then Return False
-            Dim text As ITextEffect.SentenceInfo = Nothing
             '快进状态或略过已读
             If ModuleConfig.Fast OrElse (ModuleConfig.Ignore AndAlso _effect.IsRead) Then
-                text = _effect.GetNext
+                _effect.NextState()
                 While Not _effect.IsSentenceOver
-                    text = _effect.GetNext
+                    _effect.NextState()
                 End While
-                _renderingText.Speaker = text.Speaker
-                _renderingText.Text = text.Text
-                If _effect.IsAllOver Then Return False
                 _waitingCount = 10
                 Return True
             End If
             '自动状态
             If ModuleConfig.Auto Then
-                text = _effect.GetNext
-                _renderingText.Speaker = text.Speaker
-                _renderingText.Text = text.Text
-                If _effect.IsAllOver Then Return False
+                _effect.NextState()
+                If _playVoice Then
+                    PlayVoice(_effect.VoiceFile)
+                    _playVoice = False
+                End If
                 If _effect.IsSentenceOver Then
                     _waitingCount = ModuleConfig.SetenceFrame
-                    Return True
+                    _playVoice = True
+                Else
+                    _waitingCount = ModuleConfig.WordFrame
                 End If
-                _waitingCount = ModuleConfig.WordFrame
                 Return True
             End If
             '手动状态
             If ModuleConfig.Clicked Then
                 If _effect.IsSentenceOver Then
-                    ModuleConfig.Clicked = False
-                    text = _effect.GetNext
+                    _effect.NextState()
+                    PlayVoice(_effect.VoiceFile)
                 Else
                     While Not _effect.IsSentenceOver
-                        text = _effect.GetNext
+                        _effect.NextState()
                     End While
                 End If
+                ModuleConfig.Clicked = False
             Else
                 If _effect.IsSentenceOver Then Return True
-                text = _effect.GetNext
+                _effect.NextState()
             End If
-            _renderingText.Speaker = text.Speaker
-            _renderingText.Text = text.Text
-            ModuleConfig.Clicked = False
-            If _effect.IsAllOver Then Return False
             _waitingCount = ModuleConfig.WordFrame
             Return True
         End Function
 
         Public Sub Render() Implements ILoopReceiver.Render
-            UiConfig.TextArea.Text = _renderingText.Text
-            UiConfig.SpeakerArea.Text = _renderingText.Speaker
+            UiConfig.TextArea.Text = _effect.Sentence
+            UiConfig.SpeakerArea.Text = _effect.Speaker
+        End Sub
+
+        Private Sub PlayVoice(filePath As String)
+            If filePath <> "" Then
+                MediaModule.API.SoundAPI.StopNearlyReading()
+                MediaModule.API.SoundAPI.PlayReading(filePath)
+            End If
         End Sub
 
     End Class

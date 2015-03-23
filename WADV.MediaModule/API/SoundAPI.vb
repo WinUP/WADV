@@ -133,7 +133,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Shared Sub StopNearlyReading()
-            [Stop](SoundConfig.LastReadingID)
+            [Stop](SoundConfig.LastReadingId)
         End Sub
 
         ''' <summary>

@@ -16,6 +16,7 @@ Friend NotInheritable Class PlayerList
     ''' <returns></returns>
     ''' <remarks></remarks>
     Friend Shared Function AddPlayer(fileName As String, type As SoundType, cycle As Boolean, count As Integer) As Player
+        If fileName = "" Then Return Nothing
         Dim tmpPlayer As New Player(fileName, type, cycle, count, _nextId)
         SoundList.Add(_nextId, tmpPlayer)
         _nextId += 1

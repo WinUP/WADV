@@ -1,28 +1,43 @@
 ﻿Imports WADV.TextModule
 
-Public Class PerWordEffect : Inherits StandardEffect
+Public Class PerWordEffect : Inherits BaseEffect
+    Private _currentSentence As String
+    Private _isSentenceOver As Boolean
     Private _currentProcessLength As Integer
-    Private _finalSentence As ITextEffect.SentenceInfo
+    Private _content As String
 
-    Public Sub New(text() As String, speaker() As String, isRead() As Boolean)
-        MyBase.New(text, speaker, isRead)
+
+    Public Sub New(name As String)
+        MyBase.New(name)
+        _currentSentence = ""
+        _isSentenceOver = False
         _currentProcessLength = 1
-        _finalSentence = New ITextEffect.SentenceInfo
-        _finalSentence.Speaker = SentenceSpeaker
-        _finalSentence.Text = ""
+        _content = CurrentSentence.Content
     End Sub
 
-    Public Overrides Function GetNext() As ITextEffect.SentenceInfo
-        SentenceOver = False
-        _finalSentence.Speaker = SentenceSpeaker
-        Dim tmpText = Sentence.Substring(0, _currentProcessLength)
-        _currentProcessLength += 1
-        _finalSentence.Text = tmpText
-        If _currentProcessLength = SentenceLength + 1 Then
-            MoveNext()
+    Public Overrides ReadOnly Property IsSentenceOver As Boolean
+        Get
+            Return _isSentenceOver
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property Sentence As String
+        Get
+            Return _currentSentence
+        End Get
+    End Property
+
+    Public Overrides Sub NextState()
+        If _currentProcessLength = _content.Length + 1 Then
+            NextLine()
             _currentProcessLength = 1
+            _content = CurrentSentence.Content
+            _isSentenceOver = False
         End If
-        Return _finalSentence
-    End Function
+        If IsAllOver Then Exit Sub
+        _currentSentence = _content.Substring(0, _currentProcessLength)
+        _currentProcessLength += 1
+        If _currentProcessLength = _content.Length + 1 Then _isSentenceOver = True
+    End Sub
 
 End Class

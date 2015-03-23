@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="PluginURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">plugin</Value>
+    </Setting>
+    <Setting Name="ResourceURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">resource</Value>
+    </Setting>
+    <Setting Name="SkinURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">resource\skin</Value>
+    </Setting>
+    <Setting Name="ScriptURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">script</Value>
+    </Setting>
+    <Setting Name="UserFileURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">userfile</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

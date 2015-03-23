@@ -21,7 +21,8 @@ Namespace PluginInterface
             ScriptAPI.RegisterInTableSync("api_text", "setVisibility", New Action(Of Boolean)(AddressOf ConfigAPI.SetVisibility))
             ScriptAPI.RegisterInTableSync("api_text", "registerEvent", New Action(AddressOf ConfigAPI.RegisterEvent))
             ScriptAPI.RegisterInTableSync("api_text", "unregisterEvent", New Action(AddressOf ConfigAPI.UnregisterEvent))
-            ScriptAPI.RegisterInTableSync("api_text", "show", New Func(Of Neo.IronLua.LuaTable, String, Boolean)(AddressOf TextAPI.ShowByLua))
+            ScriptAPI.RegisterInTableSync("api_text", "show", New Action(Of String, String)(AddressOf TextAPI.Show))
+            ScriptAPI.RegisterInTableSync("api_text", "addSentences", New Action(Of String, Neo.IronLua.LuaTable)(AddressOf TextAPI.AddSentences))
             MessageAPI.SendSync("[TEXT]INIT_LOAD_FINISH")
             Return True
         End Function
