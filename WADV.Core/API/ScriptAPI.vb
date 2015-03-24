@@ -91,7 +91,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' 设置脚本全局变量的值(该变量内容不是字符串)
+        ''' 设置脚本全局变量的值
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="name">变量名</param>

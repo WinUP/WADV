@@ -407,7 +407,6 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function InvokeFunction(target As Func(Of Object, Object), params As Object) As Object
-            'Public Shared Function InvokeFunction(target As Func(Of Object, Object), params As Object) As Object
             Return Dispatcher.Invoke(Function() target.Invoke(params))
         End Function
 

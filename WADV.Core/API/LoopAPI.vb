@@ -33,7 +33,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' 添加一个循环体
+        ''' 添加一个循环接收器
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
@@ -43,7 +43,7 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' 等待一个子循环的完成
+        ''' 等待一个循环接收器完成并退出
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="loopContent">循环体</param>
@@ -68,7 +68,7 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' 标记游戏循环为进行状态
+        ''' 启动游戏循环
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>
@@ -77,7 +77,7 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' 标记游戏循环为停止状态
+        ''' 终止游戏循环
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <remarks></remarks>

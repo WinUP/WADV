@@ -11,8 +11,8 @@ Public Class CenterScale : Inherits WADV.SpriteModule.BaseEffect
 
     Public Overrides Sub Render()
         Dim target As New ScaleTransform(1.0, 1.0)
-        target.CenterX = ImageContent.Width / 2
-        target.CenterY = ImageContent.Height / 2
+        target.CenterX = ImageContent.Width / 2.0
+        target.CenterY = ImageContent.Height / 2.0
         ImageContent.RenderTransform = target
         Dim targetStoryBoard As New Storyboard
         Dim animationX As New DoubleAnimation(Params(0), New Duration(LoopAPI.TranslateToTime(Params(2))))
