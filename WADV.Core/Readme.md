@@ -56,7 +56,7 @@ End Interface
 有些API不是在调用线程中执行主要逻辑的，欲知详情请参考代码的文档注释。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `AddSync(IMessageReceiver)`    | 添加一个接收器           |
 | `DeleteSync(IMessageReceiver)` | 删除一个接收器           |
 | `SendSync(String)`             | 发送一条消息             |
@@ -95,7 +95,7 @@ End Interface
 这些API均位于 `WADV.Core.API.LoopAPI`名称空间下。代码中已经含有完整的注释，因此这里便不再赘述。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/LoopAPI.vb)。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `SetFrameSync(Integer)`                | 设置理想执行周期             |
 | `GetFrame() : Integer`                 | 获取理想执行周期             |
 | `AddLoopSync(ILoopReceiver)`           | 添加一个循环接收器           |
@@ -124,7 +124,7 @@ End Interface
 这些API均位于 `WADV.Core.API.TimeAPI`名称空间下。代码中已经含有完整的注释，因此这里便不再赘述。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/TimerAPI.vb)。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `StartSync()`           | 启动计时器           |
 | `StopSync()`            | 停止计时器           |
 | `SetTickSync(Integer)`  | 设计计时器的计时间隔 |
@@ -151,7 +151,7 @@ End Interface
 ######位于 `WADV.Core.API.PathAPI` 名称空间的函数
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `Resource() : String`                  | 获取程序资源文件的存放路径     |
 | `SetResource(String)`                  | 设置程序资源文件的存放路径     |
 | `Skin() : String`                      | 获取程序皮肤文件的存放路径     |
@@ -169,7 +169,7 @@ End Interface
 ######位于 `WADV.Core.API.ResourceAPI` 名称空间的函数
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `LoadToGameSync(String)`                   | 加载资源到游戏全局 |
 | `LoadToWindowSync(String)`                 | 加载资源到主窗口   |
 | `ClearGameSync()`                          | 清空全局资源       |
@@ -192,7 +192,7 @@ End Interface
 这些API均位于 `WADV.Core.API.WindowAPI`名称空间下。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/WindowAPI.vb)。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `SetTitleSync(String)`                       | 修改窗口标题               |
 | `ClearContentSync(Panel)`                    | 清空指定容器               |
 | `LoadElementSync(Panel, String)`             | 为指定容器加载子元素       |
@@ -230,7 +230,7 @@ End Interface
 | `InvokeFunction` `(Func(Of Object, Object), Object) : Object` | 在UI线程上执行一个有一个参数且具有返回值的委托 |
 | `GetImage() : JpegBitmapEncoder`             | 获取主窗口的截图           |
 | `SaveImage(String)`                          | 将主窗口的截图保存到文件中 |
-| `AddElement` `(String, String, Double,` ` Double, Double, Double, [String])` ` : FrameworkElement` | 添加一个控件到当前页面 |
+| `AddElement(String, String, Double, Double, Double, Double, [String]) : FrameworkElement` | 添加一个控件到当前页面 |
 
 ###附注
 
@@ -245,7 +245,7 @@ End Interface
 这些API均位于 `WADV.Core.API.ScriptAPI`名称空间下。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/ScriptAPI.vb)。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `ShowSync(String, String)`                                 | 显示提示信息                       |
 | `RunFileAsync(String)`                                     | 执行脚本文件中的所有代码           |
 | `RunFileSync(String)`                                      | 执行脚本文件中的所有代码           |
@@ -267,7 +267,7 @@ End Interface
 框架提供了几个简易的API用于执行常规的框架初始化和关闭，它们是：
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `StartGame(NavigationWindow, Integer, Integer)` | 启动游戏系统     |
 | `StopGame(CancelEventArgs)`                     | 停止游戏系统     |
 | `RegisterScript()`                              | 注册系统脚本接口 |
@@ -286,7 +286,7 @@ End Interface
 这些API均位于 `WADV.Core.API.PluginAPI`名称空间下。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/PluginAPI.vb)。
 
 | 函数 | 功能 |
-| - | - |
+| ----- | ----- |
 | `Add(String)`                          | 加载一个插件       |
 | `Compile(String, [String]) : Assembly` | 编译一个代码文件   |
 | `Load(String) : Assembly`              | 加载一个动态链接库 |
@@ -296,7 +296,7 @@ End Interface
 模块需要框架功能支持时，除了调用相应的API外，还可以通过实现某些接口来获得功能支持。除了上面提到过的 `WADV.Core.PluginInterface.ILoopReceiver` 和 `WADV.Core.PluginInterface.IMessageReceiver` 外，还有这几个接口是可以使用的：
 
 | 接口 | 说明 |
-| - | - |
+| ----- | ----- |
 | `WADV.Core.PluginInterface.IPluginInitialise`        | 模块加载时执行       |
 | `WADV.Core.PluginInterface.INavigationReceiver`      | 主窗口页面切换前执行 |
 | `WADV.Core.PluginInterface.IGameInitialiserReceiver` | 框架加载完成时执行   |
