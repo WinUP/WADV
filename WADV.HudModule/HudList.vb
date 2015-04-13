@@ -4,7 +4,7 @@ Friend NotInheritable Class HudList
     Friend Shared ReadOnly MessageHudList As New ConcurrentDictionary(Of String, Object)
     Friend Shared ReadOnly LoopHudList As New ConcurrentDictionary(Of String, Object)
 
-    Friend Function Add(name As String, target As Hud)
+    Friend Shared Function Add(name As String, target As Hud)
         If target.ReceiverType = ReceiverType.LoopOnly Then
             If LoopHudList.ContainsKey(name) Then Return False
             LoopHudList.TryAdd(name, target)
@@ -17,7 +17,7 @@ Friend NotInheritable Class HudList
         Return True
     End Function
 
-    Friend Function Delete(name As String, type As ReceiverType) As Boolean
+    Friend Shared Function Delete(name As String, type As ReceiverType) As Boolean
         Dim target As Hud = Nothing
         If type = ReceiverType.LoopOnly AndAlso LoopHudList.ContainsKey(name) Then
             Return LoopHudList.TryRemove(name, target)

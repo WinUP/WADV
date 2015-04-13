@@ -65,6 +65,7 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\HudAPI.vb" />
     <Compile Include="Hud.vb" />
     <Compile Include="HudList.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
