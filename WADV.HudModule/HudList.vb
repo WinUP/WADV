@@ -8,9 +8,11 @@ Friend NotInheritable Class HudList
         If target.ReceiverType = ReceiverType.LoopOnly Then
             If LoopHudList.ContainsKey(name) Then Return False
             LoopHudList.TryAdd(name, target)
+            WindowAPI.InvokeAsync(AddressOf target.Init)
         ElseIf target.ReceiverType = ReceiverType.MessageOnly Then
             If MessageHudList.ContainsKey(name) Then Return False
             MessageHudList.TryAdd(name, target)
+            WindowAPI.InvokeAsync(AddressOf target.Init)
         Else
             Return False
         End If

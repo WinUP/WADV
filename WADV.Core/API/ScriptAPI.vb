@@ -112,6 +112,10 @@ Namespace API
             Return ScriptCore.GetInstance.Environment(name)
         End Function
 
+        Public Shared Sub RegisterTable(tableName As String)
+
+        End Sub
+
         ''' <summary>
         ''' 注册函数到脚本主机的指定表中
         ''' 同步方法|调用线程
@@ -122,8 +126,9 @@ Namespace API
         ''' <param name="declareTable">是否声明或重新声明表</param>
         ''' <remarks></remarks>
         Public Shared Sub RegisterInTableSync(tableName As String, name As String, content As [Delegate], Optional declareTable As Boolean = False)
-            If declareTable Then ScriptCore.GetInstance.Environment(tableName) = New LuaTable
-            ScriptCore.GetInstance.Environment(tableName)(name) = content
+            Dim system As LuaTable = ScriptCore.GetInstance.Environment("system")
+            If declareTable Then system(tableName) = New LuaTable
+            system(tableName)(name) = content
         End Sub
 
         ''' <summary>

@@ -2,8 +2,17 @@
 Imports System.Windows.Controls
 Imports System.Windows.Media
 Imports System.Windows.Media.Animation
+Imports WADV.SpriteModule.Effect
 
-Public Class CenterScale : Inherits WADV.SpriteModule.BaseEffect
+''' <summary>
+''' 将精灵进行中心缩放的动画
+''' 参数列表：X缩放比例, Y缩放比例, 消耗帧数, [缓动类型], [缓动参数]
+''' 缓动支持：circle, cubic, exp, quadratic, quartic, quintic, sine
+''' 缓动参数：in, out, both
+''' 循环动画：支持
+''' </summary>
+''' <remarks></remarks>
+Public Class CenterScale : Inherits BaseEffect
 
     Public Sub New(name As String, variable As Object())
         MyBase.New(name, variable)
@@ -54,6 +63,13 @@ Public Class CenterScale : Inherits WADV.SpriteModule.BaseEffect
         targetStoryBoard.Children.Add(animationY)
         AddHandler targetStoryBoard.Completed, AddressOf Animation_Finished
         targetStoryBoard.Begin()
+    End Sub
+
+    Protected Overrides Sub ReRender()
+        Dim transform As ScaleTransform = ImageContent.RenderTransform
+        transform.ScaleX = 1.0
+        transform.ScaleY = 1.0
+        Render()
     End Sub
 
 End Class

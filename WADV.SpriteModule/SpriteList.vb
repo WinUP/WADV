@@ -1,7 +1,7 @@
 ﻿Imports System.Windows.Controls
 
 ''' <summary>
-''' 立绘列表
+''' 精灵列表
 ''' </summary>
 ''' <remarks></remarks>
 Friend NotInheritable Class SpriteList
@@ -14,7 +14,7 @@ Friend NotInheritable Class SpriteList
     ''' <returns></returns>
     ''' <remarks></remarks>
     Friend Shared Function Add(name As String) As Canvas
-        Dim target As Canvas = WindowAPI.GetDispatcher.Invoke(Function() New Canvas)
+        Dim target As Canvas = WindowAPI.GetDispatcher.Invoke(Function() New Canvas With {.Name = name})
         If Add(name, target) Then
             Return target
         Else
@@ -62,9 +62,22 @@ Friend NotInheritable Class SpriteList
     Friend Shared Function Delete(name As String) As Boolean
         If Not Contains(name) Then Return False
         Dim target = List(name)
-        WindowAPI.GetDispatcher.Invoke(Sub() If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target))
+        WindowAPI.InvokeAsync(Sub() If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target))
         List.Remove(name)
         MessageAPI.SendSync("[SPRITE]SPRITE_DELETE")
+        Return True
+    End Function
+
+    ''' <summary>
+    ''' 删除一个精灵
+    ''' </summary>
+    ''' <param name="target">要删除的精灵</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Friend Shared Function Delete(target As Panel) As Boolean
+        Dim key = List.Where(Function(e) e.Value Is target).Select(Function(e) e.Key)
+        If key.Count = 0 Then Return False
+        List.Remove(key.FirstOrDefault)
         Return True
     End Function
 

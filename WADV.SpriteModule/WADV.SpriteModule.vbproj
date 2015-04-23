@@ -44,6 +44,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
+      <HintPath>..\packages\NeoLua.0.9.15\lib\net4\Neo.Lua.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -64,17 +68,16 @@
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
-    <Import Include="WADV.AppCore" />
-    <Import Include="WADV.AppCore.API" />
     <Import Include="WADV.Core" />
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ConfigAPI.vb" />
     <Compile Include="API\SpriteAPI.vb" />
-    <Compile Include="BaseEffect.vb" />
-    <Compile Include="IEffect.vb" />
-    <Compile Include="Initialiser.vb" />
+    <Compile Include="Effect\BaseEffect.vb" />
+    <Compile Include="Effect\EffectList.vb" />
+    <Compile Include="Effect\IEffect.vb" />
+    <Compile Include="Receiver\ISpriteLoopReceiver.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -91,6 +94,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="PluginInterface\LoopReceiver.vb" />
+    <Compile Include="PluginInterface\MessageReceiver.vb" />
+    <Compile Include="Receiver\ISpriteMessageReceiver.vb" />
+    <Compile Include="Receiver\LoopReceiverHelper.vb" />
+    <Compile Include="Receiver\MessageReceiverHelper.vb" />
     <Compile Include="SpriteList.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +119,7 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">

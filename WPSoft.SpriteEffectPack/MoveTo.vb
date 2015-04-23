@@ -1,8 +1,18 @@
 ﻿Imports System.Windows
 Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
+Imports WADV.SpriteModule.Effect
 
-Public Class MoveTo : Inherits WADV.SpriteModule.BaseEffect
+''' <summary>
+''' 将精灵移动到指定位置的动画
+''' 参数列表：目标X, 目标Y, 消耗帧数, [缓动类型], [缓动参数]
+''' 缓动支持：circle, cubic, exp, quadratic, quartic, quintic, sine
+''' 缓动参数：in, out, both
+''' 循环动画：支持
+''' </summary>
+''' <remarks></remarks>
+Public Class MoveTo : Inherits BaseEffect
+    Private _original As Thickness
 
     Public Sub New(name As String, variable As Object())
         MyBase.New(name, variable)
@@ -39,7 +49,13 @@ Public Class MoveTo : Inherits WADV.SpriteModule.BaseEffect
         End Select
         animation.EasingFunction = ease
         AddHandler animation.Completed, AddressOf Animation_Finished
+        _original = ImageContent.Margin
         ImageContent.BeginAnimation(Panel.MarginProperty, animation)
+    End Sub
+
+    Protected Overrides Sub ReRender()
+        ImageContent.Margin = _original
+        Render()
     End Sub
 
 End Class

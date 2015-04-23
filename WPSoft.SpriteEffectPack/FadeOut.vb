@@ -1,13 +1,17 @@
 ﻿Imports System.Windows
 Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
+Imports WADV.SpriteModule.Effect
 
 ''' <summary>
-''' 渐显效果
-''' fadeTime, ease[circle, cubic, exp, quartic, quintic, sine, noease], easeMode[in, out, both]
+''' 将精灵透明度从1过渡到0的动画
+''' 参数列表：消耗帧数, [缓动类型], [缓动参数]
+''' 缓动支持：circle, cubic, exp, quadratic, quartic, quintic, sine
+''' 缓动参数：in, out, both
+''' 循环动画：支持
 ''' </summary>
 ''' <remarks></remarks>
-Public Class FadeOut : Inherits WADV.SpriteModule.BaseEffect
+Public Class FadeOut : Inherits BaseEffect
 
     Public Sub New(name As String, variable As Object())
         MyBase.New(name, variable)
@@ -46,6 +50,11 @@ Public Class FadeOut : Inherits WADV.SpriteModule.BaseEffect
         animation.EasingFunction = ease
         AddHandler animation.Completed, AddressOf Animation_Finished
         ImageContent.BeginAnimation(Panel.OpacityProperty, animation)
+    End Sub
+
+    Protected Overrides Sub ReRender()
+        ImageContent.Opacity = 1.0
+        Render()
     End Sub
 
 End Class

@@ -15,15 +15,17 @@ Namespace API
         ''' 同步方法|调用线程
         ''' </summary>
         ''' <param name="baseWindow">游戏主窗口</param>
+        ''' <param name="frameSpan">每帧间的时间间隔</param>
+        ''' <param name="tick">计时器计时频率</param>
         ''' <remarks></remarks>
-        Public Shared Sub StartGame(baseWindow As NavigationWindow, frame As Integer, tick As Integer)
+        Public Shared Sub StartGame(baseWindow As NavigationWindow, frameSpan As Integer, tick As Integer)
             Config.BaseWindow = baseWindow
             RegisterScript()
             PluginFunction.InitialiseAllPlugins()
             MessageService.GetInstance.Start()
             MainTimer.GetInstance.Span = tick
             MainTimer.GetInstance.Start()
-            MainLoop.GetInstance.Span = frame
+            MainLoop.GetInstance.Span = frameSpan
             MainLoop.GetInstance.Start()
             ReceiverList.InitialiserReceiverList.InitialisingGame()
             MessageService.GetInstance.SendMessage("[SYSTEM]GAME_INIT_FINISH")
@@ -51,8 +53,8 @@ Namespace API
         ''' <remarks></remarks>
         Private Shared Sub RegisterScript()
             Dim system, script As LuaTable
-            ScriptCore.GetInstance.Environment("api_system") = New LuaTable
-            system = ScriptCore.GetInstance.Environment("api_system")
+            ScriptCore.GetInstance.Environment("system") = New LuaTable
+            system = ScriptCore.GetInstance.Environment("system")
             'Loop
             system("loop") = New LuaTable
             script = system("loop")
@@ -81,17 +83,17 @@ Namespace API
             'Path
             system("path") = New LuaTable
             script = system("path")
-            script("resource") = New Func(Of String)(AddressOf PathAPI.Resource)
+            script("resource") = PathAPI.GetPath(PathType.Resource)
             script("setRecource") = New Action(Of String)(AddressOf PathAPI.SetResource)
-            script("skin") = New Func(Of String)(AddressOf PathAPI.Skin)
+            script("skin") = PathAPI.GetPath(PathType.Skin)
             script("setSkin") = New Action(Of String)(AddressOf PathAPI.SetSkin)
-            script("plugin") = New Func(Of String)(AddressOf PathAPI.Plugin)
+            script("plugin") = PathAPI.GetPath(PathType.Plugin)
             script("setPlugin") = New Action(Of String)(AddressOf PathAPI.SetPlugin)
-            script("script") = New Func(Of String)(AddressOf PathAPI.Script)
+            script("script") = PathAPI.GetPath(PathType.Script)
             script("setScript") = New Action(Of String)(AddressOf PathAPI.SetScript)
-            script("userfile") = New Func(Of String)(AddressOf PathAPI.UserFile)
+            script("userfile") = PathAPI.GetPath(PathType.UserFile)
             script("setUserfile") = New Action(Of String)(AddressOf PathAPI.SetUserFile)
-            script("game") = New Func(Of String)(AddressOf PathAPI.Game)
+            script("game") = PathAPI.GetPath(PathType.Game)
             script("getPath") = New Func(Of PathType, String, String)(AddressOf PathAPI.GetPath)
             script("getUri") = New Func(Of PathType, String, Uri)(AddressOf PathAPI.GetUri)
             'Plugin
@@ -164,18 +166,10 @@ Namespace API
             script("saveImage") = New Action(Of String)(AddressOf WindowAPI.SaveImage)
             script("addElement") = New Func(Of String, String, Double, Double, Double, Double, String, FrameworkElement)(AddressOf WindowAPI.AddElement)
             '环境变量
-            ScriptCore.GetInstance.Environment("env") = New LuaTable
-            system = ScriptCore.GetInstance.Environment("env")
-            system("version") = "1.0"
-            system("luaEngine") = LuaGlobal.VersionString
-            system("path") = New LuaTable
-            script = system("path")
-            script("game") = My.Application.Info.DirectoryPath
-            script("user") = PathFunction.GetFullPath(PathType.UserFile)
-            script("plugin") = PathFunction.GetFullPath(PathType.Plugin)
-            script("resource") = PathFunction.GetFullPath(PathType.Resource)
-            script("script") = PathFunction.GetFullPath(PathType.Script)
-            script("skin") = PathFunction.GetFullPath(PathType.Skin)
+            system("env") = New LuaTable
+            script = system("env")
+            script("version") = "1.0"
+            script("luaEngine") = LuaGlobal.VersionString
         End Sub
 
     End Class

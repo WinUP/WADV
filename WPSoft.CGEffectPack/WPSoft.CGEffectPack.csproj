@@ -46,13 +46,6 @@
     <Compile Include="FadeOut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WADV.CGModule\WADV.CGModule.csproj">
-      <Project>{29c9df0e-03f0-44d1-95ca-6dd3d8dd0d1e}</Project>
-      <Name>WADV.CGModule</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
