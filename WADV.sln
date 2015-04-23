@@ -29,6 +29,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.Core", "WADV.Core\WADV
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.ShaderEffectPack", "WPSoft.ShaderEffectPack\WPSoft.ShaderEffectPack.vbproj", "{7D341C25-2AB5-4BB2-90C0-3B6702633536}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WPSoft.ShaderEffectPack2", "WPSoft.ShaderEffectPack2\WPSoft.ShaderEffectPack2.vbproj", "{30067C53-03E8-4964-935E-01E131AC2D48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,16 @@ Global
 		{7D341C25-2AB5-4BB2-90C0-3B6702633536}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7D341C25-2AB5-4BB2-90C0-3B6702633536}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7D341C25-2AB5-4BB2-90C0-3B6702633536}.Release|Win32.ActiveCfg = Release|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{30067C53-03E8-4964-935E-01E131AC2D48}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

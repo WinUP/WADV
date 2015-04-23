@@ -21,8 +21,8 @@ Friend NotInheritable Class Initialiser
                             Select types = assemble.GetTypes
                             From tmpType1 In types Select tmpType1
             If tmpType.GetInterface("IShowEffect") IsNot Nothing Then ShowEffectList.Add(tmpType.Name, tmpType)
-            If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
-            If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
+                If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
+                If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
         Next
         MessageAPI.SendSync("[CHOICE]INIT_EFFECT_FINISH")
     End Sub
