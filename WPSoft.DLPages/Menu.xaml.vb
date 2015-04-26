@@ -19,5 +19,6 @@
         brush.Stretch = Stretch.Uniform
         brush.TileMode = TileMode.None
         GearImage.Background = brush
+        MenuMainGrid.Background = New ImageBrush(New BitmapImage(PathAPI.GetUri(PathType.Resource, "image\setting.png")))
     End Sub
 End Class

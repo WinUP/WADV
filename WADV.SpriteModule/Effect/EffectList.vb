@@ -4,7 +4,7 @@
     ''' 精灵效果列表
     ''' </summary>
     ''' <remarks></remarks>
-    Friend Class EffectList
+    Friend NotInheritable Class EffectList
         Private Shared ReadOnly EffectList As New Dictionary(Of String, Type)
 
         ''' <summary>

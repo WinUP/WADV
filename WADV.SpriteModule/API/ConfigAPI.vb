@@ -2,7 +2,7 @@
 
 Namespace API
 
-    Public Class ConfigAPI
+    Public NotInheritable Class ConfigAPI
 
         ''' <summary>
         ''' 初始化模块

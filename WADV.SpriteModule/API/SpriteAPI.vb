@@ -4,7 +4,7 @@ Imports WADV.SpriteModule.PluginInterface
 
 Namespace API
 
-    Public Class SpriteAPI
+    Public NotInheritable Class SpriteAPI
 
         ''' <summary>
         ''' 添加一个精灵

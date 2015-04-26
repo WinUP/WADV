@@ -4,7 +4,7 @@ Imports WADV.SpriteModule.Receiver
 
 Namespace PluginInterface
 
-    Public Class MessageReceiver : Implements IMessageReceiver
+    Friend NotInheritable Class MessageReceiver : Implements IMessageReceiver
         Private Shared ReadOnly List As New Dictionary(Of Panel, ISpriteMessageReceiver)
         Private ReadOnly _removeList As New List(Of Panel)
 

@@ -4,7 +4,7 @@ Imports WADV.SpriteModule.Receiver
 
 Namespace PluginInterface
 
-    Public Class LoopReceiver : Implements ILoopReceiver
+    Friend NotInheritable Class LoopReceiver : Implements ILoopReceiver
         Private Shared ReadOnly List As New Dictionary(Of Panel, ISpriteLoopReceiver)
         Private ReadOnly _removeList As New List(Of Panel)
 

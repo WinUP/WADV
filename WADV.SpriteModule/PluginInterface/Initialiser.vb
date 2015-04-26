@@ -9,7 +9,7 @@ Namespace PluginInterface
         Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
             LoopAPI.AddLoopSync(New PluginInterface.LoopReceiver)
             MessageAPI.AddSync(New PluginInterface.MessageReceiver)
-            ScriptAPI.RegisterInTableSync("sprite", "init", New Action(Of String)(AddressOf ConfigAPI.Init), True)
+            ScriptAPI.RegisterInTableSync("sprite", "init", New Action(AddressOf ConfigAPI.Init), True)
             ScriptAPI.RegisterInTableSync("sprite", "new", New Func(Of String, Canvas)(AddressOf SpriteAPI.[New]))
             ScriptAPI.RegisterInTableSync("sprite", "show", New Func(Of String, Panel, Boolean)(AddressOf SpriteAPI.Show))
             ScriptAPI.RegisterInTableSync("sprite", "register", New Func(Of String, Panel, Boolean)(AddressOf SpriteAPI.Register))

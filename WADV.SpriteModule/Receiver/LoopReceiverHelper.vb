@@ -1,12 +1,10 @@
-﻿Imports System.Windows.Controls
-
-Namespace Receiver
+﻿Namespace Receiver
 
     ''' <summary>
     ''' 精灵循环接收器辅助类
     ''' </summary>
     ''' <remarks></remarks>
-    Friend Class LoopReceiverHelper : Implements ISpriteLoopReceiver
+    Friend NotInheritable Class LoopReceiverHelper : Implements ISpriteLoopReceiver
         Private ReadOnly _onLogic As Func(Of Object, Object, Object)
         Private ReadOnly _onRender As Func(Of Object, Object)
 

@@ -21,7 +21,7 @@
 	<Page.Triggers>
 		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
 			<BeginStoryboard Storyboard="{StaticResource OnLoaded1}"/>
-			<BeginStoryboard x:Name="OnLoaded2_BeginStoryboard" Storyboard="{StaticResource OnLoaded2}"/>
+			<BeginStoryboard Storyboard="{StaticResource OnLoaded2}"/>
 		</EventTrigger>
 	</Page.Triggers>
 	<Grid x:Name="MenuMainGrid">
