@@ -4,31 +4,31 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C0B62E00-90C8-44A7-8134-EF91AD01B50F}</ProjectGuid>
+    <ProjectGuid>{E8D4046B-2AB0-4EFD-8F38-C2A7BD77E997}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WADV.Core</RootNamespace>
-    <AssemblyName>WADV.Core</AssemblyName>
+    <RootNamespace>WADV.PhysicsModule</RootNamespace>
+    <AssemblyName>WADV.PhysicsModule</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <OutputPath>..\Deus Legem\bin\plugin\WADV.PhysicsModule\</OutputPath>
+    <DocumentationFile>WADV.PhysicsModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <OutputPath>..\Deus Legem\bin\plugin\WADV.PhysicsModule\</OutputPath>
+    <DocumentationFile>WADV.PhysicsModule.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -44,18 +44,15 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.0.9.15\lib\net4\Neo.Lua.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FarseerPhysics">
+      <HintPath>..\..\Farseer Physics Engine 3.5\bin\Release\FarseerPhysics.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -63,43 +60,17 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Import Include="WADV.Core" />
+    <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\GameAPI.vb" />
-    <Compile Include="API\LoopAPI.vb" />
-    <Compile Include="API\MessageAPI.vb" />
-    <Compile Include="API\PathAPI.vb" />
-    <Compile Include="API\PluginAPI.vb" />
-    <Compile Include="API\ResourceAPI.vb" />
-    <Compile Include="API\ScriptAPI.vb" />
-    <Compile Include="API\TimerAPI.vb" />
-    <Compile Include="API\WindowAPI.vb" />
+    <Compile Include="API\PhysicsAPI.vb" />
+    <Compile Include="BoundaryHelperBox2D.vb" />
+    <Compile Include="CollisionInstance.vb" />
     <Compile Include="Config.vb" />
-    <Compile Include="Enumerations.vb" />
-    <Compile Include="Exception\PluginInitialiseFailedException.vb" />
-    <Compile Include="MainLoop.vb" />
-    <Compile Include="MainTimer.vb" />
-    <Compile Include="MessageService.vb" />
-    <Compile Include="PathFunction.vb" />
-    <Compile Include="PluginFunction.vb" />
-    <Compile Include="PluginInterface\IGameDestructorReceiver.vb" />
-    <Compile Include="PluginInterface\IGameInitialiserReceiver.vb" />
-    <Compile Include="PluginInterface\IPluginInitialise.vb" />
-    <Compile Include="PluginInterface\ILoopReceiver.vb" />
-    <Compile Include="PluginInterface\IMessageReceiver.vb" />
-    <Compile Include="PluginInterface\INavigationReceiver.vb" />
-    <Compile Include="ReceiverList\BaseList.vb" />
-    <Compile Include="ReceiverList\DestructorReceiverList.vb" />
-    <Compile Include="ReceiverList\InitialiserReceiverList.vb" />
-    <Compile Include="ReceiverList\LoopReceiverList.vb" />
-    <Compile Include="ReceiverList\MessageReceiverList.vb" />
-    <Compile Include="ReceiverList\NavigationReceiverList.vb" />
-    <Compile Include="ScriptCore.vb" />
-    <Compile Include="UIOperation.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -115,6 +86,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="PhysicsJoint.vb" />
+    <Compile Include="PhysicsSprite.vb" />
+    <Compile Include="PhysicsUtilities.vb" />
+    <Compile Include="PhysicsWorld.vb" />
+    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="PluginInterface\LoopReceiver.vb" />
+    <Compile Include="Utilities.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -134,8 +112,15 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
+      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
+      <Name>WADV.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

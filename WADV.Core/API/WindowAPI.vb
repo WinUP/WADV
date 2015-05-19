@@ -173,7 +173,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Sub FadeInPageSync(time As Integer)
             FadeInPageAsync(time)
-            MessageAPI.WaitSync("[SYSTEM]WINDOW_PAGE_FADIN")
+            MessageAPI.WaitSync("[SYSTEM]WINDOW_PAGE_FADEIN")
         End Sub
 
         ''' <summary>
@@ -375,7 +375,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetDispatcher() As Windows.Threading.Dispatcher
+        Public Shared Function GetDispatcher() As Threading.Dispatcher
             Return Dispatcher
         End Function
 

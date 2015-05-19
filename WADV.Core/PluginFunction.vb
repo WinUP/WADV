@@ -2,6 +2,7 @@
 Imports System.Windows
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
+Imports WADV.Core.Exception
 
 ''' <summary>
 ''' 插件设定类
@@ -21,7 +22,7 @@ Friend NotInheritable Class PluginFunction
             Try
                 AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\", StringComparison.Ordinal) + 1)))
                 PluginFileList.Add(fileName)
-            Catch ex As Exception
+            Catch ex As System.Exception
                 MessageBox.Show(ex.Message, "插件" & My.Computer.FileSystem.GetName(fileName) & "加载失败")
             End Try
         Next
@@ -38,7 +39,7 @@ Friend NotInheritable Class PluginFunction
         Dim pluginTypes = Reflection.Assembly.LoadFrom(fileName).GetTypes
         For Each tmpTypeName In pluginTypes
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IPluginInitialise") <> Nothing Then
-                If Not DirectCast(Activator.CreateInstance(tmpTypeName), IPluginInitialise).Initialising() Then Throw New Exception("插件初始化无法顺利完成")
+                If Not DirectCast(Activator.CreateInstance(tmpTypeName), IPluginInitialise).Initialising() Then Throw New PluginInitialiseFailedException(My.Computer.FileSystem.GetName(fileName))
             End If
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IGameInitialiserReceiver") <> Nothing Then
                 InitialiserReceiverList.Add(Activator.CreateInstance(tmpTypeName))

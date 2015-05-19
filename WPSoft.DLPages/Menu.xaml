@@ -44,9 +44,9 @@
 				</LinearGradientBrush>
 			</Grid.Background>
 			<Grid HorizontalAlignment="Center" Height="40" Margin="0,0,0,0" VerticalAlignment="Center" Width="844">
-				<Button Content="开始故事" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" Click="Button_Click" Height="40" VerticalAlignment="Top"/>
-				<Button Content="寻找路线" HorizontalAlignment="Left" Height="40" Margin="216,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
-				<Button Content="物品仓库" HorizontalAlignment="Left" Height="40" Margin="432,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
+				<Button Content="开始进程" HorizontalAlignment="Left" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" Click="Button_Click" Height="40" VerticalAlignment="Top"/>
+				<Button Content="寻找断点" HorizontalAlignment="Left" Height="40" Margin="216,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
+				<Button Content="数据日志" HorizontalAlignment="Left" Height="40" Margin="432,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
 				<Button Content="系统设置" HorizontalAlignment="Left" Height="40" Margin="648,0,0,0" Style="{DynamicResource ButtonStyle1}" Width="196" Foreground="White" FontSize="18.667" VerticalAlignment="Top"/>
 			</Grid>
 		</Grid>

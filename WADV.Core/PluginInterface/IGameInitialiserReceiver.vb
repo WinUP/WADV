@@ -9,7 +9,5 @@
         ''' 开始初始化游戏
         ''' </summary>
         Sub InitialisingGame()
-
     End Interface
-
 End Namespace

@@ -10,7 +10,5 @@
         ''' <param name="e">可取消事件的数据</param>
         ''' </summary>
         Sub DestructuringGame(e As ComponentModel.CancelEventArgs)
-
     End Interface
-
 End Namespace

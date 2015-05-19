@@ -45,7 +45,7 @@ Friend NotInheritable Class VideoConfig
     Private Shared Sub Video_Click(sender As Object, e As Windows.Input.MouseButtonEventArgs)
         If ClickToSkip Then
             Video_Ended(VideoContent, New Windows.RoutedEventArgs)
-            MessageAPI.SendSync("MEDIA_VIDEO_SKIP")
+            MessageAPI.SendSync("[MEDIA]VIDEO_SKIP")
         End If
         MessageAPI.SendSync("[MEDIA]VIDEO_CLICK")
     End Sub

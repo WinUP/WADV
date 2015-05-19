@@ -21,8 +21,8 @@ Namespace API
         Public Shared Sub StartGame(baseWindow As NavigationWindow, frameSpan As Integer, tick As Integer)
             Config.BaseWindow = baseWindow
             RegisterScript()
-            PluginFunction.InitialiseAllPlugins()
             MessageService.GetInstance.Start()
+            PluginFunction.InitialiseAllPlugins()
             MainTimer.GetInstance.Span = tick
             MainTimer.GetInstance.Start()
             MainLoop.GetInstance.Span = frameSpan

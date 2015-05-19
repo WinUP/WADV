@@ -48,11 +48,11 @@ Friend NotInheritable Class MessageService
         SyncLock (_messageList)
             While _status
                 While Not _messageList.IsEmpty
-                    If Not _messageList.TryDequeue(message) Then Throw New Exception("从消息队列中获取消息失败")
+                    If Not _messageList.TryDequeue(message) Then Throw New System.Exception("从消息队列中获取消息失败")
 #If DEBUG Then
                     Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss,fff ") & message)
 #End If
-                    MessageReceiverList.Boardcast(message)
+                    MessageReceiverList.Broadcast(message)
                     SyncLock LastMessage
                         For i As Integer = 0 To message.Length - 1
                             LastMessage(i) = message(i)
