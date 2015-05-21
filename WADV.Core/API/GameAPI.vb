@@ -102,6 +102,8 @@ Namespace API
             script("add") = New Action(Of String)(AddressOf PluginAPI.Add)
             script("compile") = New Func(Of String, String, Reflection.Assembly)(AddressOf PluginAPI.Compile)
             script("load") = New Func(Of String, Reflection.Assembly)(AddressOf PluginAPI.Load)
+            script("handleEvent") = New Action(Of Object, String, [Delegate])(AddressOf PluginAPI.HandleEvent)
+            script("unhandleEvent") = New Action(Of Object, String, [Delegate])(AddressOf PluginAPI.UnhandleEvent)
             'Resource
             system("resource") = New LuaTable
             script = system("resource")

@@ -9,7 +9,7 @@ Imports FarseerPhysics.Dynamics
 Imports FarseerPhysics.Dynamics.Joints
 Imports Microsoft.Xna.Framework
 
-Public Class PhysicsUtilities
+Friend Class PhysicsUtilities
 
     ''' <summary>
     ''' 根据物体寻找所属的物理世界
@@ -17,7 +17,7 @@ Public Class PhysicsUtilities
     ''' <param name="element">目标物体的界面元素</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function FindPhysicsWorld(element As FrameworkElement) As PhysicsWorld
+    Friend Shared Function FindPhysicsWorld(element As FrameworkElement) As PhysicsWorld
         If element IsNot Nothing Then
             If TypeOf element Is PhysicsWorld Then
                 Return DirectCast(element, PhysicsWorld)
@@ -34,7 +34,7 @@ Public Class PhysicsUtilities
     ''' <param name="target">目标物体</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetOffsetPositionInScreen(target As PhysicsSprite) As Vector2
+    Friend Shared Function GetOffsetPositionInScreen(target As PhysicsSprite) As Vector2
         Dim offset As New Vector2 With {.X = Canvas.GetLeft(target), .Y = Canvas.GetTop(target)}
         Dim parent As FrameworkElement = target.Parent
         While parent IsNot Nothing
@@ -56,7 +56,7 @@ Public Class PhysicsUtilities
     ''' <param name="point">要计算的点</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function DistanceToLine(lineStart As Point, lineEnd As Point, point As Point) As Double
+    Friend Shared Function DistanceToLine(lineStart As Point, lineEnd As Point, point As Point) As Double
         Dim xDelta As Double = lineEnd.X - lineStart.X
         Dim yDelta As Double = lineEnd.Y - lineStart.Y
         Dim u As Double = ((point.X - lineStart.X) * xDelta + (point.Y - lineStart.Y) * yDelta) / (xDelta * xDelta + yDelta * yDelta)
@@ -77,7 +77,7 @@ Public Class PhysicsUtilities
     ''' <param name="angle">要转换的角度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function DegreesToRadians(angle As Double) As Double
+    Friend Shared Function DegreesToRadians(angle As Double) As Double
         Return Math.PI * angle / 180.0
     End Function
 
@@ -87,7 +87,7 @@ Public Class PhysicsUtilities
     ''' <param name="radians">要转换的弧度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function RadiansToDegrees(radians As Double) As Double
+    Friend Shared Function RadiansToDegrees(radians As Double) As Double
         Return (180 / Math.PI) * radians
     End Function
 
@@ -98,7 +98,7 @@ Public Class PhysicsUtilities
     ''' <param name="pt2">目标点2</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function DistanceBetweenTwoPoints(pt1 As Point, pt2 As Point) As Double
+    Friend Shared Function DistanceBetweenTwoPoints(pt1 As Point, pt2 As Point) As Double
         Dim a As Double = pt2.X - pt1.X
         Dim b As Double = pt2.Y - pt1.Y
         Return Math.Sqrt(a * a + b * b)
@@ -112,7 +112,7 @@ Public Class PhysicsUtilities
     ''' <param name="ptStart">原点位置</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetPointFromDistanceAngle(angle As Double, distance As Double, ptStart As Point) As Point
+    Friend Shared Function GetPointFromDistanceAngle(angle As Double, distance As Double, ptStart As Point) As Point
         Dim theta As Double = angle * 0.0174532925
         Dim p As New Point()
         p.X = ptStart.X + distance * Math.Cos(theta)
@@ -128,7 +128,7 @@ Public Class PhysicsUtilities
     ''' <param name="colorFill">要填充的颜色</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function CreatePathFromVertices(body As Body, element As PhysicsSprite, colorFill As Color) As Shapes.Shape
+    Friend Shared Function CreatePathFromVertices(body As Body, element As PhysicsSprite, colorFill As Color) As Shapes.Shape
         Dim vertices As List(Of Fixture) = body.FixtureList
         If TypeOf vertices(0).Shape Is CircleShape Then
             Dim cs As CircleShape = vertices(0).Shape
@@ -182,7 +182,7 @@ Public Class PhysicsUtilities
     ''' </summary>
     ''' <param name="uc">要重新链接的元素</param>
     ''' <remarks></remarks>
-    Public Shared Sub RedirectStoryboardTargets(uc As FrameworkElement)
+    Friend Shared Sub RedirectStoryboardTargets(uc As FrameworkElement)
         For Each item As Object In uc.Resources
             If TypeOf item Is KeyValuePair(Of Object, Object) Then
                 Dim itemValue = CType(item, KeyValuePair(Of Object, Object)).Value
@@ -210,7 +210,7 @@ Public Class PhysicsUtilities
     ''' <param name="pt2">目标点2</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetAngleBetween(pt1 As Point, pt2 As Point) As Double
+    Friend Shared Function GetAngleBetween(pt1 As Point, pt2 As Point) As Double
         Dim retval As Double = 57.2727272727273 * Math.Atan2(pt2.X - pt1.X, pt2.Y - pt1.Y)
         Return retval
     End Function
@@ -221,7 +221,7 @@ Public Class PhysicsUtilities
     ''' <param name="angle">要处理的角度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function NormalizeAngle(angle As Double) As Double
+    Friend Shared Function NormalizeAngle(angle As Double) As Double
         If angle < 0 OrElse angle > Math.PI * 2 Then
             Return Math.Abs((Math.PI * 2) - Math.Abs(angle))
         Else
@@ -237,7 +237,7 @@ Public Class PhysicsUtilities
     ''' <param name="body2">关节另一端的物体</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function FindJoint(cnvGame As PhysicsWorld, body1 As Body, body2 As Body) As List(Of Joint)
+    Friend Shared Function FindJoint(cnvGame As PhysicsWorld, body1 As Body, body2 As Body) As List(Of Joint)
         Dim joint As New List(Of Joint)()
         For Each x As Joint In cnvGame.Simulator.JointList.Where(Function(e) (e.BodyA Is body1 AndAlso e.BodyB Is body2) OrElse (e.BodyB Is body1 AndAlso e.BodyA Is body2))
             joint.Add(x)
@@ -252,7 +252,7 @@ Public Class PhysicsUtilities
     ''' <param name="pt">要判断的点</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function IsPointInside(rect As Rect, pt As Vector2) As Boolean
+    Friend Shared Function IsPointInside(rect As Rect, pt As Vector2) As Boolean
         Return (pt.X > rect.Left AndAlso pt.X < rect.Right AndAlso pt.Y > rect.Top AndAlso pt.Y < rect.Bottom)
     End Function
 
@@ -263,7 +263,7 @@ Public Class PhysicsUtilities
     ''' <param name="halfY">宽度的一半</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function CreateRectangle(halfX As Single, halfY As Single) As Vertices
+    Friend Shared Function CreateRectangle(halfX As Single, halfY As Single) As Vertices
         Dim worldX = BoundaryConverter.ScreenToWorld(halfX)
         Dim worldY = BoundaryConverter.ScreenToWorld(halfY)
         Dim vertices As New Vertices(3)
@@ -283,7 +283,7 @@ Public Class PhysicsUtilities
     ''' <param name="angle">旋转角度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function CreateRectangle(halfX As Single, halfY As Single, center As Vector2, angle As Single) As Vertices
+    Friend Shared Function CreateRectangle(halfX As Single, halfY As Single, center As Vector2, angle As Single) As Vertices
         Dim vertices As Vertices = CreateRectangle(halfX, halfY)
         Dim r As New FarseerPhysics.Common.Mat22
         Dim c = Math.Cos(angle), s = Math.Sin(angle)
@@ -302,7 +302,7 @@ Public Class PhysicsUtilities
     ''' <param name="collisionGroup">这些元素对应物体的碰撞组</param>
     ''' <param name="spriteList">将要盛放这些元素对应物体的列表</param>
     ''' <remarks></remarks>
-    Public Shared Sub EnsureUniqueNames(uc As DependencyObject, ucOffset As Guid, collisionGroup As Integer, spriteList As List(Of PhysicsSprite))
+    Friend Shared Sub EnsureUniqueNames(uc As DependencyObject, ucOffset As Guid, collisionGroup As Integer, spriteList As List(Of PhysicsSprite))
         For i As Integer = 0 To VisualTreeHelper.GetChildrenCount(uc) - 1
             Dim thisChild As DependencyObject = VisualTreeHelper.GetChild(uc, i)
             If TypeOf thisChild Is PhysicsSprite Then
@@ -343,7 +343,7 @@ Public Class PhysicsUtilities
     ''' <param name="name">元素的理想名称</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function EnsureUniqueName(cnv As Canvas, sprToAdd As PhysicsSprite, name As String) As String
+    Friend Shared Function EnsureUniqueName(cnv As Canvas, sprToAdd As PhysicsSprite, name As String) As String
         Dim suffix As Integer = 1
         Dim thisName As String = name
         Dim possibleMatch = cnv.FindName(name)

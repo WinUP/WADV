@@ -8,6 +8,7 @@ Imports Microsoft.Xna.Framework
 Imports System.Windows
 Imports System.Windows.Controls
 Imports System.Windows.Media
+
 Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     Private _scaleParent As FrameworkElement
 
@@ -170,12 +171,13 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
         _physicsObjects = New Dictionary(Of String, PhysicsSprite)
     End Sub
 
-    Private Sub PhysicsWorld_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        RenderTransform = Utilities.GenerateTransformGroup
+    Public Sub New()
+        Me.New(0.0F, 9.8F)
     End Sub
 
-    Public Sub New()
-        Me.New(0, 10)
+    Private Sub PhysicsWorld_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        RenderTransform = Utilities.GenerateTransformGroup
+        BoundaryConverter.InitialiseWorld(Me)
     End Sub
 
     ''' <summary>
@@ -219,7 +221,7 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     End Sub
 
     ''' <summary>
-    ''' 更新物理世界逻辑状态
+    ''' 更新物理世界显示状态
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub UpdateRender()
@@ -228,36 +230,19 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     End Sub
 
     ''' <summary>
-    ''' 更新物理世界显示状态
+    ''' 更新物理世界逻辑状态
     ''' </summary>
     ''' <param name="stepTime">要步进的时间(秒)</param>
     ''' <remarks></remarks>
     Public Sub UpdateStatus(stepTime As Single)
         If PauseSimulation Then Return
         Simulator.Step(stepTime)
-        CollisionStore.Collisions.ForEach(Sub(e) RaiseEvent PhysicsCollision(e.Sprite1, e.Sprite2, e.Contact))
+        CollisionStore.Collisions.ForEach(Sub(e)
+                                              RaiseEvent PhysicsCollision(e.SpriteA, e.SpriteB, e.Contact)
+                                              If Config.WorldCollisionHandle IsNot Nothing Then Config.WorldCollisionHandle.Invoke(e.SpriteA, e.SpriteB, e.Contact)
+                                          End Sub)
         CollisionStore.Collisions.Clear()
         RaiseEvent PhysicsTimeStep(Me)
-    End Sub
-
-    ''' <summary>
-    ''' 物体发生碰撞
-    ''' </summary>
-    ''' <param name="source"></param>
-    ''' <param name="spriteCollided"></param>
-    ''' <param name="contact"></param>
-    ''' <remarks></remarks>
-    Private Sub Polygon_Collision(source As PhysicsSprite, spriteCollided As String, contact As Contact)
-        If PhysicsObjects.ContainsKey(spriteCollided) Then
-            Dim sprite2 = PhysicsObjects(spriteCollided)
-            CollisionStore.AddCollision(source, sprite2, contact)
-            If Not PhysicsObjects.Keys.Contains(source.Name) Then
-                Throw New Exception("物体 " & Convert.ToString(source.Name) & " 似乎不属于这个物理世界")
-            End If
-            If Not PhysicsObjects.Keys.Contains(sprite2.Name) Then
-                Throw New Exception("物体 " + sprite2.Name & " 似乎不属于这个物理世界")
-            End If
-        End If
     End Sub
 
     ''' <summary>
@@ -274,11 +259,10 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
             If element.Parent IsNot Nothing Then TryCast(element.Parent, Panel).Children.Remove(element)
             thisName = PhysicsUtilities.EnsureUniqueName(Me, element, thisName)
             element.Name = thisName
-            Children.Add(element)
             PhysicsObjects.Add(thisName, element)
             element.Update()
-            AddHandler element.Collision, AddressOf Polygon_Collision
         End If
+        Children.Add(element)
         element.IsManipulationEnabled = ManipulationEnabled
         Return element
     End Function
@@ -287,7 +271,7 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     ''' 添加一个关节到物理世界
     ''' </summary>
     ''' <param name="joint"></param>
-    Public Sub AddPhysicsJoint(joint As PhysicsJoint)
+    Friend Sub AddPhysicsJoint(joint As PhysicsJoint)
         Dim bodyOne As String = joint.BodyA
         Dim bodyTwo As String = joint.BodyB
         Dim collisionGroup As Short = Convert.ToInt16(joint.CollisionGroup)
@@ -361,33 +345,12 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     End Function
 
     ''' <summary>
-    ''' 将显示区域坐标转换为物理世界坐标
-    ''' </summary>
-    ''' <param name="screen">要转换的坐标</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Function ScreenToWorld(screen As Point) As Vector2
-        Return BoundaryConverter.ScreenToWorld(New Vector2(screen.X, screen.Y))
-    End Function
-
-    ''' <summary>
-    ''' 将物理世界坐标转换为显示区域坐标
-    ''' </summary>
-    ''' <param name="world">要转换的坐标</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Function WorldToScreen(world As Vector2) As Vector2
-        Return BoundaryConverter.WorldToScreen(world)
-    End Function
-
-    ''' <summary>
     ''' 删除一个物理对象
     ''' </summary>
     ''' <param name="sprite">要删除的对象的名称</param>
     Public Sub DeletePhysicsObject(sprite As String)
         If PhysicsObjects.ContainsKey(sprite) Then
             Dim spr As PhysicsSprite = PhysicsObjects(sprite)
-            RemoveHandler spr.Collision, AddressOf Polygon_Collision
             DeleteObject(spr.BodyObject)
             Children.Remove(spr)
             PhysicsObjects.Remove(sprite)
@@ -400,7 +363,7 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Dispose() Implements IDisposable.Dispose
-        For i As Integer = PhysicsObjects.Values.Count - 1 To 0 Step -1
+        For i = PhysicsObjects.Values.Count - 1 To 0 Step -1
             Dim spr As PhysicsSprite = PhysicsObjects.Values.Last()
             DeletePhysicsObject(spr.Name)
         Next
@@ -410,15 +373,15 @@ Public Class PhysicsWorld : Inherits Canvas : Implements IDisposable
     ''' <summary>
     ''' 从物理世界模拟器中删除物体
     ''' </summary>
-    ''' <param name="o">要删除的物体</param>
+    ''' <param name="target">要删除的物体</param>
     ''' <remarks></remarks>
-    Private Sub DeleteObject(o As Object)
-        If TypeOf o Is Body Then
-            Simulator.RemoveBody(TryCast(o, Body))
-        ElseIf TypeOf o Is Controller Then
-            Simulator.RemoveController(TryCast(o, Controller))
-        ElseIf TypeOf o Is Joint Then
-            Simulator.RemoveJoint(TryCast(o, Joint))
+    Private Sub DeleteObject(target As Object)
+        If TypeOf target Is Body Then
+            Simulator.RemoveBody(TryCast(target, Body))
+        ElseIf TypeOf target Is Controller Then
+            Simulator.RemoveController(TryCast(target, Controller))
+        ElseIf TypeOf target Is Joint Then
+            Simulator.RemoveJoint(TryCast(target, Joint))
         Else
             Throw New Exception("你无法从物理世界中删除不是Body，不是Controller，也不是Joint的对象")
         End If

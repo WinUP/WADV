@@ -67,7 +67,10 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\PhysicsAPI.vb" />
+    <Compile Include="API\ApiForScript.vb" />
+    <Compile Include="API\Joint.vb" />
+    <Compile Include="API\Sprite.vb" />
+    <Compile Include="API\World.vb" />
     <Compile Include="BoundaryHelperBox2D.vb" />
     <Compile Include="CollisionInstance.vb" />
     <Compile Include="Config.vb" />

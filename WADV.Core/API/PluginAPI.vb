@@ -84,6 +84,30 @@ Namespace API
             Return Reflection.Assembly.LoadFrom(filePath)
         End Function
 
-    End Class
+        ''' <summary>
+        ''' 注册一个事件处理函数到指定对象的指定事件
+        ''' </summary>
+        ''' <param name="target">要注册到的对象</param>
+        ''' <param name="eventName">要注册的事件名称</param>
+        ''' <param name="code">事件处理委托</param>
+        ''' <remarks></remarks>
+        Public Shared Sub HandleEvent(target As Object, eventName As String, code As [Delegate])
+            Dim targetEvent = target.GetType.GetEvent(eventName)
+            If targetEvent Is Nothing Then Exit Sub
+            targetEvent.AddEventHandler(target, code)
+        End Sub
 
+        ''' <summary>
+        ''' 从指定对象的指定事件上解绑一个事件处理函数
+        ''' </summary>
+        ''' <param name="target">要解绑的对象</param>
+        ''' <param name="eventName">要解绑的事件名称</param>
+        ''' <param name="code">事件处理委托</param>
+        ''' <remarks></remarks>
+        Public Shared Sub UnhandleEvent(target As Object, eventName As String, code As [Delegate])
+            Dim targetEvent = target.GetType.GetEvent(eventName)
+            If targetEvent Is Nothing Then Exit Sub
+            targetEvent.RemoveEventHandler(target, code)
+        End Sub
+    End Class
 End Namespace

@@ -1,13 +1,13 @@
 ﻿Imports System.Windows.Media
 
-Public Class Utilities
+Friend Class Utilities
 
     ''' <summary>
     ''' 返回一个包含所有变换效果的变换组，其效果顺序为：平移、缩放、旋转、扭曲
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GenerateTransformGroup() As TransformGroup
+    Friend Shared Function GenerateTransformGroup() As TransformGroup
         Dim target As New TransformGroup
         target.Children.Add(New TranslateTransform)
         target.Children.Add(New ScaleTransform With {.CenterX = 0.5, .CenterY = 0.5})
@@ -23,8 +23,7 @@ Public Class Utilities
     ''' <param name="group">要检索的变换组</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetTransformFromGroup(Of T As Transform)(group As TransformGroup) As T
+    Friend Shared Function GetTransformFromGroup(Of T As Transform)(group As TransformGroup) As T
         Return group.Children.OfType(Of T).FirstOrDefault()
     End Function
-
 End Class

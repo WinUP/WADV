@@ -81,7 +81,6 @@ Public Class PhysicsJoint : Inherits Canvas
     Public Function GetCenter() As Point
         Dim offSetLeft As Double = 0
         Dim offSetTop As Double = 0
-
         Dim parent As FrameworkElement = Me.Parent
         While parent IsNot Nothing
             Dim incLeft As Double = Convert.ToDouble(parent.GetValue(LeftProperty))

@@ -136,7 +136,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
             Else
                 If BodyObject IsNot Nothing Then BodyObject.Enabled = False
                 Visibility = Visibility.Collapsed
-                RaiseEvent Disabled(Me)
+                RaiseEvent PhysicsDisabled(Me)
             End If
         End Set
     End Property
@@ -408,7 +408,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' <summary>
     ''' 用户操作开始
     ''' </summary>
-    Friend Sub AccessManipulation(sender As UIElement, target As Point)
+    Public Sub AccessManipulation(sender As UIElement, target As Point)
         _manipulationStartPoint = target
         Dim optionPoint = TransformToCanvas(sender, target)
         _positionBeforeManipulation = Position
@@ -440,7 +440,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' <summary>
     ''' 更新用户操作
     ''' </summary>
-    Friend Sub ContinueManipulation(sender As UIElement, target As Point)
+    Public Sub ContinueManipulation(sender As UIElement, target As Point)
         Dim pt = TransformToCanvas(sender, target)
         If _isManipulationWithoutPhysicsBody Then
             SetLeft(Me, pt.X - _manipulationStartPoint.X)
@@ -454,7 +454,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' 结束用户操作
     ''' </summary>
     ''' <remarks></remarks>
-    Friend Sub FinishManiupulation()
+    Public Sub FinishManiupulation()
         If _isManipulationWithoutPhysicsBody Then '操作时Body还没有被指定
             _isManipulationWithoutPhysicsBody = False
         ElseIf _manipulationJoint IsNot Nothing Then '其他情况
@@ -505,7 +505,9 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' </summary>
     Private Function HandleOnCollision(fixtureA As Fixture, fixtureB As Fixture, contact As Contact) As Boolean
         If fixtureA.Body Is BodyObject Then
-            RaiseEvent Collision(Me, Convert.ToString(fixtureB.UserData), contact)
+            RaiseEvent FixtureCollision(fixtureA, fixtureB, contact)
+            If Config.SpriteCollisionHandle.ContainsKey(Me) Then Config.SpriteCollisionHandle(Me).Invoke(fixtureA, fixtureB, contact)
+            CollisionStore.AddCollision(Me, _world.PhysicsObjects(Convert.ToString(fixtureB.UserData)), contact)
         End If
         Return True
     End Function
@@ -516,7 +518,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' <summary>
     ''' 物体发生碰撞
     ''' </summary>
-    Public Event Collision As Action(Of PhysicsSprite, String, Contact)
+    Public Event FixtureCollision As Action(Of Fixture, Fixture, Contact)
 
     ''' <summary>
     ''' 鼠标拖拽开始
@@ -531,7 +533,7 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     ''' <summary>
     ''' 对象被销毁
     ''' </summary>
-    Public Event Disabled As Action(Of PhysicsSprite)
+    Public Event PhysicsDisabled As Action(Of PhysicsSprite)
 #End Region
 
     ''' <summary>
@@ -603,17 +605,6 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     End Function
 
     ''' <summary>
-    ''' 将指定点的坐标变换为相对于指定元素的坐标
-    ''' </summary>
-    ''' <param name="elem">目标元素</param>
-    ''' <param name="pt">要变换的点</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function TransformFromCanvas(elem As UIElement, pt As Point) As Point
-        Return _world.TransformToVisual(elem).Transform(pt)
-    End Function
-
-    ''' <summary>
     ''' 更新这个物体的显示状态
     ''' </summary>
     Public Overridable Sub Update()
@@ -667,6 +658,4 @@ Public Class PhysicsSprite : Inherits Canvas : Implements IDisposable
     Public Sub RemoveCollisionHandler()
         BodyObject.FixtureList.ForEach(Sub(e) e.OnCollision = Nothing)
     End Sub
-
-    
 End Class

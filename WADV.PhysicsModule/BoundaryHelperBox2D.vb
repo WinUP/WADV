@@ -13,7 +13,7 @@ Imports Microsoft.Xna.Framework
 ''' Box2D物理世界及显示区域范围计算辅助类
 ''' </summary>
 ''' <remarks></remarks>
-Public Class BoundaryConverter
+Friend Class BoundaryConverter
 
     Shared Sub New()
         PixelsPerMeter = 100.0F
@@ -24,7 +24,7 @@ Public Class BoundaryConverter
     ''' </summary>
     ''' <param name="world">要初始化的物理世界元素</param>
     ''' <remarks></remarks>
-    Public Shared Sub InitialiseWorld(world As PhysicsWorld)
+    Friend Shared Sub InitialiseWorld(world As PhysicsWorld)
         If Double.IsNaN(world.Width) OrElse Double.IsNaN(world.Height) Then
             If Double.IsNaN(world.ActualWidth) OrElse Double.IsNaN(world.ActualHeight) OrElse world.ActualWidth.Equals(0.0) OrElse world.ActualHeight.Equals(0.0) Then
                 world.Width = 1280.0
@@ -43,7 +43,6 @@ Public Class BoundaryConverter
     ''' </summary>
     ''' <remarks></remarks>
     Public Enum DecomposerTypes
-        Bayazit
         CDT
         Earclip
         Flipcode
@@ -57,14 +56,14 @@ Public Class BoundaryConverter
     ''' <value></value>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Property DecomposerType() As DecomposerTypes
+    Friend Shared Property DecomposerType() As DecomposerTypes
 
     Private Shared _pixelPerMeter As Single
     ''' <summary>
     ''' 获取或设置物理世界中每米所表示的显示区域像素数
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared Property PixelsPerMeter As Single
+    Friend Shared Property PixelsPerMeter As Single
         Get
             Return _pixelPerMeter
         End Get
@@ -81,7 +80,7 @@ Public Class BoundaryConverter
     ''' <param name="shapeType">基础形状</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function CreateShapesFromElement(entity As PhysicsSprite, shapeType As PhysicsSprite.ShapeTypes) As List(Of Shape)
+    Friend Shared Function CreateShapesFromElement(entity As PhysicsSprite, shapeType As PhysicsSprite.ShapeTypes) As List(Of Shape)
         Dim shapeDefs As New List(Of Shape)()
         Select Case shapeType
             Case PhysicsSprite.ShapeTypes.Ellipse
@@ -167,7 +166,7 @@ Public Class BoundaryConverter
     ''' <param name="distance">要转换的长度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function ScreenToWorld(distance As Single) As Single
+    Friend Shared Function ScreenToWorld(distance As Single) As Single
         Return ConvertUnits.ToSimUnits(distance)
     End Function
 
@@ -177,7 +176,7 @@ Public Class BoundaryConverter
     ''' <param name="vector">要转换的向量</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function ScreenToWorld(vector As Vector2) As Vector2
+    Friend Shared Function ScreenToWorld(vector As Vector2) As Vector2
         Return ConvertUnits.ToSimUnits(vector)
     End Function
 
@@ -187,7 +186,7 @@ Public Class BoundaryConverter
     ''' <param name="point">要转换的坐标</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function ScreenToWorld(point As Point) As Vector2
+    Friend Shared Function ScreenToWorld(point As Point) As Vector2
         Return ConvertUnits.ToSimUnits(point.X, point.Y)
     End Function
 
@@ -197,7 +196,7 @@ Public Class BoundaryConverter
     ''' <param name="size">要转换的范围</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function ScreenToWorld(size As Size) As Vector2
+    Friend Shared Function ScreenToWorld(size As Size) As Vector2
         Return ConvertUnits.ToSimUnits(size.Width, size.Height)
     End Function
 
@@ -207,7 +206,7 @@ Public Class BoundaryConverter
     ''' <param name="distance">要转换的长度</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function WorldToScreen(distance As Single) As Single
+    Friend Shared Function WorldToScreen(distance As Single) As Single
         Return ConvertUnits.ToDisplayUnits(distance)
     End Function
 
@@ -217,7 +216,7 @@ Public Class BoundaryConverter
     ''' <param name="vector">要转换的向量</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function WorldToScreen(vector As Vector2) As Vector2
+    Friend Shared Function WorldToScreen(vector As Vector2) As Vector2
         Return ConvertUnits.ToDisplayUnits(vector)
     End Function
 
@@ -227,7 +226,7 @@ Public Class BoundaryConverter
     ''' <param name="point">要转换的坐标</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function WorldToScreen(point As Point) As Vector2
+    Friend Shared Function WorldToScreen(point As Point) As Vector2
         Return ConvertUnits.ToDisplayUnits(point.X, point.Y)
     End Function
 
@@ -237,7 +236,7 @@ Public Class BoundaryConverter
     ''' <param name="size">要转换的范围</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function WorldToScreen(size As Size) As Vector2
+    Friend Shared Function WorldToScreen(size As Size) As Vector2
         Return ConvertUnits.ToDisplayUnits(size.Width, size.Height)
     End Function
 End Class
