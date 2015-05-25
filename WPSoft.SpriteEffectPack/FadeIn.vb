@@ -4,7 +4,7 @@ Imports System.Windows.Media.Animation
 Imports WADV.SpriteModule.Effect
 
 ''' <summary>
-''' 将精灵透明度从0过渡到1的动画
+''' 将精灵透明度从0%过渡到100%的动画
 ''' 参数列表：消耗帧数, [缓动类型], [缓动参数]
 ''' 缓动支持：circle, cubic, exp, quadratic, quartic, quintic, sine
 ''' 缓动参数：in, out, both
@@ -13,8 +13,8 @@ Imports WADV.SpriteModule.Effect
 ''' <remarks></remarks>
 Public Class FadeIn : Inherits BaseEffect
 
-    Public Sub New(name As String, variable As Object())
-        MyBase.New(name, variable)
+    Public Sub New(target As FrameworkElement, variable As Object())
+        MyBase.New(target, variable)
         WindowAPI.InvokeSync(Sub() ImageContent.Opacity = 0.0)
     End Sub
 

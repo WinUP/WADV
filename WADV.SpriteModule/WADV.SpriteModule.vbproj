@@ -76,8 +76,6 @@
     <Compile Include="API\SpriteAPI.vb" />
     <Compile Include="Effect\BaseEffect.vb" />
     <Compile Include="Effect\EffectList.vb" />
-    <Compile Include="Effect\IEffect.vb" />
-    <Compile Include="Receiver\ISpriteLoopReceiver.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -96,9 +94,9 @@
     <Compile Include="PluginInterface\Initialiser.vb" />
     <Compile Include="PluginInterface\LoopReceiver.vb" />
     <Compile Include="PluginInterface\MessageReceiver.vb" />
-    <Compile Include="Receiver\ISpriteMessageReceiver.vb" />
-    <Compile Include="Receiver\LoopReceiverHelper.vb" />
-    <Compile Include="Receiver\MessageReceiverHelper.vb" />
+    <Compile Include="Receiver\SpriteReceiverForLoop.vb" />
+    <Compile Include="Receiver\SpriteReceiverForMessage.vb" />
+    <Compile Include="Sprite.vb" />
     <Compile Include="SpriteList.vb" />
   </ItemGroup>
   <ItemGroup>

@@ -13,8 +13,8 @@ Imports WADV.SpriteModule.Effect
 ''' <remarks></remarks>
 Public Class FadeOut : Inherits BaseEffect
 
-    Public Sub New(name As String, variable As Object())
-        MyBase.New(name, variable)
+    Public Sub New(target As FrameworkElement, variable As Object())
+        MyBase.New(target, variable)
         WindowAPI.InvokeSync(Sub() ImageContent.Opacity = 1.0)
     End Sub
 
