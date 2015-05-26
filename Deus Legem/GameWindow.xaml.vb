@@ -68,19 +68,19 @@ Public Class GameWindow
         '处理导航标志
         Dim data = DirectCast(e.ExtraData, NavigateOperation)
         Select Case data
-            Case NavigateOperation.Normal, NavigateOperation.FadeOutAndNavigate, NavigateOperation.FadeOutAndShow, NavigateOperation.OnlyFadeOut
+            Case NavigateOperation.Normal, NavigateOperation.OutAndNavigate, NavigateOperation.OutAndShow, NavigateOperation.OnlyOut
                 Dim fadeOut As New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(540)))
                 fadeOut.EasingFunction = New QuarticEase With {.EasingMode = EasingMode.EaseOut}
                 AddHandler fadeOut.Completed, Sub() FadeOutComplete(e)
                 BeginAnimation(OpacityProperty, fadeOut)
                 Exit Sub
-            Case NavigateOperation.NavigateAndFadeIn
+            Case NavigateOperation.NavigateAndIn
                 CustomizedNavigate(e)
                 FadeIn()
             Case NavigateOperation.NavigateAndHide
                 e.Cancel = False
                 Opacity = 0.0
-            Case NavigateOperation.OnlyFadeIn
+            Case NavigateOperation.OnlyIn
                 FadeIn()
             Case NavigateOperation.NoEffect
                 e.Cancel = False
@@ -99,9 +99,9 @@ Public Class GameWindow
             Case NavigateOperation.Normal
                 CustomizedNavigate(e)
                 FadeIn()
-            Case NavigateOperation.FadeOutAndNavigate
+            Case NavigateOperation.OutAndNavigate
                 CustomizedNavigate(e)
-            Case NavigateOperation.FadeOutAndShow
+            Case NavigateOperation.OutAndShow
                 CustomizedNavigate(e)
                 Opacity = 1.0
         End Select

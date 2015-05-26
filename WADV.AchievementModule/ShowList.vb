@@ -52,8 +52,8 @@ Friend NotInheritable Class ShowList
     End Sub
 
     Private Shared Sub ShowContent()
+        _isShowing = True
         While _list.Count > 0
-            _isShowing = True
             Dim target As Achievement = Nothing
             If Not _list.TryDequeue(target) Then Throw New Exception("从等待队列中获取成就失败")
             _dispatcher.Invoke(New Action(Of Achievement)(AddressOf ShowWindow), target)
@@ -63,10 +63,10 @@ Friend NotInheritable Class ShowList
     End Sub
 
     Private Shared Sub ShowWindow(target As Achievement)
-        _showingWindow = XamlReader.Parse(Config.WindowStyle)
+        _showingWindow = XamlReader.Parse(ModuleConfig.WindowStyle)
         _showingWindow.Opacity = 0.0
         WindowAPI.GetRoot(Of Grid).Children.Add(_showingWindow)
-        WindowAPI.GetChildByName(Of TextBlock)(_showingWindow, "AchievementTitle").Text = target.GetName
+        WindowAPI.GetChildByName(Of TextBlock)(_showingWindow, "AchievementTitle").Text = target.Name
         _showingWindow.BeginStoryboard(_mainStoryBoard)
     End Sub
 

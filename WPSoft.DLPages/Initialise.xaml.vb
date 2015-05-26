@@ -1,8 +1,6 @@
 ﻿Imports System.Security.AccessControl
-Imports WADV.AchievementModule.API
 
 Class Initialise
-
     Private Sub Initialise_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Dim image As New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(PathType.Resource, "image\black_logo.png"))))
         image.Stretch = Stretch.UniformToFill
@@ -32,12 +30,10 @@ Class Initialise
         ChangeText("启动承载系统")
         '!导入成就
         For Each tmpProperty In {"游戏运行次数", "CG显示次数"}
-            PropertyAPI.Add(tmpProperty)
+            WADV.AchievementModule.API.AchievementProperty.Add(tmpProperty)
         Next
-
         ChangeText("已就绪")
         System.Threading.Thread.Sleep(200)
         MessageAPI.SendSync("[GAME]INITIAL_DATA_READY")
     End Sub
-
 End Class

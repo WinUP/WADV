@@ -2,45 +2,6 @@
 Imports System.Runtime.Serialization.Formatters.Binary
 
 ''' <summary>
-''' 一般成就的基类
-''' </summary>
-''' <remarks></remarks>
-<Serializable> Public MustInherit Class Achievement
-    Private ReadOnly _name As String
-    Private ReadOnly _substance As String
-    Private _isEarn As Boolean
-
-    Public Sub New(name As String, substance As String)
-        _name = name
-        _substance = substance
-        _isEarn = False
-    End Sub
-
-    Public MustOverride Sub Check()
-
-    Public MustOverride Sub Register()
-
-    Public Function GetName() As String
-        Return _name
-    End Function
-
-    Public Function GetSubstance() As String
-        Return _substance
-    End Function
-
-    Public Function IsEarn() As Boolean
-        Return _isEarn
-    End Function
-
-    Protected Sub SetEarn()
-        _isEarn = True
-        ShowList.Add(Me)
-        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_EARN")
-    End Sub
-
-End Class
-
-''' <summary>
 ''' 成就存储类
 ''' </summary>
 ''' <remarks></remarks>
@@ -53,8 +14,10 @@ Friend NotInheritable Class AchievementList
     ''' <param name="achievement">要添加的成就</param>
     ''' <remarks></remarks>
     Friend Shared Sub Add(achievement As Achievement)
-        If Contains(achievement.GetName) Then Return
-        _list.Add(achievement.GetName, achievement)
+        If Contains(achievement.Name) Then Exit Sub
+        SyncLock (_list)
+            _list.Add(achievement.Name, achievement)
+        End SyncLock
         achievement.Register()
         MessageAPI.SendSync("[ACHIEVE]ACHIEVE_ADD")
     End Sub
@@ -75,21 +38,25 @@ Friend NotInheritable Class AchievementList
     ''' <param name="name">成就的名字</param>
     ''' <remarks></remarks>
     Friend Shared Sub Delete(name As String)
-        If Not Contains(name) Then Return
-        _list.Remove(name)
+        If Not Contains(name) Then Exit Sub
+        SyncLock (_list)
+            _list.Remove(name)
+        End SyncLock
         MessageAPI.SendSync("[ACHIEVE]ACHIEVE_DELETE")
     End Sub
 
     ''' <summary>
-    ''' 获取指定成就
+    ''' 获取已注册的成就
     ''' </summary>
     ''' <param name="name">成就的名字</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Friend Shared Function Item(name As String) As Achievement
-        If Not Contains(name) Then Return Nothing
-        Return _list.Item(name)
-    End Function
+    Friend Shared ReadOnly Property Item(name As String) As Achievement
+        Get
+            If Not Contains(name) Then Return Nothing
+            Return _list.Item(name)
+        End Get
+    End Property
 
     ''' <summary>
     ''' 保存成就列表到文件
@@ -98,10 +65,11 @@ Friend NotInheritable Class AchievementList
     ''' <remarks></remarks>
     Friend Shared Sub Save(fileName As String)
         Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
-        Dim formatter As New BinaryFormatter
-        formatter.Binder = New DeserializationBinder
-        formatter.Serialize(stream, _list)
-        stream.Close()
+        Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
+        SyncLock (_list)
+            formatter.Serialize(stream, _list)
+            stream.Close()
+        End SyncLock
         MessageAPI.SendSync("[ACHIEVE]ACHIEVE_SAVE")
     End Sub
 
@@ -114,9 +82,10 @@ Friend NotInheritable Class AchievementList
         Dim path = PathAPI.GetPath(PathType.UserFile, fileName)
         If Not My.Computer.FileSystem.FileExists(path) Then Return
         Dim stream As New FileStream(path, FileMode.Open)
-        Dim formatter As New BinaryFormatter
-        formatter.Binder = New DeserializationBinder
-        _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, Achievement))
+        Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
+        SyncLock (_list)
+            _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, Achievement))
+        End SyncLock
         stream.Close()
         MessageAPI.SendSync("[ACHIEVE]ACHIEVE_LOAD")
     End Sub
@@ -129,5 +98,4 @@ Friend NotInheritable Class AchievementList
     Public Shared Function GetList() As Achievement()
         Return _list.Values.ToArray
     End Function
-
 End Class

@@ -1,7 +1,7 @@
 ﻿Imports WADV.SpriteModule.Effect
 
 Namespace API
-    Module Config
+    Public Module Config
         ''' <summary>
         ''' 初始化模块
         ''' </summary>

@@ -61,14 +61,13 @@
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="WADV.AchievementModule" />
-    <Import Include="WADV.AchievementModule.API" />
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="A_成就制霸.vb" />
-    <Compile Include="A_我要干什么来着.vb" />
-    <Compile Include="A_系统初始化.vb" />
-    <Compile Include="A_设置狂人.vb" />
+    <Compile Include="成就制霸.vb" />
+    <Compile Include="我要干什么来着.vb" />
+    <Compile Include="系统已启动.vb" />
+    <Compile Include="设置狂人.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

@@ -68,11 +68,14 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Achievement.vb" />
     <Compile Include="AchievementList.vb" />
-    <Compile Include="API\AchieveAPI.vb" />
-    <Compile Include="API\ConfigAPI.vb" />
-    <Compile Include="API\PropertyAPI.vb" />
-    <Compile Include="Config.vb" />
+    <Compile Include="AchievementProperty.vb" />
+    <Compile Include="API\Achieve.vb" />
+    <Compile Include="API\ApiForScript.vb" />
+    <Compile Include="API\Config.vb" />
+    <Compile Include="API\AchievementProperty.vb" />
+    <Compile Include="ModuleConfig.vb" />
     <Compile Include="DeserializationBinder.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -91,9 +94,8 @@
     </Compile>
     <Compile Include="PluginInterface\GameClose.vb" />
     <Compile Include="PluginInterface\Initialiser.vb" />
-    <Compile Include="PluginInterface\NavigationReceiver.vb" />
     <Compile Include="PluginInterface\ScriptMessageReceiver.vb" />
-    <Compile Include="PropertyList.vb" />
+    <Compile Include="AchievementPropertyList.vb" />
     <Compile Include="ReceiverList.vb" />
     <Compile Include="ShowList.vb" />
   </ItemGroup>

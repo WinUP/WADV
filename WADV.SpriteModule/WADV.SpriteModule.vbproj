@@ -72,8 +72,8 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ConfigAPI.vb" />
-    <Compile Include="API\SpriteAPI.vb" />
+    <Compile Include="API\Config.vb" />
+    <Compile Include="API\Sprite.vb" />
     <Compile Include="Effect\BaseEffect.vb" />
     <Compile Include="Effect\EffectList.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

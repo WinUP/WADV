@@ -1,5 +1,4 @@
 ﻿Friend NotInheritable Class Properties
-
     Friend Shared Sub Register()
         For Each tmpProperty In {"游戏运行次数",
                                  "成就获得个数",
@@ -22,8 +21,7 @@
                                  "设置页面进入次数",
                                  "设置修改次数",
                                  "路线选择次数"}
-            PropertyAPI.Add(tmpProperty)
+            API.AchievementProperty.Add(tmpProperty)
         Next
     End Sub
-
 End Class

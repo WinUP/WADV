@@ -2,7 +2,7 @@
 Imports System.Windows.Controls
 
 Namespace API
-    Module Sprite
+    Public Module Sprite
         ''' <summary>
         ''' 添加一个精灵
         ''' </summary>

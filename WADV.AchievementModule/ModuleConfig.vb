@@ -1,4 +1,4 @@
-﻿Friend NotInheritable Class Config
+﻿Friend NotInheritable Class ModuleConfig
 
     Friend Shared SaveFileFolder As String = ""
 
