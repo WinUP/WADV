@@ -9,13 +9,13 @@
         ''' <remarks></remarks>
         Public Sub Init(style As String, saveFolder As String, receiverFileName As String)
             SetStyle(style)
-            ModuleConfig.SaveFileFolder = PathAPI.GetPath(PathType.UserFile, saveFolder)
-            ModuleConfig.ReceiverFileName = PathAPI.GetPath(PathType.Script, receiverFileName)
+            ModuleConfig.SaveFileFolder = Path.Combine(PathType.UserFile, saveFolder)
+            ModuleConfig.ReceiverFileName = Path.Combine(PathType.Script, receiverFileName)
             ShowList.Initialise()
             AchievementList.Load(IO.Path.Combine(saveFolder, "achievement.a.save"))
             AchievementPropertyList.Load(IO.Path.Combine(saveFolder, "achievement.p.save"))
             ReceiverList.RunReceiver()
-            MessageAPI.SendSync("[ACHIEVE]INIT_FINISH")
+            Message.Send("[ACHIEVE]INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -24,7 +24,7 @@
         ''' <param name="filePath">样式文件路径(Skin目录下)</param>
         ''' <remarks></remarks>
         Public Sub SetStyle(filePath As String)
-            ModuleConfig.WindowStyle = My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Skin, filePath), Text.Encoding.UTF8)
+            ModuleConfig.WindowStyle = My.Computer.FileSystem.ReadAllText(Path.Combine(PathType.Skin, filePath), Text.Encoding.UTF8)
         End Sub
     End Module
 End Namespace

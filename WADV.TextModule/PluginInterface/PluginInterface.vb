@@ -4,11 +4,11 @@ Imports WADV.TextModule.Config
 Namespace PluginInterface
 
     Friend NotInheritable Class LoopReceiver : Implements ILoopReceiver
-        Private ReadOnly _effect As IEffect
+        Private ReadOnly _effect As BaseEffect
         Private _waitingCount As Integer = 0
         Private _playVoice As Boolean
 
-        Public Sub New(effect As IEffect)
+        Public Sub New(effect As BaseEffect)
             _effect = effect
             _playVoice = False
         End Sub
@@ -69,8 +69,8 @@ Namespace PluginInterface
 
         Private Sub PlayVoice(filePath As String)
             If filePath <> "" Then
-                MediaModule.API.SoundAPI.StopNearlyReading()
-                MediaModule.API.SoundAPI.PlayReading(filePath)
+                MediaModule.API.Sound.StopNearlyReading()
+                MediaModule.API.Sound.PlayReading(filePath)
             End If
         End Sub
 

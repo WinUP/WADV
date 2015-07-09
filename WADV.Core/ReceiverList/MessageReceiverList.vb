@@ -15,7 +15,7 @@ Namespace ReceiverList
         ''' <remarks></remarks>
         Friend Shared Sub Broadcast(ByRef message As String)
             For Each receiver In List
-                receiver.ReceivingMessage(message)
+                receiver.ReceiveMessage(message)
             Next
         End Sub
     End Class

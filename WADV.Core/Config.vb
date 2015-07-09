@@ -57,4 +57,11 @@ Friend NotInheritable Class Config
         End Get
     End Property
 
+    ''' <summary>
+    ''' 脚本核心
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Friend Shared Property ScriptEngine As IScriptEngine = Nothing
 End Class

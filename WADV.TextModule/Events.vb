@@ -14,11 +14,11 @@ Friend NotInheritable Class Events
     Friend Shared Sub TextArea_Click(sender As Object, e As MouseButtonEventArgs)
         ModuleConfig.Clicked = True
         If ModuleConfig.Auto Then
-            MessageAPI.SendSync("[TEXT]AUTOMODE_USER_CLICK")
+            Message.Send("[TEXT]AUTOMODE_USER_CLICK")
         ElseIf ModuleConfig.Fast Then
-            MessageAPI.SendSync("[TEXT]FASTMODE_USER_CLICK")
+            Message.Send("[TEXT]FASTMODE_USER_CLICK")
         Else
-            MessageAPI.SendSync("[TEXT]USER_CLICK")
+            Message.Send("[TEXT]USER_CLICK")
         End If
     End Sub
 

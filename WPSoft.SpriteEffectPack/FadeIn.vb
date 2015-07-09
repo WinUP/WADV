@@ -15,11 +15,11 @@ Public Class FadeIn : Inherits BaseEffect
 
     Public Sub New(target As FrameworkElement, variable As Object())
         MyBase.New(target, variable)
-        WindowAPI.InvokeSync(Sub() ImageContent.Opacity = 0.0)
+        Invoke(Sub() ImageContent.Opacity = 0.0)
     End Sub
 
     Public Overrides Sub Render()
-        Dim animation As New DoubleAnimation(1.0, New Duration(LoopAPI.TranslateToTime(Params(0))))
+        Dim animation As New DoubleAnimation(1.0, New Duration(ToTime(Params(0))))
         Dim ease As EasingFunctionBase
         Select Case CStr(Params(1))
             Case "circle"

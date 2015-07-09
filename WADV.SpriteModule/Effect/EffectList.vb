@@ -12,7 +12,7 @@
         ''' <remarks></remarks>
         Friend Shared Sub ReadEffect()
             List.Add("BaseEffect", GetType(BaseEffect))
-            For Each target In IO.Directory.GetFiles(PathAPI.GetPath(PathType.Resource, "SpriteEffect\"), "*.dll") _
+            For Each target In IO.Directory.GetFiles(Path.Combine(PathType.Resource, "SpriteEffect\"), "*.dll") _
                 .SelectMany(Function(e) Reflection.Assembly.LoadFrom(e).GetTypes()) _
                 .Where(Function(e) e.BaseType.FullName = "WADV.SpriteModule.Effect.BaseEffect")
                 List.Add(target.Name, target)

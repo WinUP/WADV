@@ -4,11 +4,11 @@ Friend NotInheritable Class ReceiverList
     Private Shared ReadOnly Receiver As New ScriptMessageReceiver
 
     Friend Shared Sub RunReceiver()
-        MessageAPI.AddSync(Receiver)
+        Message.Listen(Receiver)
     End Sub
 
     Friend Shared Sub StopReceiver()
-        MessageAPI.DeleteSync(Receiver)
+        Message.Remove(Receiver)
     End Sub
 
 End Class

@@ -3,6 +3,7 @@
 Public Class CutdownBar : Inherits WADV.ChoiceModule.BaseProgress
     Private _bar As ProgressBar
     Private ReadOnly _parent As Panel
+    Private _returns As Boolean
 
     Public Sub New(choices() As Button, waitFrame As Integer)
         MyBase.New(choices, waitFrame)
@@ -22,13 +23,15 @@ Public Class CutdownBar : Inherits WADV.ChoiceModule.BaseProgress
     End Sub
 
     Public Overrides Function Logic() As Boolean
-        Dim returns = MyBase.Logic()
-        If returns Then
-            _bar.Dispatcher.Invoke(Sub() _bar.Value = WaitFrame)
-        Else
-            _bar.Dispatcher.Invoke(Sub() _parent.Children.Remove(_bar))
-        End If
-        Return returns
+        _returns = MyBase.Logic()
+        Return _returns
     End Function
 
+    Public Overrides Sub Render()
+        If _returns Then
+            _bar.Value = WaitFrame
+        Else
+            _parent.Children.Remove(_bar)
+        End If
+    End Sub
 End Class

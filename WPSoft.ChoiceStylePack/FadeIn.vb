@@ -8,8 +8,6 @@ Imports System.Windows.Media.Animation
 ''' </summary>
 ''' <remarks></remarks>
 Public Class FadeIn : Inherits BaseShow
-
-
     Public Sub New(choices() As Button)
         MyBase.New(choices)
         choices(0).Dispatcher.Invoke(Sub()
@@ -32,5 +30,4 @@ Public Class FadeIn : Inherits BaseShow
             Choices(i).BeginAnimation(Button.OpacityProperty, animation)
         Next
     End Sub
-
 End Class

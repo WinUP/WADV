@@ -20,7 +20,7 @@ Friend NotInheritable Class PlayerList
         Dim tmpPlayer As New Player(fileName, type, cycle, count, _nextId)
         SoundList.Add(_nextId, tmpPlayer)
         _nextId += 1
-        MessageAPI.SendSync("[MEDIA]SOUND_ADD")
+        Message.Send("[MEDIA]SOUND_ADD")
         Return tmpPlayer
     End Function
 
@@ -39,7 +39,7 @@ Friend NotInheritable Class PlayerList
             Debug.WriteLine("--ERROR: " & ex.Message)
         End Try
         SoundList.Remove(id)
-        MessageAPI.SendSync("[MEDIA]SOUND_REMOVE")
+        Message.Send("[MEDIA]SOUND_REMOVE")
     End Sub
 
     ''' <summary>
@@ -63,7 +63,7 @@ Friend NotInheritable Class PlayerList
         For Each tmpSound In (From singleSound In SoundList.Values Where singleSound.Type = type Select singleSound)
             tmpSound.Volume = value
         Next
-        MessageAPI.SendSync("[MEDIA]SOUND_VOLUME_CHANGE")
+        Message.Send("[MEDIA]SOUND_VOLUME_CHANGE")
     End Sub
 
     ''' <summary>
@@ -77,12 +77,12 @@ Friend NotInheritable Class PlayerList
             If player.Duration - player.Position <= 0.001 Then
                 If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then
                     DeletePlayer(player.ID)
-                    MessageAPI.SendSync("[MEDIA]SOUND_END")
+                    Message.Send("[MEDIA]SOUND_END")
                 Else
                     player.Position = 0.0
                     player.Play()
                     If player.CycleCount > 0 Then player.CycleCount -= 1
-                    MessageAPI.SendSync("[MEDIA]SOUND_CYCLE")
+                    Message.Send("[MEDIA]SOUND_CYCLE")
                 End If
             End If
         Next

@@ -18,18 +18,18 @@ Friend NotInheritable Class SpriteList
     Friend Shared Function Add(name As String, target As FrameworkElement) As FrameworkElement
         If target Is Nothing Then Return Nothing
         If List.ContainsKey(name) Then Return Nothing
-        WindowAPI.InvokeSync(Sub()
-                                 If target.Tag IsNot Nothing Then
-                                     If TryCast(target.Tag, Sprite) IsNot Nothing Then
-                                         DirectCast(target.Tag, Sprite).RemoveReceiver()
-                                     Else
-                                         target.Tag = Nothing
-                                     End If
-                                 End If
-                                 target.Tag = New Sprite(target)
-                             End Sub)
+        Invoke(Sub()
+                   If target.Tag IsNot Nothing Then
+                       If TryCast(target.Tag, Sprite) IsNot Nothing Then
+                           DirectCast(target.Tag, Sprite).RemoveReceiver()
+                       Else
+                           target.Tag = Nothing
+                       End If
+                   End If
+                   target.Tag = New Sprite(target)
+               End Sub)
         List.Add(name, target)
-        MessageAPI.SendSync("[SPRITE]SPRITE_ADD")
+        Send("[SPRITE]SPRITE_ADD")
         Return target
     End Function
 
@@ -66,12 +66,12 @@ Friend NotInheritable Class SpriteList
     Friend Shared Function Delete(name As String) As Boolean
         If Not Contains(name) Then Return False
         Dim target = List(name)
-        WindowAPI.InvokeAsync(Sub()
-                                  If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target)
-                                  DirectCast(target.Tag, Sprite).RemoveReceiver()
-                              End Sub)
+        InvokeAsync(Sub()
+                        If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target)
+                        DirectCast(target.Tag, Sprite).RemoveReceiver()
+                    End Sub)
         List.Remove(name)
-        MessageAPI.SendSync("[SPRITE]SPRITE_DELETE")
+        Send("[SPRITE]SPRITE_DELETE")
         Return True
     End Function
 

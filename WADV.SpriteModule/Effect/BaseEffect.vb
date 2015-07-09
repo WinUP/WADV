@@ -67,14 +67,14 @@ Namespace Effect
         Protected Sub Animation_Finished(sender As Object, e As EventArgs)
             If _isCircle Then
                 If _circleCount = 0 Then
-                    MessageAPI.SendSync("[SPRITE]EFFECT_PLAY_FINISH")
+                    Message.Send("[SPRITE]EFFECT_PLAY_FINISH")
                     Exit Sub
                 End If
-                MessageAPI.SendSync("[SPRITE]EFFECT_PLAY_CIRCLE")
+                Message.Send("[SPRITE]EFFECT_PLAY_CIRCLE")
                 ReRender()
                 If _circleCount <> -1 Then _circleCount -= 1
             Else
-                MessageAPI.SendSync("[SPRITE]EFFECT_PLAY_FINISH")
+                Message.Send("[SPRITE]EFFECT_PLAY_FINISH")
             End If
         End Sub
 
@@ -83,7 +83,7 @@ Namespace Effect
         ''' </summary>
         ''' <remarks></remarks>
         Public Overridable Sub Wait()
-            MessageAPI.WaitSync("[SPRITE]EFFECT_PLAY_FINISH")
+            Message.Wait("[SPRITE]EFFECT_PLAY_FINISH")
         End Sub
     End Class
 End Namespace

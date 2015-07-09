@@ -1,27 +1,47 @@
 ﻿Imports System.Windows.Controls
 
-Public Class BaseShow : Implements IShowEffect
+''' <summary>
+''' 基本显示效果
+''' </summary>
+''' <remarks></remarks>
+Public Class BaseShow
     Protected ReadOnly Choices() As Button
     Protected IsOver As Boolean
 
+    ''' <summary>
+    ''' 获得一个新的效果
+    ''' </summary>
+    ''' <param name="choices">选项内容</param>
+    ''' <remarks></remarks>
     Public Sub New(choices() As Button)
         Me.Choices = choices
     End Sub
 
-    Public Overridable Sub Render() Implements IShowEffect.Render
+    ''' <summary>
+    ''' 显示效果
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Overridable Sub Render()
         IsOver = True
         SendMessage()
     End Sub
 
-    Public Overridable Sub Wait() Implements IShowEffect.Wait
+    ''' <summary>
+    ''' 等待效果完成
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Overridable Sub Wait()
         While True
-            MessageAPI.WaitSync("[CHOICE]SHOW_FINISH")
+            Message.Wait("[CHOICE]SHOW_FINISH")
             If IsOver Then Exit While
         End While
     End Sub
 
+    ''' <summary>
+    ''' 标记效果为已完成
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub SendMessage()
-        MessageAPI.SendSync("[CHOICE]SHOW_FINISH")
+        Message.Send("[CHOICE]SHOW_FINISH")
     End Sub
-
 End Class

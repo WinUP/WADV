@@ -19,7 +19,7 @@ Friend NotInheritable Class AchievementList
             _list.Add(achievement.Name, achievement)
         End SyncLock
         achievement.Register()
-        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_ADD")
+        Message.Send("[ACHIEVE]ACHIEVE_ADD")
     End Sub
 
     ''' <summary>
@@ -42,7 +42,7 @@ Friend NotInheritable Class AchievementList
         SyncLock (_list)
             _list.Remove(name)
         End SyncLock
-        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_DELETE")
+        Message.Send("[ACHIEVE]ACHIEVE_DELETE")
     End Sub
 
     ''' <summary>
@@ -64,13 +64,13 @@ Friend NotInheritable Class AchievementList
     ''' <param name="fileName">要保存到的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Save(fileName As String)
-        Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
+        Dim stream As New FileStream(Combine(PathType.UserFile, fileName), FileMode.Create)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
         SyncLock (_list)
             formatter.Serialize(stream, _list)
             stream.Close()
         End SyncLock
-        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_SAVE")
+        Message.Send("[ACHIEVE]ACHIEVE_SAVE")
     End Sub
 
     ''' <summary>
@@ -79,7 +79,7 @@ Friend NotInheritable Class AchievementList
     ''' <param name="fileName">要读取的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Load(fileName As String)
-        Dim path = PathAPI.GetPath(PathType.UserFile, fileName)
+        Dim path = Combine(PathType.UserFile, fileName)
         If Not My.Computer.FileSystem.FileExists(path) Then Return
         Dim stream As New FileStream(path, FileMode.Open)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
@@ -87,7 +87,7 @@ Friend NotInheritable Class AchievementList
             _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, Achievement))
         End SyncLock
         stream.Close()
-        MessageAPI.SendSync("[ACHIEVE]ACHIEVE_LOAD")
+        Message.Send("[ACHIEVE]ACHIEVE_LOAD")
     End Sub
 
     ''' <summary>

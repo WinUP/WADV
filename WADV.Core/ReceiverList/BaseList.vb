@@ -8,9 +8,14 @@
         ''' </summary>
         ''' <param name="target">要添加的接收器</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Add(target As T)
-            If Not Contains(target) Then List.Add(target)
-        End Sub
+        Friend Shared Function Add(target As T) As Boolean
+            If Not Contains(target) Then
+                List.Add(target)
+                Return True
+            Else
+                Return False
+            End If
+        End Function
 
         ''' <summary>
         ''' 确定指定接收器是否已存在

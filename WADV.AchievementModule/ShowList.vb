@@ -22,7 +22,7 @@ Friend NotInheritable Class ShowList
 
     Friend Shared Sub Initialise()
         _list = New ConcurrentQueue(Of Achievement)
-        _dispatcher = WindowAPI.GetDispatcher
+        _dispatcher = Core.API.Window.Dispatcher
         _dispatcher.Invoke(New Action(AddressOf SetStoryboard))
         _showThread = New Thread(AddressOf ShowContent)
         _showThread.Name = "成就显示线程"
@@ -47,8 +47,8 @@ Friend NotInheritable Class ShowList
     End Sub
 
     Private Shared Sub Storyboard_Complete(sender As Object, e As EventArgs)
-        WindowAPI.GetRoot(Of Grid).Children.Remove(_showingWindow)
-        MessageAPI.SendSync("[ACHIEVE]SHOW_FINISH")
+        Core.API.Window.Root(Of Grid).Children.Remove(_showingWindow)
+        Message.Send("[ACHIEVE]SHOW_FINISH")
     End Sub
 
     Private Shared Sub ShowContent()
@@ -57,7 +57,7 @@ Friend NotInheritable Class ShowList
             Dim target As Achievement = Nothing
             If Not _list.TryDequeue(target) Then Throw New Exception("从等待队列中获取成就失败")
             _dispatcher.Invoke(New Action(Of Achievement)(AddressOf ShowWindow), target)
-            MessageAPI.WaitSync("[ACHIEVE]SHOW_FINISH")
+            Message.Wait("[ACHIEVE]SHOW_FINISH")
         End While
         _isShowing = False
     End Sub
@@ -65,8 +65,8 @@ Friend NotInheritable Class ShowList
     Private Shared Sub ShowWindow(target As Achievement)
         _showingWindow = XamlReader.Parse(ModuleConfig.WindowStyle)
         _showingWindow.Opacity = 0.0
-        WindowAPI.GetRoot(Of Grid).Children.Add(_showingWindow)
-        WindowAPI.GetChildByName(Of TextBlock)(_showingWindow, "AchievementTitle").Text = target.Name
+        Core.API.Window.Root(Of Grid).Children.Add(_showingWindow)
+        Core.API.Window.GetChild(Of TextBlock)(_showingWindow, "AchievementTitle").Text = target.Name
         _showingWindow.BeginStoryboard(_mainStoryBoard)
     End Sub
 

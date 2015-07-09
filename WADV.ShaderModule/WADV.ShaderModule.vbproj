@@ -43,6 +43,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
+      <HintPath>..\packages\NeoLua.0.9.17\lib\net4\Neo.Lua.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -65,8 +69,8 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ConfigAPI.vb" />
-    <Compile Include="API\ShaderAPI.vb" />
+    <Compile Include="API\Config.vb" />
+    <Compile Include="API\Shader.vb" />
     <Compile Include="EffectList.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -83,7 +87,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PluginInterface\Initialiser.vb" />
+    <Compile Include="PluginInterface\ScriptInitialise.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -103,11 +107,17 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
       <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
       <Name>WADV.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\WADV.LuaSupport\WADV.LuaSupport.vbproj">
+      <Project>{ce3761f5-1c5e-4b0d-a46c-e11682e67c1c}</Project>
+      <Name>WADV.LuaSupport</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

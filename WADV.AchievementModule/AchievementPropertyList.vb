@@ -17,7 +17,7 @@ Friend NotInheritable Class AchievementPropertyList
         If Contains(name) Then Exit Sub
         Dim prop As New AchievementProperty With {.Name = name, .Data = 0, .Triggle = New List(Of Achievement)}
         _list.Add(prop.Name, prop)
-        MessageAPI.SendSync("[ACHIEVE]PROP_ADD")
+        Message.Send("[ACHIEVE]PROP_ADD")
     End Sub
 
     ''' <summary>
@@ -42,7 +42,7 @@ Friend NotInheritable Class AchievementPropertyList
         target.Data = data
         _list.Item(name) = target
         target.Triggle.Where(Function(e) Not e.IsEarn).ToList.ForEach(Sub(e1) e1.Check())
-        MessageAPI.SendSync("[ACHIEVE]PROP_DATA_SET")
+        Message.Send("[ACHIEVE]PROP_DATA_SET")
         API.AchievementProperty.Save()
     End Sub
 
@@ -68,7 +68,7 @@ Friend NotInheritable Class AchievementPropertyList
         Dim triggle = _list.Item(name).Triggle
         If Not triggle.Contains(target) Then
             triggle.Add(target)
-            MessageAPI.SendSync("[ACHIEVE]PROP_TRIGGLE_ADD")
+            Message.Send("[ACHIEVE]PROP_TRIGGLE_ADD")
             API.AchievementProperty.Save()
         End If
     End Sub
@@ -84,7 +84,7 @@ Friend NotInheritable Class AchievementPropertyList
         Dim triggle = _list.Item(name).Triggle
         If triggle.Contains(target) Then
             triggle.Remove(target)
-            MessageAPI.SendSync("[ACHIEVE]PROP_TRIGGLE_DELETE")
+            Message.Send("[ACHIEVE]PROP_TRIGGLE_DELETE")
             API.AchievementProperty.Save()
         End If
     End Sub
@@ -97,7 +97,7 @@ Friend NotInheritable Class AchievementPropertyList
     Friend Shared Sub Delete(name As String)
         If Not Contains(name) Then Exit Sub
         _list.Remove(name)
-        MessageAPI.SendSync("[ACHIEVE]PROP_DELETE")
+        Message.Send("[ACHIEVE]PROP_DELETE")
         API.AchievementProperty.Save()
     End Sub
 
@@ -107,13 +107,13 @@ Friend NotInheritable Class AchievementPropertyList
     ''' <param name="fileName">要读取的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Load(fileName As String)
-        Dim path = PathAPI.GetPath(PathType.UserFile, fileName)
+        Dim path = Combine(PathType.UserFile, fileName)
         If Not My.Computer.FileSystem.FileExists(path) Then Return
         Dim stream As New FileStream(path, FileMode.Open)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
         _list = TryCast(formatter.Deserialize(stream), Dictionary(Of String, AchievementProperty))
         stream.Close()
-        MessageAPI.SendSync("[ACHIEVE]PROP_LOAD")
+        Message.Send("[ACHIEVE]PROP_LOAD")
     End Sub
 
     ''' <summary>
@@ -122,10 +122,10 @@ Friend NotInheritable Class AchievementPropertyList
     ''' <param name="fileName">要保存到的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Save(fileName As String)
-        Dim stream As New FileStream(PathAPI.GetPath(PathType.UserFile, fileName), FileMode.Create)
+        Dim stream As New FileStream(Combine(PathType.UserFile, fileName), FileMode.Create)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
         formatter.Serialize(stream, _list)
         stream.Close()
-        MessageAPI.SendSync("[ACHIEVE]PROP_SAVE")
+        Message.Send("[ACHIEVE]PROP_SAVE")
     End Sub
 End Class

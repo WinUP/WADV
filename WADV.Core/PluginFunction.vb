@@ -1,5 +1,5 @@
-﻿Imports System.IO
-Imports System.Windows
+﻿Imports System.Windows
+Imports System.Xml
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
 Imports WADV.Core.Exception
@@ -17,13 +17,14 @@ Friend NotInheritable Class PluginFunction
     ''' </summary>
     ''' <remarks></remarks>
     Friend Shared Sub InitialiseAllPlugins()
-        Dim tmpPluginFileList = Directory.GetDirectories(PathFunction.GetFullPath(PathType.Plugin, ""))
-        For Each fileName In tmpPluginFileList
+        If PluginFileList.Count <> 0 Then Throw New IllegalMultipleStartException
+        Dim config As New XmlDocument
+        config.Load(PathFunction.GetFullPath(PathType.Plugin, "plugin.xml"))
+        For Each pluginName In From fileName As XmlNode In config.SelectNodes("/plugin/sequence/item") Select fileName.InnerXml
             Try
-                AddPlugin(String.Format("{0}\{1}.dll", fileName, fileName.Substring(fileName.LastIndexOf("\", StringComparison.Ordinal) + 1)))
-                PluginFileList.Add(fileName)
+                AddPlugin(String.Format("{0}\{1}.dll", pluginName, pluginName))
             Catch ex As System.Exception
-                MessageBox.Show(ex.Message, "插件" & My.Computer.FileSystem.GetName(fileName) & "加载失败")
+                MessageBox.Show(ex.Message, "插件" & pluginName & "加载失败")
             End Try
         Next
         Messanger.SendMessage("[SYSTEM]PLUGIN_INIT_FINISH")
@@ -36,23 +37,23 @@ Friend NotInheritable Class PluginFunction
     ''' <remarks></remarks>
     Friend Shared Sub AddPlugin(fileName As String)
         If PluginFileList.Contains(fileName) Then Exit Sub
-        Dim pluginTypes = Reflection.Assembly.LoadFrom(fileName).GetTypes
+        Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.GetFullPath(PathType.Plugin, fileName)).GetTypes
+        PluginLoadReceiverList.BeforeLoad(pluginTypes)
         For Each tmpTypeName In pluginTypes
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IPluginInitialise") <> Nothing Then
                 If Not DirectCast(Activator.CreateInstance(tmpTypeName), IPluginInitialise).Initialising() Then Throw New PluginInitialiseFailedException(My.Computer.FileSystem.GetName(fileName))
             End If
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IGameInitialiserReceiver") <> Nothing Then
-                InitialiserReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                InitialiseReceiverList.Add(Activator.CreateInstance(tmpTypeName))
             End If
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IGameDestructorReceiver") <> Nothing Then
-                DestructorReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                DestructReceiverList.Add(Activator.CreateInstance(tmpTypeName))
             End If
             If tmpTypeName.GetInterface("WADV.Core.PluginInterface.INavigationReceiver") <> Nothing Then
-                NavigationReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                NavigateReceiverList.Add(Activator.CreateInstance(tmpTypeName))
             End If
         Next
         PluginFileList.Add(fileName)
         Messanger.SendMessage("[SYSTEM]PLUGIN_ADD")
     End Sub
-
 End Class

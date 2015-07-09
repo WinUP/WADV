@@ -7,26 +7,37 @@ Namespace API
     ''' 设置API类
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class ConfigAPI
-
-        Public Shared Sub Init(framsBetweenWord As Integer, framsBetweenSetence As Integer, auto As Boolean, ignoreReaded As Boolean)
+    Public Module Config
+        ''' <summary>
+        ''' 初始化模块
+        ''' </summary>
+        ''' <param name="framsBetweenWord">文字间隔帧</param>
+        ''' <param name="framsBetweenSetence">句子间隔帧</param>
+        ''' <param name="auto">是否自动播放</param>
+        ''' <param name="ignoreReaded">是否忽略已读</param>
+        ''' <remarks></remarks>
+        Public Sub Init(framsBetweenWord As Integer, framsBetweenSetence As Integer, auto As Boolean, ignoreReaded As Boolean)
             Initialiser.LoadEffect()
             ModuleConfig.Auto = auto
             ModuleConfig.Clicked = False
             ModuleConfig.Fast = False
             ModuleConfig.Ignore = ignoreReaded
-            SetWordFrame(framsBetweenWord)
-            SetSentenceFrame(framsBetweenSetence)
-            MessageAPI.SendSync("[TEXT]INIT_FINISH")
+            WordFrame(framsBetweenWord)
+            SentenceFrame(framsBetweenSetence)
+            Send("[TEXT]INIT_FINISH")
         End Sub
 
         ''' <summary>
-        ''' 获取文字之间的间隔帧
+        ''' 获取或设置文字之间的间隔帧
         ''' </summary>
+        ''' <param name="value">目标值</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetWordFrame() As Integer
-            Return ModuleConfig.WordFrame
+        Public Function WordFrame(Optional value As Integer = -1) As Integer
+            If value < 0 Then Return ModuleConfig.WordFrame
+            ModuleConfig.SetenceFrame = value
+            Send("[TEXT]SENTENCEFRAME_CHANGE")
+            Return value
         End Function
 
         ''' <summary>
@@ -34,8 +45,11 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetSetenceFrame() As Integer
-            Return ModuleConfig.SetenceFrame
+        Public Function SentenceFrame(Optional value As Integer = -1) As Integer
+            If value < 0 Then Return ModuleConfig.SetenceFrame
+            ModuleConfig.SetenceFrame = value
+            Send("[TEXT]SENTENCEFRAME_CHANGE")
+            Return value
         End Function
 
         ''' <summary>
@@ -43,7 +57,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetAutoMode() As Boolean
+        Public Function GetAutoMode() As Boolean
             Return ModuleConfig.Auto
         End Function
 
@@ -52,38 +66,18 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Shared Function GetIgnoreMode() As Boolean
+        Public Function GetIgnoreMode() As Boolean
             Return ModuleConfig.Ignore
         End Function
-
-        ''' <summary>
-        ''' 修改文字之间的间隔帧
-        ''' </summary>
-        ''' <param name="frame">新的数值</param>
-        ''' <remarks></remarks>
-        Public Shared Sub SetWordFrame(frame As Integer)
-            ModuleConfig.WordFrame = frame
-            MessageAPI.SendSync("[TEXT]WORDFRAME_CHANGE")
-        End Sub
-
-        ''' <summary>
-        ''' 修改句子之间的间隔帧
-        ''' </summary>
-        ''' <param name="frame">新的数值</param>
-        ''' <remarks></remarks>
-        Public Shared Sub SetSentenceFrame(frame As Integer)
-            ModuleConfig.SetenceFrame = frame
-            MessageAPI.SendSync("[TEXT]SENTENCEFRAME_CHANGE")
-        End Sub
 
         ''' <summary>
         ''' 修改自动播放状态
         ''' </summary>
         ''' <param name="auto">新的状态</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetAutoMode(auto As Boolean)
+        Public Sub SetAutoMode(auto As Boolean)
             ModuleConfig.Auto = auto
-            MessageAPI.SendSync("[TEXT]AUTOMODE_CHANGE")
+            Send("[TEXT]AUTOMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -91,9 +85,9 @@ Namespace API
         ''' </summary>
         ''' <param name="ignore">新的状态</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetIgnoreMode(ignore As Boolean)
+        Public Sub SetIgnoreMode(ignore As Boolean)
             ModuleConfig.Ignore = ignore
-            MessageAPI.SendSync("[TEXT]IGNOREMODE_CHANGE")
+            Send("[TEXT]IGNOREMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -101,21 +95,21 @@ Namespace API
         ''' </summary>
         ''' <param name="areaName">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetTextArea(areaName As String)
-            Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
+        Public Sub SetTextArea(areaName As String)
+            Dim area = Search(Of TextBlock)(areaName)
             UiConfig.TextArea = area
-            MessageAPI.SendSync("[TEXT]TEXTAREA_CHANGE")
+            Send("[TEXT]TEXTAREA_CHANGE")
         End Sub
 
         ''' <summary>
-        ''' 设置说话者显示区域
+        ''' 设置讲话者显示区域
         ''' </summary>
         ''' <param name="areaName">目标文本区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetSpeakerArea(areaName As String)
-            Dim area = WindowAPI.SearchObject(Of TextBlock)(areaName)
+        Public Sub SetSpeakerArea(areaName As String)
+            Dim area = Search(Of TextBlock)(areaName)
             UiConfig.SpeakerArea = area
-            MessageAPI.SendSync("[TEXT]SPEAKERAREA_CHANGE")
+            Send("[TEXT]SPEAKERAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -123,10 +117,10 @@ Namespace API
         ''' </summary>
         ''' <param name="areaName">目标面板区域</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetMainArea(areaName As String)
-            Dim area = WindowAPI.SearchObject(Of Windows.FrameworkElement)(areaName)
+        Public Sub SetMainArea(areaName As String)
+            Dim area = Search(Of Windows.FrameworkElement)(areaName)
             UiConfig.FrameArea = area
-            MessageAPI.SendSync("[TEXT]MAINAREA_CHANGE")
+            Send("[TEXT]MAINAREA_CHANGE")
         End Sub
 
         ''' <summary>
@@ -134,33 +128,31 @@ Namespace API
         ''' </summary>
         ''' <param name="visible">是否可见</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetVisibility(visible As Boolean)
-            WindowAPI.InvokeSync(Sub() UiConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
-            MessageAPI.SendSync("[TEXT]VISIBILITY_CHANGE")
+        Public Sub SetVisibility(visible As Boolean)
+            Invoke(Sub() UiConfig.FrameArea.Visibility = If(visible, Windows.Visibility.Visible, Windows.Visibility.Collapsed))
+            Send("[TEXT]VISIBILITY_CHANGE")
         End Sub
 
         ''' <summary>
         ''' 注册事件
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub RegisterEvent()
-            AddHandler WindowAPI.GetWindow.KeyDown, AddressOf Events.Ctrl_Down
-            AddHandler WindowAPI.GetWindow.KeyUp, AddressOf Events.Ctrl_Up
+        Public Sub Register()
+            AddHandler Window.Window.KeyDown, AddressOf Events.Ctrl_Down
+            AddHandler Window.Window.KeyUp, AddressOf Events.Ctrl_Up
             AddHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf Events.TextArea_Click
-            MessageAPI.SendSync("[TEXT]EVENT_REGISTER")
+            Send("[TEXT]EVENT_REGISTER")
         End Sub
 
         ''' <summary>
         ''' 注销事件
         ''' </summary>
         ''' <remarks></remarks>
-        Public Shared Sub UnregisterEvent()
-            RemoveHandler WindowAPI.GetWindow.KeyDown, AddressOf Events.Ctrl_Down
-            RemoveHandler WindowAPI.GetWindow.KeyUp, AddressOf Events.Ctrl_Up
+        Public Sub Unregister()
+            RemoveHandler Window.Window.KeyDown, AddressOf Events.Ctrl_Down
+            RemoveHandler Window.Window.KeyUp, AddressOf Events.Ctrl_Up
             RemoveHandler UiConfig.TextArea.MouseLeftButtonDown, AddressOf Events.TextArea_Click
-            MessageAPI.SendSync("[TEXT]EVENT_UNREGISTER")
+            Send("[TEXT]EVENT_UNREGISTER")
         End Sub
-
-    End Class
-
+    End Module
 End Namespace

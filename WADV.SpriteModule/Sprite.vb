@@ -76,7 +76,7 @@ Public Class Sprite : Implements IDisposable
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function AsChild(parent As Panel) As Boolean
-        WindowAPI.InvokeSync(Sub() parent.Children.Add(_element))
+        Invoke(Sub() parent.Children.Add(_element))
         Return True
     End Function
 
@@ -91,11 +91,11 @@ Public Class Sprite : Implements IDisposable
         Dim effectType = EffectList.Item(effectName)
         If effectType Is Nothing Then Return
         Dim effect As BaseEffect = Activator.CreateInstance(effectType, New Object() {_element, params})
-        MessageAPI.SendSync("[SPRITE]EFFECT_STANDBY")
+        Message.Send("[SPRITE]EFFECT_STANDBY")
         _element.Dispatcher.Invoke(Sub(e) e.Render(), effect)
         If sync Then effect.Wait()
         effect.Dispose()
-        MessageAPI.SendSync("[SPRITE]EFFECT_FINISH")
+        Message.Send("[SPRITE]EFFECT_FINISH")
     End Sub
 
     ''' <summary>

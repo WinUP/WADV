@@ -13,13 +13,13 @@ Friend NotInheritable Class SentenceList
     Friend Shared Sub Add(name As String, target As Sentence())
         If Not Contains(name) Then
             List.Add(name, target)
-            MessageAPI.SendSync("[TEXT]SENTENCE_ADD")
+            Message.Send("[TEXT]SENTENCE_ADD")
         End If
     End Sub
 
     Friend Shared Sub DirectAdd(name As String, target As Sentence())
         List.Add(name, target)
-        MessageAPI.SendSync("[TEXT]SENTENCE_ADD")
+        Message.Send("[TEXT]SENTENCE_ADD")
     End Sub
 
     Friend Shared Function Contains(name As String)
@@ -29,13 +29,13 @@ Friend NotInheritable Class SentenceList
     Friend Shared Sub Delete(name As String)
         If Contains(name) Then
             List.Remove(name)
-            MessageAPI.SendSync("[TEXT]SENTENCE_DELETE")
+            Message.Send("[TEXT]SENTENCE_DELETE")
         End If
     End Sub
 
     Friend Shared Sub DirectDelete(name As String)
         List.Remove(name)
-        MessageAPI.SendSync("[TEXT]SENTENCE_DELETE")
+        Message.Send("[TEXT]SENTENCE_DELETE")
     End Sub
 
 
@@ -68,7 +68,7 @@ Friend NotInheritable Class SentenceList
             tmpTarget("voice") = tmpItem.VoiceFile
             target.ArrayList.Add(tmpTarget)
         Next
-        MessageAPI.SendSync("[TEXT]SENTENCE_EXPORT")
+        Message.Send("[TEXT]SENTENCE_EXPORT")
         Return target
     End Function
 

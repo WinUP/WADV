@@ -109,7 +109,7 @@ Public NotInheritable Class Player
     ''' <param name="count">循环次数</param>
     ''' <remarks></remarks>
     Public Sub New(fileName As String, type As SoundType, cycle As Boolean, count As Integer, id As Integer)
-        _player = New Audio(PathAPI.GetPath(PathType.Resource, fileName), False)
+        _player = New Audio(Path.Combine(PathType.Resource, fileName), False)
         If type = SoundType.Background Then
             Volume = SoundConfig.Background
         ElseIf type = SoundType.Effect Then

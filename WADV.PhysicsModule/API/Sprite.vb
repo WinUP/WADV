@@ -59,7 +59,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function LoadSprite(filePath As String) As PhysicsSprite
-            Dim content = XamlReader.Parse(My.Computer.FileSystem.ReadAllText(PathAPI.GetPath(PathType.Resource, filePath), Text.Encoding.Default))
+            Dim content = XamlReader.Parse(My.Computer.FileSystem.ReadAllText(Path.Combine(PathType.Resource, filePath), Text.Encoding.Default))
             Dim target As New PhysicsSprite
             target.Children.Add(content)
             Return target

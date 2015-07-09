@@ -1,31 +1,51 @@
 ﻿Imports System.Windows
 Imports System.Windows.Controls
 
-Public Class BaseHide : Implements IHideEffect
+''' <summary>
+''' 基本退出效果
+''' </summary>
+''' <remarks></remarks>
+Public Class BaseHide
     Protected ReadOnly Choices() As Button
     Protected IsOver As Boolean
 
+    ''' <summary>
+    ''' 获得一个新的效果
+    ''' </summary>
+    ''' <param name="choices">选项内容</param>
+    ''' <remarks></remarks>
     Public Sub New(choices() As Button)
         Me.Choices = choices
     End Sub
 
-    Public Overridable Sub Render() Implements IHideEffect.Render
+    ''' <summary>
+    ''' 显示效果
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Overridable Sub Render()
         For Each choice In Choices
             choice.Visibility = Visibility.Hidden
         Next
         IsOver = True
-        SendMessage()
+        SendFinished()
     End Sub
 
-    Public Overridable Sub Wait() Implements IHideEffect.Wait
+    ''' <summary>
+    ''' 等待效果结束
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub Wait()
         While True
-            MessageAPI.WaitSync("[CHOICE]HIDE_FINISH")
+            Message.Wait("[CHOICE]HIDE_FINISH")
             If IsOver Then Exit While
         End While
     End Sub
 
-    Protected Sub SendMessage()
-        MessageAPI.SendSync("[CHOICE]HIDE_FINISH")
+    ''' <summary>
+    ''' 标记效果为已完成
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub SendFinished()
+        Message.Send("[CHOICE]HIDE_FINISH")
     End Sub
-
 End Class

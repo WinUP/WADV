@@ -19,7 +19,7 @@ Public Class MoveTo : Inherits BaseEffect
     End Sub
 
     Public Overrides Sub Render()
-        Dim animation As New ThicknessAnimation(New Thickness(Params(0), Params(1), 0, 0), New Duration(LoopAPI.TranslateToTime(Params(2))))
+        Dim animation As New ThicknessAnimation(New Thickness(Params(0), Params(1), 0, 0), New Duration(ToTime(Params(2))))
         Dim ease As EasingFunctionBase
         Select Case CStr(Params(3))
             Case "circle"

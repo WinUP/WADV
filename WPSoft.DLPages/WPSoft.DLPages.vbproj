@@ -49,6 +49,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Neo.Lua">
+      <HintPath>..\packages\NeoLua.0.9.17\lib\net4\Neo.Lua.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -102,7 +106,7 @@
     <Import Include="WADV.Core.API" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.vb" />
+    <Compile Include="API\Page.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Initialise.xaml.vb">
       <DependentUpon>Initialise.xaml</DependentUpon>
@@ -124,7 +128,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PageList.vb" />
-    <Compile Include="PluginInterface.vb" />
+    <Compile Include="PluginInterface\PluginInitialise.vb" />
+    <Compile Include="PluginInterface\ScriptInitialise.vb" />
     <Compile Include="Story.xaml.vb">
       <DependentUpon>Story.xaml</DependentUpon>
     </Compile>
@@ -151,6 +156,11 @@
     <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
       <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
       <Name>WADV.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\WADV.LuaSupport\WADV.LuaSupport.vbproj">
+      <Project>{ce3761f5-1c5e-4b0d-a46c-e11682e67c1c}</Project>
+      <Name>WADV.LuaSupport</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\WADV.MediaModule\WADV.MediaModule.vbproj">

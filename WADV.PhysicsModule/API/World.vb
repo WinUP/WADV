@@ -20,10 +20,10 @@ Namespace API
         Public Sub SetWorld(target As PhysicsWorld)
             If Not Config.StopSimulation Then
                 Config.StopSimulation = True
-                MessageAPI.WaitSync("[PHYSICS]SIMULATION_END")
+                Message.Wait("[PHYSICS]SIMULATION_END")
             End If
             Config.TargetPysicsWorld = target
-            MessageAPI.SendSync("[PHYSICS]WORLD_CHANGE")
+            Message.Send("[PHYSICS]WORLD_CHANGE")
         End Sub
 
         ''' <summary>
@@ -42,8 +42,8 @@ Namespace API
             If Config.TargetPysicsWorld Is Nothing Then Exit Sub
             If Not Config.StopSimulation Then Exit Sub
             Config.StopSimulation = False
-            LoopAPI.AddLoopSync(New PluginInterface.LoopReceiver)
-            MessageAPI.SendSync("[PHYSICS]SIMULATION_START")
+            [Loop].Listen(New PluginInterface.LoopReceiver)
+            Message.Send("[PHYSICS]SIMULATION_START")
         End Sub
 
         ''' <summary>

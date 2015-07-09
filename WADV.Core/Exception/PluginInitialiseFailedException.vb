@@ -5,8 +5,8 @@
     ''' </summary>
     ''' <remarks></remarks>
     Public Class PluginInitialiseFailedException : Inherits System.Exception
-
         Private ReadOnly _pluginName As String
+
         Public ReadOnly Property PluginName As String
             Get
                 Return _pluginName

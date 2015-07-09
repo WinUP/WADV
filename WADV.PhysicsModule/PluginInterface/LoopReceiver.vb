@@ -12,7 +12,7 @@ Namespace PluginInterface
                 _previousTime = timeNow
                 Return True
             Else
-                MessageAPI.SendSync("[PHYSICS]SIMULATION_END")
+                Message.Send("[PHYSICS]SIMULATION_END")
                 Return False
             End If
         End Function

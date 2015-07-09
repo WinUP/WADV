@@ -6,7 +6,7 @@
     ''' </summary>
     ''' <remarks></remarks>
     Friend Shared Sub ReadEffect()
-        For Each file In IO.Directory.GetFiles(PathAPI.GetPath(PathType.Resource, "ShaderEffect\"), "*.dll") _
+        For Each file In IO.Directory.GetFiles(Path.Combine(PathType.Resource, "ShaderEffect\"), "*.dll") _
             .SelectMany(Function(e) Reflection.Assembly.LoadFrom(e).GetTypes()) _
             .Where(Function(e) e.BaseType.FullName = "System.Windows.Media.Effects.ShaderEffect" <> Nothing)
             List.Add(file.Name, file)

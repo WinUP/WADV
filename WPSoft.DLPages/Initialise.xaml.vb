@@ -2,7 +2,7 @@
 
 Class Initialise
     Private Sub Initialise_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        Dim image As New ImageBrush(New BitmapImage(New Uri(PathAPI.GetPath(PathType.Resource, "image\black_logo.png"))))
+        Dim image As New ImageBrush(New BitmapImage(CombineUri(PathType.Resource, "image\black_logo.png")))
         image.Stretch = Stretch.UniformToFill
         image.TileMode = TileMode.None
         image.Viewbox = New Rect(0, 0, 1, 1)
@@ -21,7 +21,7 @@ Class Initialise
 
     Private Sub DoInitialise()
         ChangeText("检查科学法则")
-        Dim access = IO.Directory.GetAccessControl(PathAPI.UserFile).GetAccessRules(True, True, GetType(System.Security.Principal.NTAccount)).OfType(Of FileSystemAccessRule)()
+        Dim access = IO.Directory.GetAccessControl(UserFile).GetAccessRules(True, True, GetType(System.Security.Principal.NTAccount)).OfType(Of FileSystemAccessRule)()
 
 
         '!检查文件夹权限
@@ -34,6 +34,6 @@ Class Initialise
         Next
         ChangeText("已就绪")
         System.Threading.Thread.Sleep(200)
-        MessageAPI.SendSync("[GAME]INITIAL_DATA_READY")
+        Message.Send("[GAME]INITIAL_DATA_READY")
     End Sub
 End Class

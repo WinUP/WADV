@@ -15,12 +15,15 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="target">要添加的循环函数</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Add(target As ILoopReceiver)
+        Friend Shared Function Add(target As ILoopReceiver) As Boolean
             If Not Contains(target) Then
                 List.Add(target)
                 Messager.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
+                Return True
+            Else
+                Return False
             End If
-        End Sub
+        End Function
 
         ''' <summary>
         ''' 确定指定循环体是否已存在

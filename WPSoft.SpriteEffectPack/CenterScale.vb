@@ -24,8 +24,8 @@ Public Class CenterScale : Inherits BaseEffect
         target.CenterY = ImageContent.Height / 2.0
         ImageContent.RenderTransform = target
         Dim targetStoryBoard As New Storyboard
-        Dim animationX As New DoubleAnimation(Params(0), New Duration(LoopAPI.TranslateToTime(Params(2))))
-        Dim animationY As New DoubleAnimation(Params(1), New Duration(LoopAPI.TranslateToTime(Params(2))))
+        Dim animationX As New DoubleAnimation(Params(0), New Duration(ToTime(Params(2))))
+        Dim animationY As New DoubleAnimation(Params(1), New Duration(ToTime(Params(2))))
         Dim ease As EasingFunctionBase
         Select Case CStr(Params(3))
             Case "circle"

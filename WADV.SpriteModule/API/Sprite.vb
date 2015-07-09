@@ -10,7 +10,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function [New](name As String) As Canvas
-            Dim target As Canvas = WindowAPI.GetDispatcher.Invoke(Function() New Canvas With {.Name = name})
+            Dim target As Canvas = Dispatcher.Invoke(Function() New Canvas With {.Name = name})
             Return SpriteList.Add(name, target)
         End Function
 
@@ -42,7 +42,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetSprite(target As FrameworkElement) As SpriteModule.Sprite
-            Return WindowAPI.InvokeFunction(Function(e) e.Tag, target)
+            Return InvokeFunction(Function(e) e.Tag, target)
         End Function
 
         ''' <summary>

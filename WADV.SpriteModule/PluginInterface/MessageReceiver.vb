@@ -57,7 +57,7 @@ Namespace PluginInterface
             End If
         End Sub
 
-        Public Sub ReceivingMessage(message As String) Implements IMessageReceiver.ReceivingMessage
+        Public Sub ReceivingMessage(message As String) Implements IMessageReceiver.ReceiveMessage
             _removeList.ForEach(Sub(e) List.Remove(e))
             _removeList.Clear()
             SyncLock (List)

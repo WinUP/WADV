@@ -1,4 +1,4 @@
-﻿Public MustInherit Class BaseEffect : Implements IEffect
+﻿Public MustInherit Class BaseEffect
     Private _index As Integer
     Private ReadOnly _list() As Sentence
     Private ReadOnly _listLength As Integer
@@ -17,33 +17,33 @@
         End Get
     End Property
 
-    Public ReadOnly Property IsAllOver As Boolean Implements IEffect.IsAllOver
+    Public ReadOnly Property IsAllOver As Boolean
         Get
             Return _index = _listLength
         End Get
     End Property
 
-    Public ReadOnly Property IsRead As Boolean Implements IEffect.IsRead
+    Public ReadOnly Property IsRead As Boolean
         Get
             Return _currentSetence.IsRead
         End Get
     End Property
 
-    Public ReadOnly Property Speaker As String Implements IEffect.Speaker
+    Public ReadOnly Property Speaker As String
         Get
             Return _currentSetence.Speaker
         End Get
     End Property
 
-    Public ReadOnly Property VoiceFile As String Implements IEffect.VoiceFile
+    Public ReadOnly Property VoiceFile As String
         Get
             Return _currentSetence.VoiceFile
         End Get
     End Property
 
-    Public MustOverride ReadOnly Property IsSentenceOver As Boolean Implements IEffect.IsSentenceOver
+    Public MustOverride ReadOnly Property IsSentenceOver As Boolean
 
-    Public MustOverride ReadOnly Property Sentence As String Implements IEffect.Sentence
+    Public MustOverride ReadOnly Property Sentence As String
 
     Protected Sub NextLine()
         _currentSetence.IsRead = True
@@ -51,6 +51,5 @@
         If Not IsAllOver Then _currentSetence = _list(_index)
     End Sub
 
-    Public MustOverride Sub NextState() Implements IEffect.NextState
-
+    Public MustOverride Sub NextState()
 End Class

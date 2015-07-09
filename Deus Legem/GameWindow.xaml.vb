@@ -11,7 +11,7 @@ Public Class GameWindow
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
-        GameAPI.StopGame(e)
+        Game.[Stop](e)
     End Sub
 
     ''' <summary>
@@ -20,22 +20,22 @@ Public Class GameWindow
     ''' <remarks></remarks>
     Private Sub GameWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         '绑定事件
-        AddHandler NavigationService.LoadCompleted, Sub() MessageAPI.SendSync("[SYSTEM]WINDOW_PAGE_CHANGE")
+        AddHandler NavigationService.LoadCompleted, Sub() Send("[SYSTEM]WINDOW_PAGE_CHANGE")
         '设定参数
-        PathAPI.SetPlugin(IO.Path.Combine(PathAPI.Game, My.Settings.PluginURL))
-        PathAPI.SetResource(IO.Path.Combine(PathAPI.Game, My.Settings.ResourceURL))
-        PathAPI.SetScript(IO.Path.Combine(PathAPI.Game, My.Settings.ScriptURL))
-        PathAPI.SetSkin(IO.Path.Combine(PathAPI.Game, My.Settings.SkinURL))
-        PathAPI.SetUserFile(IO.Path.Combine(PathAPI.Game, My.Settings.UserFileURL))
+        Path.Plugin(IO.Path.Combine(Path.Game, My.Settings.PluginURL))
+        Path.Resource(IO.Path.Combine(Path.Game, My.Settings.ResourceURL))
+        Path.Script(IO.Path.Combine(Path.Game, My.Settings.ScriptURL))
+        Path.Skin(IO.Path.Combine(Path.Game, My.Settings.SkinURL))
+        Path.UserFile(IO.Path.Combine(Path.Game, My.Settings.UserFileURL))
         '启动游戏核心
-        GameAPI.StartGame(Me, 40, 3600000)
+        Game.Start(Me, 40, 3600000)
         '判断是否是第一次启动
-        If My.Computer.FileSystem.FileExists(PathAPI.GetPath(PathType.UserFile, "first_run")) Then
+        If My.Computer.FileSystem.FileExists(Path.Combine(PathType.UserFile, "first_run")) Then
             '第一次启动要执行的逻辑
             Dim tmpThread As New Thread(CType(Sub()
-                                                  ScriptAPI.RunFileSync("init.lua")
-                                                  My.Computer.FileSystem.DeleteFile(PathAPI.GetPath(PathType.UserFile, "first_run"), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently)
-                                                  ScriptAPI.RunFileAsync("game.lua")
+                                                  RunFile("init.lua")
+                                                  My.Computer.FileSystem.DeleteFile(Path.Combine(PathType.UserFile, "first_run"), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently)
+                                                  RunFile("game.lua")
                                               End Sub, ThreadStart))
             tmpThread.IsBackground = False
             tmpThread.Name = "游戏初始化承载线程"
@@ -43,7 +43,7 @@ Public Class GameWindow
             tmpThread.Start()
         Else
             '其他情况要执行的逻辑
-            ScriptAPI.RunFileAsync("game.lua")
+            RunFileAsync("game.lua")
         End If
     End Sub
 

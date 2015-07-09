@@ -16,15 +16,15 @@ Friend NotInheritable Class Initialiser
         ShowEffectList.Add("BaseShow", GetType(BaseShow))
         HideEffectList.Add("BaseHide", GetType(BaseHide))
         ProgressEffectList.Add("BaseProgress", GetType(BaseProgress))
-        Dim basePath As String = PathAPI.GetPath(PathType.Resource, "ChoiceEffect\")
+        Dim basePath As String = Path.Combine(PathType.Resource, "ChoiceEffect\")
         For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Assembly.LoadFrom(file)))
                             Select types = assemble.GetTypes
                             From tmpType1 In types Select tmpType1
-            If tmpType.GetInterface("IShowEffect") IsNot Nothing Then ShowEffectList.Add(tmpType.Name, tmpType)
-                If tmpType.GetInterface("IHideEffect") IsNot Nothing Then HideEffectList.Add(tmpType.Name, tmpType)
-                If tmpType.GetInterface("IProgressEffect") IsNot Nothing Then ProgressEffectList.Add(tmpType.Name, tmpType)
+            If tmpType.BaseType.FullName = "WADV.ChoiceModule.BaseShow" Then ShowEffectList.Add(tmpType.Name, tmpType)
+            If tmpType.BaseType.FullName = "WADV.ChoiceModule.BaseHide" Then HideEffectList.Add(tmpType.Name, tmpType)
+            If tmpType.BaseType.FullName = "WADV.ChoiceModule.BaseProgress" Then ProgressEffectList.Add(tmpType.Name, tmpType)
         Next
-        MessageAPI.SendSync("[CHOICE]INIT_EFFECT_FINISH")
+        Message.Send("[CHOICE]INIT_EFFECT_FINISH")
     End Sub
 
 End Class

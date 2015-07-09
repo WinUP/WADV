@@ -9,13 +9,13 @@
     ''' </summary>
     Friend Shared Sub LoadEffect()
         EffectList = New Dictionary(Of String, Type)
-        Dim basePath As String = PathAPI.GetPath(PathType.Resource, "TextEffect\")
+        Dim basePath As String = Path.Combine(PathType.Resource, "TextEffect\")
         For Each tmpType In From assemble In (IO.Directory.GetFiles(basePath, "*.dll").Select(Function(file) Reflection.Assembly.LoadFrom(file)))
-                            Select types = assemble.GetTypes.Where(Function(e) e.GetInterface("IEffect") IsNot Nothing)
+                            Select types = assemble.GetTypes.Where(Function(e) e.BaseType.FullName = "WADV.TextModule.BaseEffect")
                             From tmpType1 In types Select tmpType1
             EffectList.Add(tmpType.Name, tmpType)
         Next
-        MessageAPI.SendSync("[TEXT]INIT_EFFECT_FINISH")
+        Message.Send("[TEXT]INIT_EFFECT_FINISH")
     End Sub
 
 End Class

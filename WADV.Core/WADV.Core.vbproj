@@ -44,18 +44,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.0.9.17\lib\net4\Neo.Lua.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -63,42 +57,47 @@
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
-    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\GameAPI.vb" />
-    <Compile Include="API\LoopAPI.vb" />
-    <Compile Include="API\MessageAPI.vb" />
-    <Compile Include="API\PathAPI.vb" />
-    <Compile Include="API\PluginAPI.vb" />
-    <Compile Include="API\ResourceAPI.vb" />
-    <Compile Include="API\ScriptAPI.vb" />
-    <Compile Include="API\TimerAPI.vb" />
-    <Compile Include="API\WindowAPI.vb" />
+    <Compile Include="API\Game.vb" />
+    <Compile Include="API\Loop.vb" />
+    <Compile Include="API\Message.vb" />
+    <Compile Include="API\Path.vb" />
+    <Compile Include="API\Plugin.vb" />
+    <Compile Include="API\Resource.vb" />
+    <Compile Include="API\Script.vb" />
+    <Compile Include="API\Timer.vb" />
+    <Compile Include="API\Window.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Enumerations.vb" />
+    <Compile Include="Exception\CompileTargetFormatException.vb" />
+    <Compile Include="Exception\FrameOutOfRangeException.vb" />
+    <Compile Include="Exception\IllegalMultipleStartException.vb" />
     <Compile Include="Exception\PluginInitialiseFailedException.vb" />
+    <Compile Include="Exception\TickOutOfRangeException.vb" />
+    <Compile Include="IScriptEngine.vb" />
     <Compile Include="MainLoop.vb" />
     <Compile Include="MainTimer.vb" />
     <Compile Include="MessageService.vb" />
     <Compile Include="PathFunction.vb" />
     <Compile Include="PluginFunction.vb" />
-    <Compile Include="PluginInterface\IGameDestructorReceiver.vb" />
-    <Compile Include="PluginInterface\IGameInitialiserReceiver.vb" />
+    <Compile Include="PluginInterface\IGameDestructReceiver.vb" />
+    <Compile Include="PluginInterface\IGameInitialiseReceiver.vb" />
     <Compile Include="PluginInterface\IPluginInitialise.vb" />
     <Compile Include="PluginInterface\ILoopReceiver.vb" />
     <Compile Include="PluginInterface\IMessageReceiver.vb" />
-    <Compile Include="PluginInterface\INavigationReceiver.vb" />
+    <Compile Include="PluginInterface\INavigateReceiver.vb" />
+    <Compile Include="PluginInterface\IPluginLoadReceiver.vb" />
     <Compile Include="ReceiverList\BaseList.vb" />
-    <Compile Include="ReceiverList\DestructorReceiverList.vb" />
+    <Compile Include="ReceiverList\DestructReceiverList.vb" />
     <Compile Include="ReceiverList\InitialiserReceiverList.vb" />
     <Compile Include="ReceiverList\LoopReceiverList.vb" />
     <Compile Include="ReceiverList\MessageReceiverList.vb" />
-    <Compile Include="ReceiverList\NavigationReceiverList.vb" />
-    <Compile Include="ScriptCore.vb" />
+    <Compile Include="ReceiverList\NavigateReceiverList.vb" />
+    <Compile Include="ReceiverList\PluginLoadingReceiverList.vb" />
     <Compile Include="UIOperation.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
