@@ -56,5 +56,4 @@ Friend NotInheritable Class VideoConfig
         Message.Send("[MEDIA]VIDEO_END")
         VideoContent.Close()
     End Sub
-
 End Class

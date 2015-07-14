@@ -103,6 +103,7 @@
     <Compile Include="PluginInterface\ScriptInitialise.vb" />
     <Compile Include="SoundConfig.vb" />
     <Compile Include="VideoConfig.vb" />
+    <Compile Include="VideoCore.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

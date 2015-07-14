@@ -62,6 +62,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Component.vb" />
     <Compile Include="API\Game.vb" />
     <Compile Include="API\Loop.vb" />
     <Compile Include="API\Message.vb" />
@@ -71,6 +72,8 @@
     <Compile Include="API\Script.vb" />
     <Compile Include="API\Timer.vb" />
     <Compile Include="API\Window.vb" />
+    <Compile Include="Component\Component.vb" />
+    <Compile Include="Component\ComponentList.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Enumerations.vb" />
     <Compile Include="Exception\CompileTargetFormatException.vb" />

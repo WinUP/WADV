@@ -113,6 +113,10 @@ Namespace PluginInterface
             script("image") = New Func(Of JpegBitmapEncoder)(AddressOf Core.API.Window.Image)
             script("save") = New Action(Of String)(AddressOf Core.API.Window.Save)
             script("add") = New Func(Of String, String, Double, Double, Double, Double, String, FrameworkElement)(AddressOf Core.API.Window.Add)
+            '组件
+            system("component") = New LuaTable
+            script = system("component")
+            script("from") = New Func(Of FrameworkElement, Component.ComponentList)(AddressOf Core.API.Component.From)
             '环境变量
             system("env") = New LuaTable
             script = system("env")

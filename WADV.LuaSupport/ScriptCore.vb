@@ -43,9 +43,9 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     End Property
 
     Friend Function RunFile(filePath As String) As Object Implements IScriptEngine.RunFile
-        Message.Send("[LUA]SCRIPTFILE_STANDBY")
+        Send("[LUA]SCRIPTFILE_STANDBY")
         Dim result = _env.DoChunk(Combine(PathType.Script, filePath))
-        Message.Send("[LUA]SCRIPTFILE_FINISH")
+        Send("[LUA]SCRIPTFILE_FINISH")
         Return result
     End Function
 
@@ -54,14 +54,14 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本文件执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Message.Send("[LUA]ASYNC_SCRIPTFILE_STANDBY")
+        Send("[LUA]ASYNC_SCRIPTFILE_STANDBY")
         tmpThread.Start()
     End Sub
 
     Friend Function RunString(script As String) As Object Implements IScriptEngine.RunString
-        Message.Send("[LUA]SCRIPT_STANDBY")
+        Send("[LUA]SCRIPT_STANDBY")
         Dim result = _env.DoChunk(script, "temp.lua")
-        Message.Send("[LUA]SCRIPT_FINISH")
+        Send("[LUA]SCRIPT_FINISH")
         Return result
     End Function
 
@@ -70,7 +70,7 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本字符串执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Message.Send("[LUA]ASYNC_SCRIPT_STANDBY")
+        Send("[LUA]ASYNC_SCRIPT_STANDBY")
         tmpThread.Start(content)
     End Sub
 

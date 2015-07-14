@@ -1,7 +1,7 @@
 ﻿Namespace Exception
 
     ''' <summary>
-    ''' 表示重复启动游戏的异常
+    ''' 表示重复调用游戏启动函数的异常
     ''' </summary>
     ''' <remarks></remarks>
     Public Class IllegalMultipleStartException : Inherits System.Exception
