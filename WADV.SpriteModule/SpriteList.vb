@@ -18,16 +18,13 @@ Friend NotInheritable Class SpriteList
     Friend Shared Function Add(name As String, target As FrameworkElement) As FrameworkElement
         If target Is Nothing Then Return Nothing
         If List.ContainsKey(name) Then Return Nothing
-        Invoke(Sub()
-                   If target.Tag IsNot Nothing Then
-                       If TryCast(target.Tag, Sprite) IsNot Nothing Then
-                           DirectCast(target.Tag, Sprite).RemoveReceiver()
-                       Else
-                           target.Tag = Nothing
-                       End If
-                   End If
-                   target.Tag = New Sprite(target)
-               End Sub)
+        Dim componentList = From(target)
+        Dim sprite = componentList.Get(Of Sprite)()
+        If sprite IsNot Nothing Then
+            sprite.RemoveReceiver()
+            componentList.Remove(Of Sprite)()
+        End If
+        componentList.Add(New Sprite)
         List.Add(name, target)
         Send("[SPRITE]SPRITE_ADD")
         Return target
@@ -68,7 +65,7 @@ Friend NotInheritable Class SpriteList
         Dim target = List(name)
         InvokeAsync(Sub()
                         If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target)
-                        DirectCast(target.Tag, Sprite).RemoveReceiver()
+                        TryCast(target.Tag, Sprite).RemoveReceiver()
                     End Sub)
         List.Remove(name)
         Send("[SPRITE]SPRITE_DELETE")

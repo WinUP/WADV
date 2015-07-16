@@ -1,4 +1,6 @@
-﻿Namespace Effect
+﻿Imports System.Windows
+
+Namespace Effect
     ''' <summary>
     ''' 精灵效果列表
     ''' </summary>
@@ -31,5 +33,19 @@
                 Return List.Item(name)
             End Get
         End Property
+
+        ''' <summary>
+        ''' 根据名称、作用对象和参数获得效果实例
+        ''' </summary>
+        ''' <param name="name">目标效果的名称</param>
+        ''' <param name="element">目标效果的作用对象</param>
+        ''' <param name="params">目标效果的初始化参数</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function Create(name As String, element As FrameworkElement, ParamArray params() As Object) As BaseEffect
+            Dim effectType = EffectList.Item(name)
+            If effectType Is Nothing Then Return Nothing
+            Return Activator.CreateInstance(effectType, New Object() {element, params})
+        End Function
     End Class
 End Namespace

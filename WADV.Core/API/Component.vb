@@ -15,12 +15,27 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks>由于组件列表挂载在元素的Tag属性上，请不要随意修改Tag属性</remarks>
         Public Function From(target As FrameworkElement) As ComponentList
-            If target.Tag Is Nothing Then
-                target.Tag = New ComponentList(target)
-            ElseIf Not TypeOf target.Tag Is ComponentList Then
-                target.Tag = New ComponentList(target)
+            Dim tag = TryCast(InvokeFunction(Function(e As FrameworkElement) e.Tag, target), ComponentList)
+            If tag IsNot Nothing Then
+                Dim result = New ComponentList(target)
+                Invoke(Sub() target.Tag = result)
+                Return result
+            Else
+                Return tag
             End If
-            Return DirectCast(target.Tag, ComponentList)
         End Function
+
+        ''' <summary>
+        ''' 删除元素的组件列表
+        ''' </summary>
+        ''' <param name="target">目标元素</param>
+        ''' <remarks></remarks>
+        Public Sub Remove(target As FrameworkElement)
+            Dim tag = TryCast(InvokeFunction(Function(e As FrameworkElement) e.Tag, target), ComponentList)
+            If tag IsNot Nothing Then
+                tag.Dispose()
+                Invoke(Sub() target.Tag = Nothing)
+            End If
+        End Sub
     End Module
 End Namespace

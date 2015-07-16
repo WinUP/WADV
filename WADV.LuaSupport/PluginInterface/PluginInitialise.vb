@@ -117,14 +117,15 @@ Namespace PluginInterface
             system("component") = New LuaTable
             script = system("component")
             script("from") = New Func(Of FrameworkElement, Component.ComponentList)(AddressOf Core.API.Component.From)
+            script("remove") = New Action(Of FrameworkElement)(AddressOf Core.API.Component.Remove)
             '环境变量
             system("env") = New LuaTable
             script = system("env")
             script("version") = "1.0"
             script("luaEngine") = LuaGlobal.VersionString
-            Message.Send("[LUA]SCRIPT_INIT_FINISH")
             '注册组件到系统
             Core.API.Script.Register(ScriptCore.GetInstance)
+            Send("[LUA]SCRIPT_INIT_FINISH")
             Return Core.API.Plugin.Listen(New PluginLoadReceiver)
         End Function
     End Class

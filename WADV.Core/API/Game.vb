@@ -23,6 +23,8 @@ Namespace API
             MainLoop.GetInstance.Span = frameSpan
             MainLoop.GetInstance.Start()
             ReceiverList.InitialiseReceiverList.InitialisingGame()
+            [Loop].Listen(New Core.Component.ComponentLoopReceiver)
+            Message.Listen(New Core.Component.ComponentMessageReceiver)
             MessageService.GetInstance.SendMessage("[SYSTEM]GAME_INIT_FINISH")
         End Sub
 

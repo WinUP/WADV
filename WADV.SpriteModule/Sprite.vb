@@ -26,21 +26,33 @@ Public Enum SpriteReceiverType
 End Enum
 
 ''' <summary>
-''' 游戏精灵
+''' 游戏精灵[Component]
 ''' </summary>
-''' <remarks></remarks>
-Public Class Sprite : Implements IDisposable
-    Private ReadOnly _element As FrameworkElement
+''' <remarks>这个Component被关联到多个元素时操作的始终是最后一个元素</remarks>
+Public Class Sprite : Inherits Core.Component.Component
+    Private _receiverType As SpriteReceiverType = SpriteReceiverType.None
+    Private _element As FrameworkElement
 
-    ''' <summary>
-    ''' 获得一个精灵
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Sub New(target As FrameworkElement)
-        _element = target
+    Protected Overrides Function BeforeBinding(sourceElement As FrameworkElement) As Boolean
+        _element = sourceElement
+        Return True
+    End Function
+
+    Protected Overrides Function BeforeUnbinding(sourceElement As FrameworkElement, Optional isForce As Boolean = False) As Boolean
+        Dim elements = BindedElements
+        If elements.Length > 0 Then
+            _element = elements(elements.Length - 1)
+        Else
+            RemoveReceiver()
+        End If
+        Return True
+    End Function
+
+    Protected Overrides Sub Dispose()
+        RemoveReceiver()
+        MyBase.Dispose()
     End Sub
 
-    Private _receiverType As SpriteReceiverType = SpriteReceiverType.None
     ''' <summary>
     ''' 获取精灵的接收器类型
     ''' </summary>
@@ -58,7 +70,7 @@ Public Class Sprite : Implements IDisposable
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Show()
-        _element.Dispatcher.Invoke(Sub() _element.Visibility = Visibility.Visible)
+        Invoke(Sub() _element.Visibility = Visibility.Visible)
     End Sub
 
     ''' <summary>
@@ -66,7 +78,7 @@ Public Class Sprite : Implements IDisposable
     ''' </summary>
     ''' <remarks></remarks>
     Public Sub Hide()
-        _element.Dispatcher.Invoke(Sub() _element.Visibility = Visibility.Collapsed)
+        Invoke(Sub() _element.Visibility = Visibility.Collapsed)
     End Sub
 
     ''' <summary>
@@ -76,7 +88,10 @@ Public Class Sprite : Implements IDisposable
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function AsChild(parent As Panel) As Boolean
-        Invoke(Sub() parent.Children.Add(_element))
+        Invoke(Sub()
+                   If _element.Parent IsNot Nothing Then DirectCast(_element.Parent, Panel).Children.Remove(_element)
+                   parent.Children.Add(_element)
+               End Sub)
         Return True
     End Function
 
@@ -88,14 +103,13 @@ Public Class Sprite : Implements IDisposable
     ''' <param name="params">效果参数</param>
     ''' <remarks></remarks>
     Public Sub Effect(effectName As String, sync As Boolean, ParamArray params() As Object)
-        Dim effectType = EffectList.Item(effectName)
-        If effectType Is Nothing Then Return
-        Dim effect As BaseEffect = Activator.CreateInstance(effectType, New Object() {_element, params})
-        Message.Send("[SPRITE]EFFECT_STANDBY")
+        Dim effect = EffectList.Create(effectName, _element, New Object() {_element, params})
+        If effect Is Nothing Then Exit Sub
+        Send("[SPRITE]EFFECT_STANDBY")
         _element.Dispatcher.Invoke(Sub(e) e.Render(), effect)
         If sync Then effect.Wait()
         effect.Dispose()
-        Message.Send("[SPRITE]EFFECT_FINISH")
+        Send("[SPRITE]EFFECT_FINISH")
     End Sub
 
     ''' <summary>
@@ -155,25 +169,5 @@ Public Class Sprite : Implements IDisposable
             PluginInterface.MessageReceiver.Remove(_element)
         End If
         _receiverType = SpriteReceiverType.None
-    End Sub
-
-    ''' <summary>
-    ''' 删除这个精灵
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Sub Delete()
-        _element.Dispatcher.Invoke(Sub() SpriteList.Delete(_element))
-    End Sub
-
-    ''' <summary>
-    ''' 释放这个精灵的所有资源，但不删除精灵列表引用
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Sub Dispose() Implements IDisposable.Dispose
-        RemoveReceiver()
-        Hide()
-        If _element.Parent IsNot Nothing Then
-            _element.Dispatcher.Invoke(Sub() CType(_element.Parent, Panel).Children.Remove(_element))
-        End If
     End Sub
 End Class

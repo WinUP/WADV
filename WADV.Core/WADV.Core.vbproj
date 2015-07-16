@@ -74,6 +74,7 @@
     <Compile Include="API\Window.vb" />
     <Compile Include="Component\Component.vb" />
     <Compile Include="Component\ComponentList.vb" />
+    <Compile Include="Component\Enum.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Enumerations.vb" />
     <Compile Include="Exception\CompileTargetFormatException.vb" />

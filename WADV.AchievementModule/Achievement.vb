@@ -74,7 +74,7 @@
     Protected Sub SetEarn()
         _isEarn = True
         ShowList.Add(Me)
-        Message.Send("[ACHIEVE]ACHIEVE_EARN")
+        Send("[ACHIEVE]ACHIEVE_EARN")
         API.Achieve.Save()
     End Sub
 End Class
