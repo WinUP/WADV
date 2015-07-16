@@ -93,5 +93,36 @@ Namespace API
         Public Function GetFromWindow() As ResourceDictionary
             Return Window.Dispatcher.Invoke(Function() Window.Window.Resources)
         End Function
+
+        ''' <summary>
+        ''' 为元素注册一个名称
+        ''' </summary>
+        ''' <param name="name">要使用的名称</param>
+        ''' <param name="target">要注册的元素</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Register(name As String, target As FrameworkElement) As Boolean
+            Return NamedElementList.Register(name, target)
+        End Function
+
+        ''' <summary>
+        ''' 收回一个已分配的名称
+        ''' </summary>
+        ''' <param name="name">要收回的名称</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Unregister(name As String) As Boolean
+            Return NamedElementList.Unregister(name)
+        End Function
+
+        ''' <summary>
+        ''' 根据名称获取元素
+        ''' </summary>
+        ''' <param name="name">目标元素的名称</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function GetByName(name As String) As FrameworkElement
+            Return NamedElementList.Get(name)
+        End Function
     End Module
 End Namespace

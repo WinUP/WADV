@@ -68,6 +68,9 @@ Namespace PluginInterface
             script("removeFromWindow") = New Action(Of ResourceDictionary)(AddressOf Resource.RemoveFromWindow)
             script("getFromGame") = New Func(Of ResourceDictionary)(AddressOf Resource.GetFromGame)
             script("getFromWindow") = New Func(Of ResourceDictionary)(AddressOf Resource.GetFromWindow)
+            script("register") = New Func(Of String, FrameworkElement, Boolean)(AddressOf Resource.Register)
+            script("unregister") = New Func(Of String, Boolean)(AddressOf Resource.Unregister)
+            script("getByName") = New Func(Of String, FrameworkElement)(AddressOf Resource.GetByName)
             'Timer
             system("timer") = New LuaTable
             script = system("timer")

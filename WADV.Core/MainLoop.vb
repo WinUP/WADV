@@ -1,4 +1,8 @@
-﻿Imports System.Threading
+﻿' WinUP Adventure Game Engine Core Framework
+' Game Looping Class
+' This is the game looping class
+
+Imports System.Threading
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
 

@@ -72,8 +72,10 @@
     <Compile Include="API\Script.vb" />
     <Compile Include="API\Timer.vb" />
     <Compile Include="API\Window.vb" />
+    <Compile Include="Component\ComponentMessageReceiver.vb" />
     <Compile Include="Component\Component.vb" />
     <Compile Include="Component\ComponentList.vb" />
+    <Compile Include="Component\ComponentLoopReceiver.vb" />
     <Compile Include="Component\Enum.vb" />
     <Compile Include="Config.vb" />
     <Compile Include="Enumerations.vb" />
@@ -86,6 +88,7 @@
     <Compile Include="MainLoop.vb" />
     <Compile Include="MainTimer.vb" />
     <Compile Include="MessageService.vb" />
+    <Compile Include="NamedElementList.vb" />
     <Compile Include="PathFunction.vb" />
     <Compile Include="PluginFunction.vb" />
     <Compile Include="PluginInterface\IGameDestructReceiver.vb" />

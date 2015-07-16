@@ -1,4 +1,8 @@
-﻿Imports System.Windows
+﻿' WinUP Adventure Game Engine Core Framework
+' UI Operation Class
+' This file include all core functions of UI operation
+
+Imports System.Windows
 Imports System.Windows.Media
 Imports System.Windows.Shapes
 Imports System.Windows.Controls

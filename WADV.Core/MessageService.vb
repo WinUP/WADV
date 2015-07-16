@@ -1,4 +1,8 @@
-﻿Imports System.Threading
+﻿' WinUP Adventure Game Engine Core Framework
+' Game Message Service Class
+' This is the message service class
+
+Imports System.Threading
 Imports System.Collections.Concurrent
 Imports WADV.Core.ReceiverList
 

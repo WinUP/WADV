@@ -1,7 +1,11 @@
-﻿Imports System.Windows.Navigation
+﻿' WinUP Adventure Game Engine Core Framework
+' Game Config Class
+' This class is write for record core settings of game, like main window and resource path
+
+Imports System.Windows.Navigation
 
 ''' <summary>
-''' 窗口设定类
+''' 引擎设定类
 ''' </summary>
 ''' <remarks></remarks>
 Friend NotInheritable Class Config

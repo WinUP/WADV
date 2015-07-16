@@ -20,10 +20,7 @@ Friend NotInheritable Class SpriteList
         If List.ContainsKey(name) Then Return Nothing
         Dim componentList = From(target)
         Dim sprite = componentList.Get(Of Sprite)()
-        If sprite IsNot Nothing Then
-            sprite.RemoveReceiver()
-            componentList.Remove(Of Sprite)()
-        End If
+        If sprite IsNot Nothing Then componentList.Remove(Of Sprite)()
         componentList.Add(New Sprite)
         List.Add(name, target)
         Send("[SPRITE]SPRITE_ADD")
@@ -62,11 +59,7 @@ Friend NotInheritable Class SpriteList
     ''' <remarks></remarks>
     Friend Shared Function Delete(name As String) As Boolean
         If Not Contains(name) Then Return False
-        Dim target = List(name)
-        InvokeAsync(Sub()
-                        If target.Parent IsNot Nothing Then DirectCast(target.Parent, Panel).Children.Remove(target)
-                        TryCast(target.Tag, Sprite).RemoveReceiver()
-                    End Sub)
+        From(List(name)).Remove(Of Sprite)()
         List.Remove(name)
         Send("[SPRITE]SPRITE_DELETE")
         Return True

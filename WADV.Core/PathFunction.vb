@@ -1,4 +1,8 @@
-﻿''' <summary>
+﻿' WinUP Adventure Game Engine Core Framework
+' Path Class
+' This class include some helper functions for path system
+
+''' <summary>
 ''' 路径辅助类
 ''' </summary>
 ''' <remarks></remarks>

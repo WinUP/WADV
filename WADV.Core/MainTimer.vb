@@ -1,4 +1,8 @@
-﻿Imports System.Threading
+﻿' WinUP Adventure Game Engine Core Framework
+' Timer Class
+' This is the timer class
+
+Imports System.Threading
 
 Friend NotInheritable Class MainTimer
     Private Shared _self As MainTimer

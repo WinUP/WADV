@@ -96,6 +96,8 @@ Namespace Component
             If targetList.Length = 0 Then Return UnbindingResult.CannotFind
             Dim target = targetList(0)
             If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
+            target.ListenLoop(False)
+            target.ListenMessage(False)
             target.Unbind(_element)
             _componentlist.Remove(target)
             Send("[SYSTEM]COMPONENT_REMOVE")
@@ -112,6 +114,8 @@ Namespace Component
             If targetList.Length = 0 Then Return UnbindingResult.CannotFind
             Dim target = targetList(0)
             If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
+            target.ListenLoop(False)
+            target.ListenMessage(False)
             target.Unbind(_element)
             _componentlist.Remove(target)
             Send("[SYSTEM]COMPONENT_REMOVE")
@@ -134,6 +138,8 @@ Namespace Component
                     result(i) = UnbindingResult.Cancel
                     Continue For
                 End If
+                target.ListenLoop(False)
+                target.ListenMessage(False)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
@@ -158,6 +164,8 @@ Namespace Component
                     result(i) = UnbindingResult.Cancel
                     Continue For
                 End If
+                target.ListenLoop(False)
+                target.ListenMessage(False)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
@@ -174,6 +182,8 @@ Namespace Component
         Public Sub Clear()
             For Each target In _componentlist '逻辑顺序限制：不能转换为LINQ语句
                 If target.BeforeUnbinding(_element, True) Then
+                    target.ListenLoop(False)
+                    target.ListenMessage(False)
                     target.Unbind(_element)
                     _componentlist.Remove(target)
                 End If
@@ -183,7 +193,11 @@ Namespace Component
 
         Friend Sub Dispose() Implements IDisposable.Dispose
             Clear()
-            _componentlist.ForEach(Sub(e) e.ForceUnbinding(_element))
+            For Each e In _componentlist
+                e.ForceUnbinding(_element)
+                e.ListenLoop(False)
+                e.ListenMessage(False)
+            Next
             Send("[SYSTEM]COMPONENTLIST_DISPOSE")
         End Sub
     End Class

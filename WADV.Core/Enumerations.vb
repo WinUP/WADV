@@ -1,4 +1,8 @@
-﻿''' <summary>
+﻿' WinUP Adventure Game Engine Core Framework
+' Enumerations
+' This file include all enumerations of core framework
+
+''' <summary>
 ''' 路径类型
 ''' </summary>
 ''' <remarks></remarks>

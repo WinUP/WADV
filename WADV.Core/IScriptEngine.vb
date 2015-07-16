@@ -1,4 +1,8 @@
-﻿Public Interface IScriptEngine
+﻿' WinUP Adventure Game Engine Core Framework
+' Script Engine Interface
+' This is the only one necessary interface that a suitable script engine should be implemented
+
+Public Interface IScriptEngine
     Sub RunFileAsync(filePath As String)
     Function RunFile(filePath As String) As Object
     Sub RunStringAsync(content As String)
