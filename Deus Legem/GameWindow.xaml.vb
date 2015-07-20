@@ -19,6 +19,8 @@ Public Class GameWindow
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub GameWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        '显示等待页面
+        NavigationService.Navigate(New WaitingPage)
         '绑定事件
         AddHandler NavigationService.LoadCompleted, Sub() Send("[SYSTEM]WINDOW_PAGE_CHANGE")
         '设定参数

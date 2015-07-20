@@ -1,6 +1,5 @@
 ﻿Imports System.Windows
 Imports System.Windows.Controls
-Imports Neo.IronLua
 Imports WADV.SpriteModule.Effect
 
 ''' <summary>
@@ -45,11 +44,19 @@ Public Class Sprite : Inherits Core.Component.Component
     ''' <remarks></remarks>
     Public Function AsChild(parent As Panel) As Boolean
         Invoke(Sub()
-                   If _element.Parent IsNot Nothing Then DirectCast(_element.Parent, Panel).Children.Remove(_element)
+                   NoParent()
                    parent.Children.Add(_element)
                End Sub)
         Return True
     End Function
+
+    ''' <summary>
+    ''' 解除精灵和界面父元素的关系
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub NoParent()
+        Invoke(Sub() If _element.Parent IsNot Nothing Then DirectCast(_element.Parent, Panel).Children.Remove(_element))
+    End Sub
 
     ''' <summary>
     ''' 对指定名称的精灵应用动画效果
@@ -59,7 +66,7 @@ Public Class Sprite : Inherits Core.Component.Component
     ''' <param name="params">效果参数</param>
     ''' <remarks></remarks>
     Public Sub Effect(effectName As String, sync As Boolean, ParamArray params() As Object)
-        Dim effect = EffectList.Create(effectName, _element, New Object() {_element, params})
+        Dim effect = EffectList.Create(effectName, _element, params)
         If effect Is Nothing Then Exit Sub
         Send("[SPRITE]EFFECT_STANDBY")
         _element.Dispatcher.Invoke(Sub(e) e.Render(), effect)

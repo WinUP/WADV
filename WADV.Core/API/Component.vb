@@ -16,7 +16,7 @@ Namespace API
         ''' <remarks>由于组件列表挂载在元素的Tag属性上，请不要随意修改Tag属性</remarks>
         Public Function From(target As FrameworkElement) As ComponentList
             Dim tag = TryCast(InvokeFunction(Function(e As FrameworkElement) e.Tag, target), ComponentList)
-            If tag IsNot Nothing Then
+            If tag Is Nothing Then
                 Dim result = New ComponentList(target)
                 Invoke(Sub() target.Tag = result)
                 Return result

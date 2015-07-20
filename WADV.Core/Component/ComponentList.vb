@@ -36,7 +36,7 @@ Namespace Component
         ''' <remarks></remarks>
         Public Function Add(target As Component) As BindingResult
             If _componentlist.Contains(target) Then Return BindingResult.NoNeed
-            If target.BeforeBinding(_element) Then Return BindingResult.Cancel
+            If Not target.BeforeBinding(_element) Then Return BindingResult.Cancel
             target.Bind(_element)
             _componentlist.Add(target)
             Send("[SYSTEM]COMPONENT_ADD")
@@ -180,14 +180,19 @@ Namespace Component
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Clear()
-            For Each target In _componentlist '逻辑顺序限制：不能转换为LINQ语句
+            Dim i = 0
+            Dim target As Component
+            While i < _componentlist.Count
+                target = _componentlist(i)
                 If target.BeforeUnbinding(_element, True) Then
                     target.ListenLoop(False)
                     target.ListenMessage(False)
                     target.Unbind(_element)
                     _componentlist.Remove(target)
+                Else
+                    i += 1
                 End If
-            Next
+            End While
             Send("[SYSTEM]COMPONENTLIST_CLEAR")
         End Sub
 
@@ -198,6 +203,7 @@ Namespace Component
                 e.ListenLoop(False)
                 e.ListenMessage(False)
             Next
+            _componentlist.Clear()
             Send("[SYSTEM]COMPONENTLIST_DISPOSE")
         End Sub
     End Class

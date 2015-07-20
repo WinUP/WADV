@@ -113,9 +113,11 @@ Namespace PluginInterface
             script("dispatcher") = New Func(Of Threading.Dispatcher)(AddressOf Core.API.Window.Dispatcher)
             script("window") = New Func(Of NavigationWindow)(AddressOf Core.API.Window.Window)
             script("invoke") = New Func(Of Func(Of Object, Object), Object, Object)(AddressOf Core.API.Window.InvokeFunction)
+            script("run") = New Func(Of Func(Of Object), Object)(AddressOf Core.API.Window.InvokeFunction)
             script("image") = New Func(Of JpegBitmapEncoder)(AddressOf Core.API.Window.Image)
             script("save") = New Action(Of String)(AddressOf Core.API.Window.Save)
             script("add") = New Func(Of String, String, Double, Double, Double, Double, String, FrameworkElement)(AddressOf Core.API.Window.Add)
+            script("generate") = New Func(Of String, FrameworkElement)(AddressOf Core.API.Window.Generate)
             '组件
             system("component") = New LuaTable
             script = system("component")

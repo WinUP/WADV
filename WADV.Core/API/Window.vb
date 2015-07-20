@@ -423,6 +423,10 @@ Namespace API
             Return MainDispatcher.Invoke(Function() target.Invoke(params))
         End Function
 
+        Public Function InvokeFunction(target As Func(Of Object)) As Object
+            Return MainDispatcher.Invoke(Function() target.Invoke())
+        End Function
+
         ''' <summary>
         ''' 获取主窗口的截图
         ''' 同步方法|调用线程
@@ -487,6 +491,16 @@ Namespace API
                 End If
                 Return target
             End If
+        End Function
+
+        ''' <summary>
+        ''' 生成新控件
+        ''' </summary>
+        ''' <param name="type">控件类型</param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Function Generate(type As String) As FrameworkElement
+            Return MainDispatcher.Invoke(Function() UiOperation.GenerateElement(type))
         End Function
     End Module
 End Namespace

@@ -8,7 +8,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Init()
             EffectList.ReadEffect()
-            Message.Send("[SPRITE]INIT_FINISH")
+            Send("[SPRITE]INIT_FINISH")
         End Sub
     End Module
 End Namespace

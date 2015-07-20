@@ -1,0 +1,3 @@
+﻿Class WaitingPage
+
+End Class
