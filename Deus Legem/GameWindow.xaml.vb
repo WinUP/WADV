@@ -5,6 +5,7 @@ Imports WADV.Core.API
 
 Public Class GameWindow
     Private _directNavigation = False
+    Private _processingE As NavigatingCancelEventArgs
 
     ''' <summary>
     ''' 游戏解构函数
@@ -56,11 +57,18 @@ Public Class GameWindow
     Private Sub GameWindow_Navigating(sender As Object, e As NavigatingCancelEventArgs) Handles Me.Navigating
         '重置导航状态
         If _directNavigation OrElse Content Is Nothing Then
+            If _processingE Is Nothing Then Exit Sub
+            Select Case DirectCast(_processingE.ExtraData, NavigateOperation)
+                Case NavigateOperation.Normal, NavigateOperation.NavigateAndIn
+                    FadeIn()
+            End Select
             _directNavigation = False
-            Return
+            IsHitTestVisible = True
+            _processingE = Nothing
+            Exit Sub
         End If
         '执行所有接收器
-
+        BoardcastNavigate(e)
         '判断导航是否已被取消
         If e.Cancel Then Exit Sub
         '处理窗口属性
@@ -68,54 +76,39 @@ Public Class GameWindow
         IsHitTestVisible = False
         e.Cancel = True
         '处理导航标志
-        Dim data = DirectCast(e.ExtraData, NavigateOperation)
+        _processingE = e
+        Dim data = DirectCast(_processingE.ExtraData, NavigateOperation)
         Select Case data
             Case NavigateOperation.Normal, NavigateOperation.OutAndNavigate, NavigateOperation.OutAndShow, NavigateOperation.OnlyOut
                 Dim fadeOut As New DoubleAnimation(0.0, New Duration(TimeSpan.FromMilliseconds(540)))
                 fadeOut.EasingFunction = New QuarticEase With {.EasingMode = EasingMode.EaseOut}
-                AddHandler fadeOut.Completed, Sub() FadeOutComplete(e)
+                AddHandler fadeOut.Completed, Sub() FadeOutComplete()
                 BeginAnimation(OpacityProperty, fadeOut)
-                Exit Sub
-            Case NavigateOperation.NavigateAndIn
-                CustomizedNavigate(e)
-                FadeIn()
+            Case NavigateOperation.NavigateAndIn, NavigateOperation.NoEffect
+                CustomizedNavigate()
             Case NavigateOperation.NavigateAndHide
-                e.Cancel = False
+                CustomizedNavigate()
                 Opacity = 0.0
             Case NavigateOperation.OnlyIn
                 FadeIn()
-            Case NavigateOperation.NoEffect
-                e.Cancel = False
         End Select
     End Sub
 
     ''' <summary>
     ''' 页面淡入处理函数
     ''' </summary>
-    ''' <param name="e"></param>
     ''' <remarks></remarks>
-    Private Sub FadeOutComplete(e As NavigatingCancelEventArgs)
-        Dim data = DirectCast(e.ExtraData, NavigateOperation)
-        IsHitTestVisible = True
-        Select Case data
-            Case NavigateOperation.Normal
-                CustomizedNavigate(e)
-                FadeIn()
-            Case NavigateOperation.OutAndNavigate
-                CustomizedNavigate(e)
-            Case NavigateOperation.OutAndShow
-                CustomizedNavigate(e)
-                Opacity = 1.0
-        End Select
+    Private Sub FadeOutComplete()
+        If DirectCast(_processingE.ExtraData, NavigateOperation) = NavigateOperation.OutAndShow Then Opacity = 1.0
+        CustomizedNavigate()
     End Sub
 
     ''' <summary>
     ''' 自定义导航数据处理函数
     ''' </summary>
-    ''' <param name="e"></param>
     ''' <remarks></remarks>
-    Private Sub CustomizedNavigate(e As NavigatingCancelEventArgs)
-        Select Case e.NavigationMode
+    Private Sub CustomizedNavigate()
+        Select Case _processingE.NavigationMode
             Case NavigationMode.Back
                 NavigationService.GoBack()
             Case NavigationMode.Forward
@@ -123,10 +116,10 @@ Public Class GameWindow
             Case NavigationMode.Refresh
                 NavigationService.Refresh()
             Case NavigationMode.New
-                If e.Uri Is Nothing Then
-                    NavigationService.Navigate(e.Content)
+                If _processingE.Uri Is Nothing Then
+                    NavigationService.Navigate(_processingE.Content)
                 Else
-                    NavigationService.Navigate(e.Uri)
+                    NavigationService.Navigate(_processingE.Uri)
                 End If
         End Select
     End Sub
@@ -138,8 +131,7 @@ Public Class GameWindow
     Private Sub FadeIn()
         Opacity = 0.0
         Dim fadeIn As New DoubleAnimation(1.0, New Duration(TimeSpan.FromMilliseconds(540)))
-        fadeIn.EasingFunction = New QuinticEase With {.EasingMode = EasingMode.EaseOut}
+        fadeIn.EasingFunction = New QuadraticEase With {.EasingMode = EasingMode.EaseOut}
         BeginAnimation(OpacityProperty, fadeIn)
     End Sub
-
 End Class

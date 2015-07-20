@@ -458,6 +458,15 @@ Namespace API
         End Sub
 
         ''' <summary>
+        ''' 广播游戏窗口转场消息
+        ''' </summary>
+        ''' <param name="e">可取消的导航事件</param>
+        ''' <remarks></remarks>
+        Public Sub BoardcastNavigate(e As NavigatingCancelEventArgs)
+            ReceiverList.NavigateReceiverList.Boardcast(e)
+        End Sub
+
+        ''' <summary>
         ''' 添加一个控件到当前页面
         ''' </summary>
         ''' <param name="type">控件类型</param>
