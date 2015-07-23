@@ -8,12 +8,29 @@ Imports WADV.Core
 ''' <remarks></remarks>
 Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     Private Shared _self As ScriptCore
-    Private ReadOnly _vm As Lua
-    Private ReadOnly _env As LuaGlobal
+    Private _vm As Lua
+    Private _env As LuaGlobal
 
     Private Sub New()
+    End Sub
+
+    ''' <summary>
+    ''' 初始化脚本核心
+    ''' </summary>
+    Friend Sub Initialise() Implements IScriptEngine.Initialise
         _vm = New Lua
         _env = _vm.CreateEnvironment
+    End Sub
+
+    ''' <summary>
+    ''' 释放脚本核心的资源
+    ''' </summary>
+    Friend Sub Dispose() Implements IScriptEngine.Dispose
+        _env.ArrayList.Clear()
+        _env.Members.Clear()
+        _env = Nothing
+        _vm.Dispose()
+        _vm = Nothing
     End Sub
 
     ''' <summary>

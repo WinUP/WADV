@@ -36,7 +36,7 @@ Namespace API
         ''' </summary>
         ''' <param name="content">目标容器</param>
         ''' <remarks></remarks>
-        Public Sub ClearContent(content As Panel)
+        Public Sub Clear(content As Panel)
             content.Dispatcher.Invoke(Sub() content.Children.Clear())
             MessageService.GetInstance.SendMessage("[SYSTEM]PANEL_CONTENT_CLEAR")
         End Sub
@@ -207,7 +207,7 @@ Namespace API
         ''' 移除一个最近的返回记录
         ''' 同步方法|UI线程
         ''' </summary>
-        Public Sub RemoveOneBack()
+        Public Sub RemoveBack()
             MainDispatcher.Invoke(Sub()
                                       If Config.BaseWindow.NavigationService.CanGoBack Then
                                           Config.BaseWindow.NavigationService.RemoveBackEntry()
@@ -431,15 +431,16 @@ Namespace API
         ''' 获取主窗口的截图
         ''' 同步方法|调用线程
         ''' </summary>
+        ''' <param name="quality">图像质量[0-100]</param>
         ''' <returns>截图的编码器</returns>
         ''' <remarks></remarks>
-        Public Function Image() As JpegBitmapEncoder
+        Public Function Image(Optional quality As Integer = 100) As JpegBitmapEncoder
             Dim panel = Root(Of FrameworkElement)()
             Dim targetImage As New RenderTargetBitmap(panel.ActualWidth, panel.ActualHeight, 96, 96, PixelFormats.Pbgra32)
             targetImage.Render(Config.BaseWindow)
             Dim encoder As New JpegBitmapEncoder
             encoder.Frames.Add(BitmapFrame.Create(targetImage))
-            encoder.QualityLevel = 100
+            encoder.QualityLevel = quality
             Return encoder
         End Function
 
@@ -450,7 +451,7 @@ Namespace API
         ''' <param name="filePath">要保存的路径(UserFile目录下)</param>
         ''' <remarks></remarks>
         Public Sub Save(filePath As String)
-            Dim image = API.Window.Image
+            Dim image = API.Image
             Dim stream As New FileStream(PathFunction.GetFullPath(PathType.UserFile, filePath), FileMode.Create)
             image.Save(stream)
             stream.Close()
@@ -467,48 +468,12 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' 添加一个控件到当前页面
-        ''' </summary>
-        ''' <param name="type">控件类型</param>
-        ''' <param name="name">控件名称</param>
-        ''' <param name="x">控件左上角水平坐标</param>
-        ''' <param name="y">控件左上角垂直坐标</param>
-        ''' <param name="width">控件宽度</param>
-        ''' <param name="height">控件高度</param>
-        ''' <param name="parentName">控件父容器名称(留空则添加到根容器)</param>
-        ''' <returns>添加完成的控件</returns>
-        ''' <remarks></remarks>
-        Public Function Add(type As String, name As String, x As Double, y As Double, width As Double, height As Double, Optional parentName As String = "") As FrameworkElement
-            Dim target As FrameworkElement = MainDispatcher.Invoke(Function() UiOperation.GenerateElement(type))
-            If target Is Nothing Then
-                Return Nothing
-            Else
-                target.Name = name
-                target.Width = width
-                target.Height = height
-                target.Margin = New Thickness(x, y, 0, 0)
-                Dim parent As Panel
-                If parentName = "" Then
-                    parent = Root(Of Panel)()
-                Else
-                    parent = Search(Of Panel)(parentName)
-                End If
-                If parent Is Nothing Then
-                    Return Nothing
-                Else
-                    MainDispatcher.Invoke(Sub() parent.Children.Add(target))
-                End If
-                Return target
-            End If
-        End Function
-
-        ''' <summary>
         ''' 生成新控件
         ''' </summary>
         ''' <param name="type">控件类型</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Generate(type As String) As FrameworkElement
+        Public Function Generate(type As ElementType) As FrameworkElement
             Return MainDispatcher.Invoke(Function() UiOperation.GenerateElement(type))
         End Function
     End Module

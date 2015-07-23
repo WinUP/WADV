@@ -10,6 +10,8 @@ Imports WADV.Core.PluginInterface
 Namespace PluginInterface
     Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
         Public Function Initialising() As Boolean Implements IPluginInitialise.Initialising
+            '注册组件到系统
+            Core.API.Script.Register(ScriptCore.GetInstance)
             Dim system, script As LuaTable
             ScriptCore.GetInstance.Environment("core") = New LuaTable
             system = ScriptCore.GetInstance.Environment("core")
@@ -55,8 +57,6 @@ Namespace PluginInterface
             script("listen") = New Func(Of IPluginLoadReceiver, Boolean)(AddressOf Plugin.Listen)
             script("compile") = New Func(Of String, String, Reflection.Assembly)(AddressOf Plugin.Compile)
             script("load") = New Func(Of String, Reflection.Assembly)(AddressOf Plugin.Load)
-            script("handleEvent") = New Action(Of Object, String, [Delegate])(AddressOf Plugin.HandleEvent)
-            script("unhandleEvent") = New Action(Of Object, String, [Delegate])(AddressOf Plugin.UnhandleEvent)
             'Resource
             system("resource") = New LuaTable
             script = system("resource")
@@ -71,6 +71,8 @@ Namespace PluginInterface
             script("register") = New Func(Of String, FrameworkElement, Boolean)(AddressOf Resource.Register)
             script("unregister") = New Func(Of String, Boolean)(AddressOf Resource.Unregister)
             script("getByName") = New Func(Of String, FrameworkElement)(AddressOf Resource.GetByName)
+            script("handle") = New Action(Of Object, String, [Delegate])(AddressOf Resource.Handle)
+            script("unhandle") = New Action(Of Object, String, [Delegate])(AddressOf Resource.Unhandle)
             'Timer
             system("timer") = New LuaTable
             script = system("timer")
@@ -82,7 +84,7 @@ Namespace PluginInterface
             system("window") = New LuaTable
             script = system("window")
             script("title") = New Func(Of String, String)(AddressOf Core.API.Window.Title)
-            script("clearContent") = New Action(Of Panel)(AddressOf Core.API.Window.ClearContent)
+            script("clear") = New Action(Of Panel)(AddressOf Core.API.Window.Clear)
             script("loadElement") = New Action(Of Panel, String)(AddressOf Core.API.Window.LoadElement)
             script("loadElementA") = New Action(Of Panel, String)(AddressOf Core.API.Window.LoadElementAsync)
             script("loadPage") = New Action(Of String, NavigateOperation)(AddressOf Core.API.Window.LoadPage)
@@ -97,7 +99,7 @@ Namespace PluginInterface
             script("fadeInA") = New Action(Of Integer)(AddressOf Core.API.Window.FadeInAsync)
             script("back") = New Action(AddressOf Core.API.Window.Back)
             script("forward") = New Action(AddressOf Core.API.Window.Forward)
-            script("removeOneBack") = New Action(AddressOf Core.API.Window.RemoveOneBack)
+            script("removeBack") = New Action(AddressOf Core.API.Window.RemoveBack)
             script("removeBackList") = New Action(AddressOf Core.API.Window.RemoveBackList)
             script("setBackgroundByColor") = New Action(Of Color)(AddressOf Core.API.Window.SetBackgroundByColor)
             script("setBackgroundByRGB") = New Action(Of Byte, Byte, Byte)(AddressOf Core.API.Window.SetBackgroundByRgb)
@@ -108,16 +110,17 @@ Namespace PluginInterface
             script("topmost") = New Action(Of Boolean)(AddressOf Core.API.Window.Topmost)
             script("icon") = New Action(Of String)(AddressOf Core.API.Window.Icon)
             script("cursor") = New Action(Of String)(AddressOf Core.API.Window.Cursor)
+            script("getChild") = New Func(Of DependencyObject, String, FrameworkElement)(AddressOf Core.API.Window.GetChild(Of FrameworkElement))
             script("search") = New Func(Of String, FrameworkElement)(AddressOf Core.API.Window.Search(Of FrameworkElement))
-            script("root") = New Func(Of Panel)(AddressOf Core.API.Window.Root(Of Panel))
+            script("root") = New Func(Of FrameworkElement)(AddressOf Core.API.Window.Root(Of FrameworkElement))
             script("dispatcher") = New Func(Of Threading.Dispatcher)(AddressOf Core.API.Window.Dispatcher)
             script("window") = New Func(Of NavigationWindow)(AddressOf Core.API.Window.Window)
             script("invoke") = New Func(Of Func(Of Object, Object), Object, Object)(AddressOf Core.API.Window.InvokeFunction)
             script("run") = New Func(Of Func(Of Object), Object)(AddressOf Core.API.Window.InvokeFunction)
-            script("image") = New Func(Of JpegBitmapEncoder)(AddressOf Core.API.Window.Image)
+            script("image") = New Func(Of Integer, JpegBitmapEncoder)(AddressOf Core.API.Window.Image)
             script("save") = New Action(Of String)(AddressOf Core.API.Window.Save)
-            script("add") = New Func(Of String, String, Double, Double, Double, Double, String, FrameworkElement)(AddressOf Core.API.Window.Add)
-            script("generate") = New Func(Of String, FrameworkElement)(AddressOf Core.API.Window.Generate)
+            script("boardcastNavigate") = New Action(Of NavigatingCancelEventArgs)(AddressOf Core.API.Window.BoardcastNavigate)
+            script("generate") = New Func(Of ElementType, FrameworkElement)(AddressOf Core.API.Window.Generate)
             '组件
             system("component") = New LuaTable
             script = system("component")
@@ -128,10 +131,8 @@ Namespace PluginInterface
             script = system("env")
             script("version") = "1.0"
             script("luaEngine") = LuaGlobal.VersionString
-            '注册组件到系统
-            Core.API.Script.Register(ScriptCore.GetInstance)
             Send("[LUA]SCRIPT_INIT_FINISH")
-            Return Core.API.Plugin.Listen(New PluginLoadReceiver)
+            Return Plugin.Listen(New PluginLoadReceiver)
         End Function
     End Class
 End Namespace

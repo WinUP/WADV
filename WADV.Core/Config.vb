@@ -1,14 +1,15 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Game Config Class
-' This class is write for record core settings of game, like main window and resource path
-
-Imports System.Windows.Navigation
+﻿Imports System.Windows.Navigation
 
 ''' <summary>
 ''' 引擎设定类
 ''' </summary>
 ''' <remarks></remarks>
 Friend NotInheritable Class Config
+    Private Shared _gamePath As String
+
+    Shared Sub New()
+        _gamePath = My.Application.Info.DirectoryPath
+    End Sub
 
     ''' <summary>
     ''' 游戏主窗口
@@ -57,7 +58,7 @@ Friend NotInheritable Class Config
     ''' <returns></returns>
     Friend Shared ReadOnly Property GamePath As String
         Get
-            Return My.Application.Info.DirectoryPath
+            Return _gamePath
         End Get
     End Property
 

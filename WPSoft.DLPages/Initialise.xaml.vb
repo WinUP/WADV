@@ -34,6 +34,6 @@ Class Initialise
         Next
         ChangeText("已就绪")
         System.Threading.Thread.Sleep(200)
-        Message.Send("[GAME]INITIAL_DATA_READY")
+        Send("[GAME]INITIAL_DATA_READY")
     End Sub
 End Class

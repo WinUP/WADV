@@ -10,5 +10,4 @@ Friend NotInheritable Class ReceiverList
     Friend Shared Sub StopReceiver()
         Message.Remove(Receiver)
     End Sub
-
 End Class

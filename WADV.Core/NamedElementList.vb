@@ -1,7 +1,4 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Named Element List Class
-' This class support the function that named UI elements and get them with the name they have
-Imports System.Windows
+﻿Imports System.Windows
 
 ''' <summary>
 ''' 元素命名列表

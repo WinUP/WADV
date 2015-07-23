@@ -1,13 +1,13 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' UI Operation Class
-' This file include all core functions of UI operation
-
-Imports System.Windows
+﻿Imports System.Windows
 Imports System.Windows.Media
 Imports System.Windows.Shapes
 Imports System.Windows.Controls
 Imports System.Windows.Controls.Primitives
 
+''' <summary>
+''' UI操作类
+''' </summary>
+''' <remarks>公开API位于Window</remarks>
 Friend NotInheritable Class UiOperation
 
     ''' <summary>
@@ -16,53 +16,57 @@ Friend NotInheritable Class UiOperation
     ''' <param name="type">元素类型</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Friend Shared Function GenerateElement(type As String) As FrameworkElement
+    Friend Shared Function GenerateElement(type As ElementType) As FrameworkElement
         Dim tmpElement As FrameworkElement
         Select Case type
-            Case "Border"
+            Case ElementType.Border
                 tmpElement = New Border
-            Case "Button"
+            Case ElementType.Button
                 tmpElement = New Button
-            Case "Canvas"
+            Case ElementType.Canvas
                 tmpElement = New Canvas
-            Case "CheckBox"
+            Case ElementType.CheckBox
                 tmpElement = New CheckBox
-            Case "ComboBox"
+            Case ElementType.ComboBox
                 tmpElement = New ComboBox
-            Case "Ellipse"
+            Case ElementType.Ellipse
                 tmpElement = New Ellipse
-            Case "Expander"
+            Case ElementType.Expander
                 tmpElement = New Expander
-            Case "Grid"
+            Case ElementType.Grid
                 tmpElement = New Grid
-            Case "GroupBox"
+            Case ElementType.GroupBox
                 tmpElement = New GroupBox
-            Case "Image"
+            Case ElementType.Image
                 tmpElement = New Image
-            Case "Label"
+            Case ElementType.Label
                 tmpElement = New Label
-            Case "ListBox"
+            Case ElementType.ListBox
                 tmpElement = New ListBox
-            Case "ListView"
+            Case ElementType.ListView
                 tmpElement = New ListView
-            Case "ProgressBar"
+            Case ElementType.ProgressBar
                 tmpElement = New ProgressBar
-            Case "RadioButton"
+            Case ElementType.RadioButton
                 tmpElement = New RadioButton
-            Case "Rectangle"
+            Case ElementType.Rectangle
                 tmpElement = New Rectangle
-            Case "ScrollBar"
+            Case ElementType.RichTextBox
+                tmpElement = New RichTextBox
+            Case ElementType.ScrollBar
                 tmpElement = New ScrollBar
-            Case "Slider"
+            Case ElementType.Slider
                 tmpElement = New Slider
-            Case "TabControl"
+            Case ElementType.TabControl
                 tmpElement = New TabControl
-            Case "TextBlock"
+            Case ElementType.TextBlock
                 tmpElement = New TextBlock
-            Case "TextBox"
+            Case ElementType.TextBox
                 tmpElement = New TextBox
-            Case "ViewBox"
+            Case ElementType.ViewBox
                 tmpElement = New Viewbox
+            Case ElementType.Viewport3D
+                tmpElement = New RichTextBox
             Case Else
                 tmpElement = Nothing
         End Select
@@ -83,7 +87,7 @@ Friend NotInheritable Class UiOperation
         For i = 0 To VisualTreeHelper.GetChildrenCount(obj) - 1
             child = VisualTreeHelper.GetChild(obj, i)
             If (TypeOf child Is T) AndAlso (name = "" OrElse DirectCast(child, T).Name = name) Then
-                Return DirectCast(child, T)
+                Return child
             Else
                 grandChild = GetChildByName(Of T)(child, name)
                 If grandChild IsNot Nothing Then Return grandChild
@@ -91,5 +95,4 @@ Friend NotInheritable Class UiOperation
         Next
         Return Nothing
     End Function
-
 End Class

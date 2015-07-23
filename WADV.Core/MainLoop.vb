@@ -1,8 +1,4 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Game Looping Class
-' This is the game looping class
-
-Imports System.Threading
+﻿Imports System.Threading
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
 
@@ -20,7 +16,7 @@ Friend NotInheritable Class MainLoop
 
     Private Sub New()
         Status = False
-        Span = 33
+        Span = 40
         _loopThread = New Thread(AddressOf LoopingContent)
         _loopThread.IsBackground = True
         _loopThread.Name = "[系统]游戏循环线程"

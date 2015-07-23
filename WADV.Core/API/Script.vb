@@ -10,7 +10,9 @@
         ''' <param name="target">目标虚拟机</param>
         ''' <remarks></remarks>
         Public Sub Register(target As IScriptEngine)
+            Config.ScriptEngine?.Dispose()
             Config.ScriptEngine = target
+            target.Initialise()
         End Sub
 
         ''' <summary>

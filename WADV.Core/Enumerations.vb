@@ -1,8 +1,4 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Enumerations
-' This file include all enumerations of core framework
-
-''' <summary>
+﻿''' <summary>
 ''' 路径类型
 ''' </summary>
 ''' <remarks></remarks>
@@ -60,4 +56,34 @@ Public Enum NavigateOperation
     ''' </summary>
     ''' <remarks></remarks>
     Normal
+End Enum
+
+''' <summary>
+''' 元素类型
+''' </summary>
+Public Enum ElementType
+    Border
+    Button
+    Canvas
+    CheckBox
+    ComboBox
+    Ellipse
+    Expander
+    Grid
+    GroupBox
+    Image
+    Label
+    ListBox
+    ListView
+    ProgressBar
+    RadioButton
+    Rectangle
+    RichTextBox
+    ScrollBar
+    Slider
+    TabControl
+    TextBlock
+    TextBox
+    ViewBox
+    Viewport3D
 End Enum

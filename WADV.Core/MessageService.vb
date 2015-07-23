@@ -1,13 +1,9 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Game Message Service Class
-' This is the message service class
-
-Imports System.Threading
+﻿Imports System.Threading
 Imports System.Collections.Concurrent
 Imports WADV.Core.ReceiverList
 
 ''' <summary>
-''' 游戏消息循环
+''' 消息循环
 ''' </summary>
 Friend NotInheritable Class MessageService
     Private _status As Boolean
@@ -54,7 +50,7 @@ Friend NotInheritable Class MessageService
                 While Not _messageList.IsEmpty
                     If Not _messageList.TryDequeue(message) Then Throw New System.Exception("从消息队列中获取消息失败")
 #If DEBUG Then
-                    Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss,fff ") & message)
+                    Debug.WriteLine(Date.Now.ToString("HH:mm:ss,fff ") & message)
 #End If
                     MessageReceiverList.Broadcast(message)
                     SyncLock LastMessage
@@ -98,5 +94,4 @@ Friend NotInheritable Class MessageService
     Friend Sub [Stop]()
         _status = False
     End Sub
-
 End Class

@@ -1,9 +1,8 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Timer Class
-' This is the timer class
+﻿Imports System.Threading
 
-Imports System.Threading
-
+''' <summary>
+''' 游戏计时器
+''' </summary>
 Friend NotInheritable Class MainTimer
     Private Shared _self As MainTimer
     Private ReadOnly _loopThread As Thread
@@ -78,5 +77,4 @@ Friend NotInheritable Class MainTimer
             Thread.Sleep(Span)
         End While
     End Sub
-
 End Class

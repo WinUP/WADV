@@ -1,9 +1,5 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Plugin Class
-' This is the main class of game plugin system
-
+﻿Imports System.Xml
 Imports System.Windows
-Imports System.Xml
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
 Imports WADV.Core.Exception

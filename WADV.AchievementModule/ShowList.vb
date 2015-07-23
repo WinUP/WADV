@@ -76,5 +76,4 @@ Friend NotInheritable Class ShowList
             If Not _showThread.IsAlive Then _showThread.Start()
         End If
     End Sub
-
 End Class

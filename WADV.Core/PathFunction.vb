@@ -1,8 +1,4 @@
-﻿' WinUP Adventure Game Engine Core Framework
-' Path Class
-' This class include some helper functions for path system
-
-''' <summary>
+﻿''' <summary>
 ''' 路径辅助类
 ''' </summary>
 ''' <remarks></remarks>
@@ -40,5 +36,4 @@ Friend NotInheritable Class PathFunction
     Friend Shared Function GetFullUri(type As PathType, Optional filePath As String = "") As Uri
         Return New Uri(GetFullPath(type, filePath))
     End Function
-
 End Class
