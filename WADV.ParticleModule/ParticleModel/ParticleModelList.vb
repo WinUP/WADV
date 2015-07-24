@@ -10,6 +10,8 @@ Namespace ParticleModel
         ''' </summary>
         ''' <remarks></remarks>
         Friend Shared Sub ReadModel()
+            List.Clear()
+            List.Add("NormalParticleModel", GetType(NormalParticleModel))
             For Each file In IO.Directory.GetFiles(Path.Combine(PathType.Resource, "ParticleModel\"), "*.dll") _
                 .SelectMany(Function(e) Reflection.Assembly.LoadFrom(e).GetTypes()) _
                 .Where(Function(e) e.BaseType.FullName = "WADV.ParticleModule.ParticleModel.NormalParticleModel" <> Nothing)
