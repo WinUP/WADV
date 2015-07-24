@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Deus Legem", "Deus Legem\Deus Legem.vbproj", "{0D72E99F-FAF2-4010-B958-85D44CD21CC6}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.PhysicsModule", "WADV.PhysicsModule\WADV.PhysicsModule.vbproj", "{E8D4046B-2AB0-4EFD-8F38-C2A7BD77E997}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.LuaSupport", "WADV.LuaSupport\WADV.LuaSupport.vbproj", "{CE3761F5-1C5E-4B0D-A46C-E11682E67C1C}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WADV.ParticleModule", "WADV.ParticleModule\WADV.ParticleModule.vbproj", "{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -229,6 +231,18 @@ Global
 		{CE3761F5-1C5E-4B0D-A46C-E11682E67C1C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CE3761F5-1C5E-4B0D-A46C-E11682E67C1C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CE3761F5-1C5E-4B0D-A46C-E11682E67C1C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Debug|Win32.Build.0 = Debug|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Win32.ActiveCfg = Release|Any CPU
+		{46E7676F-DBF1-4D72-A5E2-D9F20D06FAFA}.Release|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

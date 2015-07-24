@@ -19,7 +19,7 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     ''' </summary>
     Friend Sub Initialise() Implements IScriptEngine.Initialise
         _vm = New Lua
-        _env = _vm.CreateEnvironment
+        _env = _vm.CreateEnvironment(Of LuaGlobal)
     End Sub
 
     ''' <summary>
