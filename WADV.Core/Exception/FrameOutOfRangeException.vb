@@ -9,7 +9,7 @@
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub New()
-            MyBase.New("对游戏循环理想执行周期的设置超出了可用范围(1-∞)")
+            MyBase.New("你正在尝试设置游戏循环理想执行周期为不支持的值。它必须为正整数。")
         End Sub
     End Class
 End Namespace

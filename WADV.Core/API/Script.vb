@@ -33,8 +33,7 @@
         ''' <param name="filePath">文件路径(Script目录下)</param>
         ''' <remarks></remarks>
         Public Function RunFile(filePath As String) As Object
-            If Config.ScriptEngine Is Nothing Then Return Nothing
-            Return Config.ScriptEngine.RunFile(filePath)
+            Return Config.ScriptEngine?.RunFile(filePath)
         End Function
 
         ''' <summary>
@@ -44,8 +43,7 @@
         ''' <param name="content">脚本内容</param>
         ''' <remarks></remarks>
         Public Sub RunStringAsync(content As String)
-            If Config.ScriptEngine Is Nothing Then Exit Sub
-            Config.ScriptEngine.RunStringAsync(content)
+            Config.ScriptEngine?.RunStringAsync(content)
         End Sub
 
         ''' <summary>
@@ -55,8 +53,7 @@
         ''' <param name="content">脚本内容</param>
         ''' <remarks></remarks>
         Public Function RunString(content As String) As Object
-            If Config.ScriptEngine Is Nothing Then Return Nothing
-            Return Config.ScriptEngine.RunString(content)
+            Return Config.ScriptEngine?.RunString(content)
         End Function
 
         ''' <summary>
@@ -67,8 +64,7 @@
         ''' <param name="value">变量内容(字符串形式)</param>
         ''' <remarks></remarks>
         Public Sub [Set](name As String, value As Object)
-            If Config.ScriptEngine Is Nothing Then Exit Sub
-            Config.ScriptEngine.Set(name, value)
+            Config.ScriptEngine?.Set(name, value)
         End Sub
 
         ''' <summary>
@@ -79,8 +75,7 @@
         ''' <returns>变量内容</returns>
         ''' <remarks></remarks>
         Public Function [Get](name As String) As Object
-            If Config.ScriptEngine Is Nothing Then Return Nothing
-            Return Config.ScriptEngine.Get(name)
+            Return Config.ScriptEngine?.Get(name)
         End Function
     End Module
 End Namespace

@@ -8,7 +8,6 @@ Namespace ReceiverList
     ''' <remarks></remarks>
     Friend NotInheritable Class LoopReceiverList
         Private Shared ReadOnly List As New List(Of ILoopReceiver)
-        Private Shared ReadOnly Messager As MessageService = MessageService.GetInstance
 
         ''' <summary>
         ''' 添加一个循环体
@@ -18,7 +17,7 @@ Namespace ReceiverList
         Friend Shared Function Add(target As ILoopReceiver) As Boolean
             If Not Contains(target) Then
                 List.Add(target)
-                Messager.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
+                Config.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
                 Return True
             Else
                 Return False
@@ -52,7 +51,7 @@ Namespace ReceiverList
         ''' <remarks></remarks>
         Friend Shared Sub Delete(i As Integer)
             List.RemoveAt(i)
-            Messager.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
+            Config.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
         End Sub
 
         ''' <summary>

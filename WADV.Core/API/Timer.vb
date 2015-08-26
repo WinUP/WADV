@@ -1,5 +1,4 @@
 ﻿Namespace API
-
     ''' <summary>
     ''' 计时器API
     ''' </summary>
@@ -11,7 +10,7 @@
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Start()
-            MainTimer.GetInstance.Start()
+            Config.MainTimer.Start()
         End Sub
 
         ''' <summary>
@@ -20,7 +19,7 @@
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub [Stop]()
-            MainTimer.GetInstance.Stop()
+            Config.MainTimer.Stop()
         End Sub
 
         ''' <summary>
@@ -30,9 +29,9 @@
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Tick(Optional value As Integer = -1) As Integer
-            If value = -1 Then Return MainTimer.GetInstance.Span
+            If value = -1 Then Return Config.MainTimer.Span
             If value < 1 Then Throw New Exception.TickOutOfRangeException
-            MainTimer.GetInstance.Span = value
+            Config.MainTimer.Span = value
             Return value
         End Function
 
@@ -42,7 +41,7 @@
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Status() As Boolean
-            Return MainTimer.GetInstance.Status
+            Return Config.MainTimer.Status
         End Function
     End Module
 End Namespace

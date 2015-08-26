@@ -10,24 +10,24 @@ Imports WADV.Core.Exception
 ''' <remarks></remarks>
 Friend NotInheritable Class PluginFunction
     Private Shared ReadOnly PluginFileList As New List(Of String)
-    Private Shared ReadOnly Messanger As MessageService = MessageService.GetInstance
 
     ''' <summary>
     ''' 载入所有插件
     ''' </summary>
     ''' <remarks></remarks>
     Friend Shared Sub InitialiseAllPlugins()
-        If PluginFileList.Count <> 0 Then Throw New IllegalMultipleStartException
-        Dim config As New XmlDocument
-        config.Load(PathFunction.GetFullPath(PathType.Plugin, "plugin.xml"))
-        For Each pluginName In From fileName As XmlNode In config.SelectNodes("/plugin/sequence/item") Select fileName.InnerXml
+        If Config.IsPluginInitialised Then Throw New PluginsMultiInitialiseException
+        Dim pluginConfig As New XmlDocument
+        pluginConfig.Load(PathFunction.GetFullPath(PathType.Plugin, "plugin.xml"))
+        For Each pluginName In From fileName As XmlNode In pluginConfig.SelectNodes("/plugin/sequence/item") Select fileName.InnerXml
             Try
-                AddPlugin(String.Format("{0}\{1}.dll", pluginName, pluginName))
+                AddPlugin($"{pluginName}\{pluginName}.dll")
             Catch ex As System.Exception
                 MessageBox.Show(ex.Message, "插件" & pluginName & "加载失败")
             End Try
         Next
-        Messanger.SendMessage("[SYSTEM]PLUGIN_INIT_FINISH")
+        Config.IsPluginInitialised = True
+        Config.MessageService.SendMessage("[SYSTEM]PLUGIN_INIT_FINISH")
     End Sub
 
     ''' <summary>
@@ -36,7 +36,7 @@ Friend NotInheritable Class PluginFunction
     ''' <param name="fileName">插件路径(从Plugin目录开始)</param>
     ''' <remarks></remarks>
     Friend Shared Sub AddPlugin(fileName As String)
-        If PluginFileList.Contains(fileName) Then Exit Sub
+        If PluginFileList.Contains(fileName) Then Throw New PluginMultiInitialiseException
         Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.GetFullPath(PathType.Plugin, fileName)).GetTypes
         PluginLoadReceiverList.BeforeLoad(pluginTypes)
         For Each tmpTypeName In pluginTypes
@@ -54,6 +54,6 @@ Friend NotInheritable Class PluginFunction
             End If
         Next
         PluginFileList.Add(fileName)
-        Messanger.SendMessage("[SYSTEM]PLUGIN_ADD")
+        Config.MessageService.SendMessage("[SYSTEM]PLUGIN_ADD")
     End Sub
 End Class

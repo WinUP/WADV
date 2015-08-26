@@ -19,7 +19,7 @@
         ''' <param name="name">初始化失败的插件的名称</param>
         ''' <remarks></remarks>
         Public Sub New(name As String)
-            MyBase.New("插件初始化失败")
+            MyBase.New("你尝试加载的一个插件初始化失败。你可以通过此异常的PluginName属性查看插件名称。")
             _pluginName = name
         End Sub
     End Class

@@ -26,7 +26,7 @@ Namespace API
         Public Function Title(Optional value As String = "") As String
             If value = "" Then Return MainDispatcher.Invoke(Function() Config.BaseWindow.Title)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Title = value)
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_TITLE_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_TITLE_CHANGE")
             Return value
         End Function
 
@@ -38,7 +38,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Clear(content As Panel)
             content.Dispatcher.Invoke(Sub() content.Children.Clear())
-            MessageService.GetInstance.SendMessage("[SYSTEM]PANEL_CONTENT_CLEAR")
+            Config.MessageService.SendMessage("[SYSTEM]PANEL_CONTENT_CLEAR")
         End Sub
 
         ''' <summary>
@@ -64,7 +64,7 @@ Namespace API
             content.Dispatcher.BeginInvoke(
                 Sub()
                     content.Children.Add(XamlReader.Load(XmlTextReader.Create(PathFunction.GetFullPath(PathType.Skin, filePath))))
-                    MessageService.GetInstance.SendMessage("[SYSTEM]PANEL_CONTENT_CHANGE")
+                    Config.MessageService.SendMessage("[SYSTEM]PANEL_CONTENT_CHANGE")
                 End Sub)
         End Sub
 
@@ -185,7 +185,7 @@ Namespace API
             MainDispatcher.Invoke(Sub()
                                       If Config.BaseWindow.NavigationService.CanGoBack Then
                                           Config.BaseWindow.NavigationService.GoBack()
-                                          MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_PAGE_GOBACK")
+                                          Config.MessageService.SendMessage("[SYSTEM]WINDOW_PAGE_GOBACK")
                                       End If
                                   End Sub)
         End Sub
@@ -198,7 +198,7 @@ Namespace API
             MainDispatcher.Invoke(Sub()
                                       If Config.BaseWindow.NavigationService.CanGoForward Then
                                           Config.BaseWindow.NavigationService.GoForward()
-                                          MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_PAGE_GOFORWARD")
+                                          Config.MessageService.SendMessage("[SYSTEM]WINDOW_PAGE_GOFORWARD")
                                       End If
                                   End Sub)
         End Sub
@@ -211,7 +211,7 @@ Namespace API
             MainDispatcher.Invoke(Sub()
                                       If Config.BaseWindow.NavigationService.CanGoBack Then
                                           Config.BaseWindow.NavigationService.RemoveBackEntry()
-                                          MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVE")
+                                          Config.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVE")
                                       End If
                                   End Sub)
         End Sub
@@ -226,7 +226,7 @@ Namespace API
                                           Config.BaseWindow.NavigationService.RemoveBackEntry()
                                       End While
                                   End Sub)
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVEALL")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATE_REMOVEALL")
         End Sub
 
         ''' <summary>
@@ -237,7 +237,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub SetBackgroundByColor(color As Color)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(color))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -250,7 +250,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub SetBackgroundByRgb(r As Byte, g As Byte, b As Byte)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(Color.FromRgb(r, g, b)))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -261,7 +261,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub SetBackgroundByHex(hex As String)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Background = New SolidColorBrush(ColorConverter.ConvertFromString(hex)))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_BACKGROUND_CHANGE")
         End Sub
 
         ''' <summary>
@@ -272,7 +272,7 @@ Namespace API
         Public Function Width(Optional value As Double = 0.0) As Double
             If value.Equals(0.0) Then Return MainDispatcher.Invoke(Function() Config.BaseWindow.Width)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Width = value)
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_WIDTH_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_WIDTH_CHANGE")
             Return value
         End Function
 
@@ -284,7 +284,7 @@ Namespace API
         Public Function Height(Optional value As Double = 0.0) As Double
             If value.Equals(0.0) Then Return MainDispatcher.Invoke(Function() Config.BaseWindow.Height)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Height = value)
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_HEIGHT_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_HEIGHT_CHANGE")
             Return value
         End Function
 
@@ -296,7 +296,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Resize(canResize As Boolean)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.ResizeMode = If(canResize, ResizeMode.CanResize, ResizeMode.CanMinimize))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESIZEMODE_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_RESIZEMODE_CHANGE")
         End Sub
 
         ''' <summary>
@@ -307,7 +307,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Topmost(isTopmost As Boolean)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Topmost = isTopmost)
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_TOPMOST_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_TOPMOST_CHANGE")
         End Sub
 
         ''' <summary>
@@ -318,7 +318,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Icon(filePath As String)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Icon = BitmapFrame.Create(PathFunction.GetFullUri(PathType.Skin, filePath)))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE")
         End Sub
 
         ''' <summary>
@@ -329,7 +329,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Cursor(filePath As String)
             MainDispatcher.Invoke(Sub() Config.BaseWindow.Cursor = New Cursor(PathFunction.GetFullPath(PathType.Skin, filePath)))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE")
         End Sub
 
         ''' <summary>
@@ -455,7 +455,7 @@ Namespace API
             Dim stream As New FileStream(PathFunction.GetFullPath(PathType.UserFile, filePath), FileMode.Create)
             image.Save(stream)
             stream.Close()
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_IMAGE_SAVE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_IMAGE_SAVE")
         End Sub
 
         ''' <summary>

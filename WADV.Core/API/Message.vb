@@ -30,7 +30,7 @@ Namespace API
         ''' </summary>
         ''' <param name="message">消息内容</param>
         Public Sub Send(message As String)
-            MessageService.GetInstance.SendMessage(message)
+            Config.MessageService.SendMessage(message)
         End Sub
 
         ''' <summary>
@@ -40,10 +40,10 @@ Namespace API
         ''' <param name="message">消息内容</param>
         Public Sub Wait(message As String)
             While True
-                SyncLock MessageService.LastMessage
+                SyncLock Config.MessageService.LastMessage
                     For i As Integer = 0 To message.Length - 1
-                        If message(i) <> MessageService.LastMessage(i) Then
-                            Monitor.Wait(MessageService.LastMessage)
+                        If message(i) <> Config.MessageService.LastMessage(i) Then
+                            Monitor.Wait(Config.MessageService.LastMessage)
                             Continue While
                         End If
                     Next
@@ -58,7 +58,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Last() As String
-            Return New String(MessageService.LastMessage).ToString.Trim(ChrW(0))
+            Return New String(Config.MessageService.LastMessage).ToString.Trim(ChrW(0))
         End Function
 
         ''' <summary>
@@ -67,7 +67,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Start()
-            MessageService.GetInstance.Start()
+            Config.MessageService.Start()
         End Sub
 
         ''' <summary>
@@ -76,7 +76,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub [Stop]()
-            MessageService.GetInstance.Stop()
+            Config.MessageService.Stop()
         End Sub
 
         ''' <summary>
@@ -85,7 +85,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Status() As Boolean
-            Return MessageService.GetInstance.Status
+            Return Config.MessageService.Status
         End Function
     End Module
 End Namespace

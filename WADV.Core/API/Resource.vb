@@ -1,4 +1,5 @@
 ﻿Imports System.Windows
+Imports WADV.Core.GameSystem
 
 Namespace API
     ''' <summary>
@@ -16,7 +17,7 @@ Namespace API
             Dim tmpDictionart As New ResourceDictionary
             tmpDictionart.Source = PathFunction.GetFullUri(PathType.Skin, filePath)
             Application.Current.Resources.MergedDictionaries.Add(tmpDictionart)
-            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_ADD")
+            Config.MessageService.SendMessage("[SYSTEM]GAME_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
@@ -29,7 +30,7 @@ Namespace API
             Dim tmpDictionart As New ResourceDictionary
             tmpDictionart.Source = PathFunction.GetFullUri(PathType.Skin, filePath)
             Window.Invoke(Sub() Window.Window.Resources.MergedDictionaries.Add(tmpDictionart))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_ADD")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_RESOURCE_ADD")
         End Sub
 
         ''' <summary>
@@ -39,7 +40,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub ClearGame()
             Application.Current.Resources.MergedDictionaries.Clear()
-            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_CLEAR")
+            Config.MessageService.SendMessage("[SYSTEM]GAME_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
@@ -49,7 +50,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub ClearWindow()
             Window.Invoke(Sub() Window.Window.Resources.MergedDictionaries.Clear())
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_CLEAR")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_RESOURCE_CLEAR")
         End Sub
 
         ''' <summary>
@@ -60,7 +61,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub RemoveFromGame(resource As ResourceDictionary)
             Application.Current.Resources.MergedDictionaries.Remove(resource)
-            MessageService.GetInstance.SendMessage("[SYSTEM]GAME_RESOURCE_REMOVE")
+            Config.MessageService.SendMessage("[SYSTEM]GAME_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>
@@ -71,7 +72,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub RemoveFromWindow(resource As ResourceDictionary)
             Window.Invoke(Sub() Window.Window.Resources.MergedDictionaries.Remove(resource))
-            MessageService.GetInstance.SendMessage("[SYSTEM]WINDOW_RESOURCE_REMOVE")
+            Config.MessageService.SendMessage("[SYSTEM]WINDOW_RESOURCE_REMOVE")
         End Sub
 
         ''' <summary>
@@ -102,7 +103,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Register(name As String, target As FrameworkElement) As Boolean
-            Return NamedElementList.Register(name, target)
+            Return MainObjectList.Register(name, target)
         End Function
 
         ''' <summary>
@@ -112,7 +113,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Unregister(name As String) As Boolean
-            Return NamedElementList.Unregister(name)
+            Return MainObjectList.Unregister(name)
         End Function
 
         ''' <summary>
@@ -122,7 +123,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetByName(name As String) As FrameworkElement
-            Return NamedElementList.Get(name)
+            Return MainObjectList.Get(name)
         End Function
 
         ''' <summary>

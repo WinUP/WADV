@@ -14,11 +14,11 @@ Namespace API
         ''' <param name="value">理想执行周期的目标值(毫秒)，不需要设置的话不要传递数值</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Frame(Optional value As Integer = -1) As Integer
-            If value = -1 Then Return MainLoop.GetInstance.Span
+        Public Function Span(Optional value As Integer = -1) As Integer
+            If value = -1 Then Return Config.MainLoop.Span
             If value < 1 Then Throw New FrameOutOfRangeException
-            MainLoop.GetInstance.Span = value
-            MessageService.GetInstance.SendMessage("[SYSTEM]LOOP_FRAME_CHANGE")
+            Config.MainLoop.Span = value
+            Config.MessageService.SendMessage("[SYSTEM]LOOP_SPAN_CHANGE")
             Return value
         End Function
 
@@ -51,7 +51,7 @@ Namespace API
         ''' <param name="count">要挂起的帧数</param>
         ''' <remarks></remarks>
         Public Sub WaitFrame(count As Integer)
-            Dim waiter As New EmptyLooping(count)
+            Dim waiter As New EmptyLoop(count)
             Listen(waiter)
             WaitLoop(waiter)
         End Sub
@@ -62,7 +62,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Start()
-            MainLoop.GetInstance.Start()
+            Config.MainLoop.Start()
         End Sub
 
         ''' <summary>
@@ -71,7 +71,7 @@ Namespace API
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub [Stop]()
-            MainLoop.GetInstance.Stop()
+            Config.MainLoop.Stop()
         End Sub
 
         ''' <summary>
@@ -80,7 +80,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         Public Function TotalFrame() As Integer
-            Return MainLoop.GetInstance.CurrentFrame
+            Return Config.MainLoop.CurrentFrame
         End Function
 
         ''' <summary>
@@ -89,7 +89,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function Status() As Boolean
-            Return MainLoop.GetInstance.Status
+            Return Config.MainLoop.Status
         End Function
 
         ''' <summary>
@@ -100,7 +100,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Function ToTime(count As Integer) As TimeSpan
             Dim day, hour, minute, second, millionsecond As Integer
-            Dim currentFps = Frame()
+            Dim currentFps = Config.MainLoop.Span
             day = count / (216000 * currentFps)
             count -= day * 216000 * currentFps
             hour = count / (3600 * currentFps)
@@ -120,7 +120,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function ToFrame(time As TimeSpan) As Integer
-            Dim currentFps = Frame()
+            Dim currentFps = Config.MainLoop.Span
             Return (time.Days * 216000 + time.Hours * 3600 + time.Minutes * 60 + time.Seconds) * currentFps + CInt((CDbl(time.Milliseconds) / 1000.0) * currentFps)
         End Function
     End Module

@@ -20,7 +20,7 @@ Namespace PluginInterface
             script = system("loop")
             script("start") = New Action(AddressOf [Loop].Start)
             script("stop") = New Action(AddressOf [Loop].Stop)
-            script("frame") = New Func(Of Integer, Integer)(AddressOf [Loop].Frame)
+            script("frame") = New Func(Of Integer, Integer)(AddressOf [Loop].Span)
             script("totalFrame") = New Func(Of Integer)(AddressOf [Loop].TotalFrame)
             script("waitFrame") = New Action(Of Integer)(AddressOf [Loop].WaitFrame)
             script("waitLoop") = New Action(Of ILoopReceiver)(AddressOf [Loop].WaitLoop)

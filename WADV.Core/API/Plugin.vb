@@ -45,7 +45,7 @@ Namespace API
             ElseIf codeFile.Extension.ToLower = ".cs" Then
                 codeProvider = New CSharpCodeProvider
             Else
-                Throw New Exception.CompileTargetFormatException
+                Throw New Exception.CompileTargetFormatIllegalException
             End If
             Dim param As New CompilerParameters
             param.GenerateExecutable = False
