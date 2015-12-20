@@ -1,7 +1,9 @@
 ﻿Imports System.Threading
 Imports System.Windows.Media.Animation
+Imports WADV
 Imports WADV.Core
 Imports WADV.Core.API
+Imports WADV.WPF.Renderer
 
 Public Class GameWindow
     Private _directNavigation = False
@@ -11,8 +13,8 @@ Public Class GameWindow
     ''' 游戏解构函数
     ''' </summary>
     ''' <remarks></remarks>
-    Private Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
-        Game.[Stop](e)
+    Private Shared Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
+        Game.ChorusFF_Stop(e)
     End Sub
 
     ''' <summary>
@@ -22,8 +24,6 @@ Public Class GameWindow
     Private Sub GameWindow_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         '显示等待页面
         NavigationService.Navigate(New WaitingPage)
-        '绑定事件
-        AddHandler NavigationService.LoadCompleted, Sub() Send("[SYSTEM]WINDOW_PAGE_CHANGE")
         '设定参数
         Path.Plugin(IO.Path.Combine(Path.Game, My.Settings.PluginURL))
         Path.Resource(IO.Path.Combine(Path.Game, My.Settings.ResourceURL))
@@ -31,14 +31,17 @@ Public Class GameWindow
         Path.Skin(IO.Path.Combine(Path.Game, My.Settings.SkinURL))
         Path.UserFile(IO.Path.Combine(Path.Game, My.Settings.UserFileURL))
         '启动游戏核心
-        Game.Start(Me, 40, 3600000)
+        Game.Chorus01_PrepareSystem()
+        Game.Chorus02_LoadPlugins()
+        Game.Chorus03_Start(New WindowDelegate(Me), 40, 3600000)
+        Extension.Plug()
         '判断是否是第一次启动
         If My.Computer.FileSystem.FileExists(Path.Combine(PathType.UserFile, "first_run")) Then
             '第一次启动要执行的逻辑
             Dim tmpThread As New Thread(CType(Sub()
-                                                  RunFile("init.lua")
+                                                  Script.RunFile("init.lua")
                                                   My.Computer.FileSystem.DeleteFile(Path.Combine(PathType.UserFile, "first_run"), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.DeletePermanently)
-                                                  RunFile("game.lua")
+                                                  Script.RunFileAsync("game.lua")
                                               End Sub, ThreadStart))
             tmpThread.IsBackground = False
             tmpThread.Name = "游戏初始化承载线程"
@@ -46,7 +49,7 @@ Public Class GameWindow
             tmpThread.Start()
         Else
             '其他情况要执行的逻辑
-            RunFileAsync("game.lua")
+            Script.RunFileAsync("game.lua")
         End If
     End Sub
 
@@ -67,10 +70,6 @@ Public Class GameWindow
             _processingE = Nothing
             Exit Sub
         End If
-        '执行所有接收器
-        BoardcastNavigate(e)
-        '判断导航是否已被取消
-        If e.Cancel Then Exit Sub
         '处理窗口属性
         _directNavigation = True
         IsHitTestVisible = False

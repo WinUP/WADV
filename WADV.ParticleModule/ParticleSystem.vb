@@ -21,7 +21,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
     Private _element As Panel '绑定到的界面元素
     Private _runnable As Boolean '是否可以继续运行
     Private _surplusFrame As Integer '距离下次产生粒子的帧数
-    Private _random As New Random(Date.Now.Millisecond)
+    Private ReadOnly _random As New Random(Date.Now.Millisecond)
 
     ''' <summary>
     ''' 粒子初始坐标，这是一个依赖项属性
@@ -135,7 +135,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
         Else
             _renderTarget = New Rectangle
         End If
-        Send("[PARTICLE]SYSTEM_DECLARE")
+        Message.Send("[PARTICLE]SYSTEM_DECLARE")
     End Sub
 
     ''' <summary>
@@ -147,7 +147,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
         _renderImage = New RenderTargetBitmap(element.Width, element.Height, 96, 96, PixelFormats.Bgra32)
         element.Background = New ImageBrush(_renderImage)
         _element = element
-        Send("[PARTICLE]SYSTEM_BIND")
+        Message.Send("[PARTICLE]SYSTEM_BIND")
     End Sub
 
     ''' <summary>
@@ -158,7 +158,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
         _renderImage.Clear()
         _element.Background = Nothing
         _element = Nothing
-        Send("[PARTICLE]SYSTEM_UNBIND")
+        Message.Send("[PARTICLE]SYSTEM_UNBIND")
     End Sub
 
     ''' <summary>
@@ -214,7 +214,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
         If _runnable Then Exit Sub
         _runnable = True
         PluginInterface.LoopReceiver.Add(Me)
-        Send("[PARTICLE]SYSTEM_START")
+        Message.Send("[PARTICLE]SYSTEM_START")
     End Sub
 
     ''' <summary>
@@ -222,7 +222,7 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
     ''' </summary>
     Public Sub Pause()
         _runnable = False
-        Send("[PARTICLE]SYSTEM_PAUSE")
+        Message.Send("[PARTICLE]SYSTEM_PAUSE")
     End Sub
 
     ''' <summary>
@@ -231,6 +231,6 @@ Public NotInheritable Class ParticleSystem : Inherits DependencyObject
     Public Sub [Stop]()
         Pause()
         Unbind()
-        Send("[PARTICLE]SYSTEM_STOP")
+        Message.Send("[PARTICLE]SYSTEM_STOP")
     End Sub
 End Class

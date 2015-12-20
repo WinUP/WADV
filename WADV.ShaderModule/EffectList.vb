@@ -23,6 +23,4 @@
         If Not List.ContainsKey(name) Then Return Nothing
         Return List.Item(name)
     End Function
-
-
 End Class

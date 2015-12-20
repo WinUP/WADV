@@ -1,5 +1,5 @@
-﻿Imports System.Windows
-Imports WADV.Core.API
+﻿Imports WADV.Core.API
+Imports WADV.Core.Render
 
 Namespace Component
     ''' <summary>
@@ -8,16 +8,15 @@ Namespace Component
     ''' <remarks></remarks>
     Public NotInheritable Class ComponentList : Implements IDisposable
         Private ReadOnly _componentlist As New List(Of Component)
-        Private ReadOnly _element As FrameworkElement
+        Private ReadOnly _element As Sprite
 
         ''' <summary>
         ''' 获得一个新的组件列表
         ''' </summary>
         ''' <param name="element">组件列表所属的元素</param>
         ''' <remarks></remarks>
-        Friend Sub New(element As FrameworkElement)
+        Friend Sub New(element As Sprite)
             _element = element
-            Send("[SYSTEM]COMPONENTLIST_NEW")
         End Sub
 
         ''' <summary>
@@ -39,7 +38,6 @@ Namespace Component
             If Not target.BeforeBinding(_element) Then Return BindingResult.Cancel
             target.Bind(_element)
             _componentlist.Add(target)
-            Send("[SYSTEM]COMPONENT_ADD")
             Return BindingResult.Success
         End Function
 
@@ -100,7 +98,6 @@ Namespace Component
             target.ListenMessage(False)
             target.Unbind(_element)
             _componentlist.Remove(target)
-            Send("[SYSTEM]COMPONENT_REMOVE")
             Return UnbindingResult.Success
         End Function
 
@@ -118,7 +115,6 @@ Namespace Component
             target.ListenMessage(False)
             target.Unbind(_element)
             _componentlist.Remove(target)
-            Send("[SYSTEM]COMPONENT_REMOVE")
             Return UnbindingResult.Success
         End Function
 
@@ -143,7 +139,6 @@ Namespace Component
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
-                Send("[SYSTEM]COMPONENT_REMOVE")
             Next
             Return result
         End Function
@@ -169,7 +164,6 @@ Namespace Component
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
-                Send("[SYSTEM]COMPONENT_REMOVE")
             Next
             Return result
         End Function
@@ -193,7 +187,6 @@ Namespace Component
                     i += 1
                 End If
             End While
-            Send("[SYSTEM]COMPONENTLIST_CLEAR")
         End Sub
 
         Friend Sub Dispose() Implements IDisposable.Dispose
@@ -204,7 +197,6 @@ Namespace Component
                 e.ListenMessage(False)
             Next
             _componentlist.Clear()
-            Send("[SYSTEM]COMPONENTLIST_DISPOSE")
         End Sub
     End Class
 End Namespace

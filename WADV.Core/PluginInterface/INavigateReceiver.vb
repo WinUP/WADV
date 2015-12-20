@@ -11,7 +11,7 @@ Namespace PluginInterface
         ''' </summary>
         ''' <param name="e">可取消的转场数据</param>
         ''' <remarks></remarks>
-        Sub ReceiveNavigate(e As NavigatingCancelEventArgs)
+        Sub ReceiveNavigate(e As NavigationParameter)
     End Interface
 End Namespace
 

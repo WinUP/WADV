@@ -17,7 +17,7 @@ Namespace ReceiverList
         Friend Shared Function Add(target As ILoopReceiver) As Boolean
             If Not Contains(target) Then
                 List.Add(target)
-                Config.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
                 Return True
             Else
                 Return False
@@ -51,7 +51,7 @@ Namespace ReceiverList
         ''' <remarks></remarks>
         Friend Shared Sub Delete(i As Integer)
             List.RemoveAt(i)
-            Config.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
         End Sub
 
         ''' <summary>

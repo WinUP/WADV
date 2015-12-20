@@ -21,7 +21,7 @@
                                  "设置页面进入次数",
                                  "设置修改次数",
                                  "路线选择次数"}
-            API.AchievementProperty.Add(tmpProperty)
+            Extension.Property.Add(tmpProperty)
         Next
     End Sub
 End Class

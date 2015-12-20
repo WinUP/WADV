@@ -1,6 +1,4 @@
 ﻿Namespace Config
-
-
     ''' <summary>
     ''' 模块设置类
     ''' </summary>
@@ -13,7 +11,7 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend Shared Property Fast As Boolean
+        Friend Shared Property FastMode As Boolean
 
         ''' <summary>
         ''' 获取或设置略过效果状态
@@ -21,7 +19,7 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend Shared Property Clicked As Boolean
+        Friend Shared Property ClickedSkip As Boolean
 
         ''' <summary>
         ''' 获取或设置文字间隔帧
@@ -37,7 +35,7 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend Shared Property Auto As Boolean
+        Friend Shared Property AutoMode As Boolean
 
         ''' <summary>
         ''' 获取或设置句子间隔帧
@@ -53,8 +51,6 @@
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend Shared Property Ignore As Boolean
-
+        Friend Shared Property IgnoreRead As Boolean
     End Class
-
 End Namespace

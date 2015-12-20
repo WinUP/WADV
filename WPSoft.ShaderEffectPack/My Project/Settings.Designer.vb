@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.WPSoft.ShaderEffectPack.My.MySettings
+        Friend ReadOnly Property Settings() As Global.WPSoft.WPF.ShaderEffectPack.My.MySettings
             Get
-                Return Global.WPSoft.ShaderEffectPack.My.MySettings.Default
+                Return Global.WPSoft.WPF.ShaderEffectPack.My.MySettings.Default
             End Get
         End Property
     End Module

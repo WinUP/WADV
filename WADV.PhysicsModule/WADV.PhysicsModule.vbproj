@@ -127,6 +127,7 @@
     <Compile Include="PhysicsWorld.vb" />
     <Compile Include="PluginInterface\LoopReceiver.vb" />
     <Compile Include="PluginInterface\ScriptInitialise.vb" />
+    <Compile Include="Point2.vb" />
     <Compile Include="Utilities.vb" />
   </ItemGroup>
   <ItemGroup>

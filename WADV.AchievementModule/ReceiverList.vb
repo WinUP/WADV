@@ -1,4 +1,4 @@
-﻿Imports WADV.AchievementModule.PluginInterface
+﻿Imports WADV.WPF.AchievementModule.PluginInterface
 
 Friend NotInheritable Class ReceiverList
     Private Shared ReadOnly Receiver As New ScriptMessageReceiver

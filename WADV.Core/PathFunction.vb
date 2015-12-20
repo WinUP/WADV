@@ -13,15 +13,15 @@ Friend NotInheritable Class PathFunction
         Dim typePath As String = ""
         Select Case type
             Case PathType.Plugin
-                typePath = Config.PluginPath
+                typePath = Configuration.Path.PluginPath
             Case PathType.Resource
-                typePath = Config.ResourcePath
+                typePath = Configuration.Path.ResourcePath
             Case PathType.Script
-                typePath = Config.ScriptPath
+                typePath = Configuration.Path.ScriptPath
             Case PathType.Skin
-                typePath = Config.SkinPath
+                typePath = Configuration.Path.SkinPath
             Case PathType.UserFile
-                typePath = Config.UserFilePath
+                typePath = Configuration.Path.UserFilePath
         End Select
         Return IO.Path.Combine(typePath, filePath)
     End Function

@@ -125,9 +125,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WADV.TextModule\WADV.TextModule.vbproj">
+    <ProjectReference Include="..\WADV.TextModule\WADV.WPF.TextModule.vbproj">
       <Project>{67f83b68-5996-4af6-b596-fda9befd9a4c}</Project>
-      <Name>WADV.TextModule</Name>
+      <Name>WADV.WPF.TextModule</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WPSoft.DLAchievements")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WPSoft.DLAchievements")> 
-<Assembly: AssemblyCopyright("Copyright ©  2015")> 
+<Assembly: AssemblyTitle("Deus Legem Achievements For WADV")>
+<Assembly: AssemblyDescription("Deus Legem Achievements For WADV")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("Deus Legem Achievements For WADV")>
+<Assembly: AssemblyCopyright("Copyright © WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

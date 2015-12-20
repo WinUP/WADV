@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WPSoft.ShaderEffectPack3")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WPSoft.ShaderEffectPack3")> 
-<Assembly: AssemblyCopyright("Copyright ©  2015")> 
+<Assembly: AssemblyTitle("ShaderEffect Pack No.3 For WADV")>
+<Assembly: AssemblyDescription("ShaderEffect Pack No.3 For WADV")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("ShaderEffect Pack No.3 For WADV")>
+<Assembly: AssemblyCopyright("Copyright © WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

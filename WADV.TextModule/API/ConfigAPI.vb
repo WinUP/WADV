@@ -18,10 +18,10 @@ Namespace API
         ''' <remarks></remarks>
         Public Sub Init(framsBetweenWord As Integer, framsBetweenSetence As Integer, auto As Boolean, ignoreReaded As Boolean)
             Initialiser.LoadEffect()
-            ModuleConfig.Auto = auto
-            ModuleConfig.Clicked = False
-            ModuleConfig.Fast = False
-            ModuleConfig.Ignore = ignoreReaded
+            ModuleConfig.AutoMode = auto
+            ModuleConfig.ClickedSkip = False
+            ModuleConfig.FastMode = False
+            ModuleConfig.IgnoreRead = ignoreReaded
             WordFrame(framsBetweenWord)
             SentenceFrame(framsBetweenSetence)
             Send("[TEXT]INIT_FINISH")
@@ -58,7 +58,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetAutoMode() As Boolean
-            Return ModuleConfig.Auto
+            Return ModuleConfig.AutoMode
         End Function
 
         ''' <summary>
@@ -67,7 +67,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Function GetIgnoreMode() As Boolean
-            Return ModuleConfig.Ignore
+            Return ModuleConfig.IgnoreRead
         End Function
 
         ''' <summary>
@@ -76,7 +76,7 @@ Namespace API
         ''' <param name="auto">新的状态</param>
         ''' <remarks></remarks>
         Public Sub SetAutoMode(auto As Boolean)
-            ModuleConfig.Auto = auto
+            ModuleConfig.AutoMode = auto
             Send("[TEXT]AUTOMODE_CHANGE")
         End Sub
 
@@ -86,7 +86,7 @@ Namespace API
         ''' <param name="ignore">新的状态</param>
         ''' <remarks></remarks>
         Public Sub SetIgnoreMode(ignore As Boolean)
-            ModuleConfig.Ignore = ignore
+            ModuleConfig.IgnoreRead = ignore
             Send("[TEXT]IGNOREMODE_CHANGE")
         End Sub
 

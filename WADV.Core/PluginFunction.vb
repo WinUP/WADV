@@ -16,7 +16,6 @@ Friend NotInheritable Class PluginFunction
     ''' </summary>
     ''' <remarks></remarks>
     Friend Shared Sub InitialiseAllPlugins()
-        If Config.IsPluginInitialised Then Throw New PluginsMultiInitialiseException
         Dim pluginConfig As New XmlDocument
         pluginConfig.Load(PathFunction.GetFullPath(PathType.Plugin, "plugin.xml"))
         For Each pluginName In From fileName As XmlNode In pluginConfig.SelectNodes("/plugin/sequence/item") Select fileName.InnerXml
@@ -26,8 +25,7 @@ Friend NotInheritable Class PluginFunction
                 MessageBox.Show(ex.Message, "插件" & pluginName & "加载失败")
             End Try
         Next
-        Config.IsPluginInitialised = True
-        Config.MessageService.SendMessage("[SYSTEM]PLUGIN_INIT_FINISH")
+        Configuration.Status.IsPluginInitialised = True
     End Sub
 
     ''' <summary>
@@ -36,7 +34,7 @@ Friend NotInheritable Class PluginFunction
     ''' <param name="fileName">插件路径(从Plugin目录开始)</param>
     ''' <remarks></remarks>
     Friend Shared Sub AddPlugin(fileName As String)
-        If PluginFileList.Contains(fileName) Then Throw New PluginMultiInitialiseException
+        If PluginFileList.Contains(fileName) Then Throw New PluginMultiInitialisesException
         Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.GetFullPath(PathType.Plugin, fileName)).GetTypes
         PluginLoadReceiverList.BeforeLoad(pluginTypes)
         For Each tmpTypeName In pluginTypes
@@ -54,6 +52,6 @@ Friend NotInheritable Class PluginFunction
             End If
         Next
         PluginFileList.Add(fileName)
-        Config.MessageService.SendMessage("[SYSTEM]PLUGIN_ADD")
+        Configuration.System.MessageService.SendMessage("[SYSTEM]PLUGIN_ADD")
     End Sub
 End Class

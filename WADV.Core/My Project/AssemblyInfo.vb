@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WADV.Core")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WADV.Core")> 
-<Assembly: AssemblyCopyright("Copyright ©  2015")> 
+<Assembly: AssemblyTitle("WinUP Adventure Game Engine Core")>
+<Assembly: AssemblyDescription("WinUP Adventure Game Engine Core")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("WinUP Adventure Game Engine Core")>
+<Assembly: AssemblyCopyright("Copyright © WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

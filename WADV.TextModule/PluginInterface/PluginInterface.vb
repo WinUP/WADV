@@ -20,7 +20,7 @@ Namespace PluginInterface
             End If
             If _effect.IsAllOver Then Return False
             '快进状态或略过已读
-            If ModuleConfig.Fast OrElse (ModuleConfig.Ignore AndAlso _effect.IsRead) Then
+            If ModuleConfig.FastMode OrElse (ModuleConfig.IgnoreRead AndAlso _effect.IsRead) Then
                 _effect.NextState()
                 While Not _effect.IsSentenceOver
                     _effect.NextState()
@@ -29,7 +29,7 @@ Namespace PluginInterface
                 Return True
             End If
             '自动状态
-            If ModuleConfig.Auto Then
+            If ModuleConfig.AutoMode Then
                 _effect.NextState()
                 If _playVoice Then
                     PlayVoice(_effect.VoiceFile)
@@ -44,7 +44,7 @@ Namespace PluginInterface
                 Return True
             End If
             '手动状态
-            If ModuleConfig.Clicked Then
+            If ModuleConfig.ClickedSkip Then
                 If _effect.IsSentenceOver Then
                     _effect.NextState()
                     PlayVoice(_effect.VoiceFile)
@@ -53,7 +53,7 @@ Namespace PluginInterface
                         _effect.NextState()
                     End While
                 End If
-                ModuleConfig.Clicked = False
+                ModuleConfig.ClickedSkip = False
             Else
                 If _effect.IsSentenceOver Then Return True
                 _effect.NextState()

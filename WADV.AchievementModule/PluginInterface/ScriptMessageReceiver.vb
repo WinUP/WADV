@@ -1,6 +1,6 @@
 ﻿Imports Neo.IronLua
 Imports WADV.Core.PluginInterface
-Imports WADV.LuaSupport.API
+Imports WADV.LuaSupport.Extension
 
 Namespace PluginInterface
     Friend NotInheritable Class ScriptMessageReceiver : Implements IMessageReceiver
@@ -8,8 +8,8 @@ Namespace PluginInterface
         Private ReadOnly _env As LuaGlobal
 
         Public Sub New()
-            _env = Environment()
-            _script = Vm.CompileChunk(ModuleConfig.ReceiverFileName, New LuaCompileOptions)
+            _env = GetEnvironment()
+            _script = Compile(Config.ReceiverFileName, New LuaCompileOptions)
         End Sub
 
         Public Sub ReceivingMessage(message As String) Implements IMessageReceiver.ReceiveMessage

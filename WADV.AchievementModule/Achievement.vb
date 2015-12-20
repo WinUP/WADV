@@ -68,13 +68,14 @@
     End Property
 
     ''' <summary>
-    ''' 设置这个成就围已获得
+    ''' 设置这个成就为已获得<br></br>
+    ''' 将会发送消息 [ACHIEVE]ACHIEVE_EARN
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub SetEarn()
         _isEarn = True
         ShowList.Add(Me)
-        Send("[ACHIEVE]ACHIEVE_EARN")
-        API.Achieve.Save()
+        Message.Send("[ACHIEVE]ACHIEVE_EARN")
+        Extension.Item.Save()
     End Sub
 End Class

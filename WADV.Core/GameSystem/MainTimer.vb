@@ -15,7 +15,7 @@ Namespace GameSystem
             _loopThread.IsBackground = True
             _loopThread.Name = "[系统]游戏计时线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            Config.MessageService.SendMessage("[SYSTEM]TIMER_INIT_FINISH")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]TIMER_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -60,7 +60,7 @@ Namespace GameSystem
         ''' <remarks></remarks>
         Private Sub TimerContent()
             While (Status)
-                Config.MessageService.SendMessage("[SYSTEM]TIMER_TICK")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]TIMER_TICK")
                 Thread.Sleep(Span)
             End While
         End Sub

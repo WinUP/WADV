@@ -1,18 +1,15 @@
 ﻿Imports System.Threading
 Imports Neo.IronLua
 Imports WADV.Core
+Imports WADV.Core.Script
 
 ''' <summary>
 ''' 脚本引擎核心类
 ''' </summary>
 ''' <remarks></remarks>
 Friend NotInheritable Class ScriptCore : Implements IScriptEngine
-    Private Shared _self As ScriptCore
     Private _vm As Lua
     Private _env As LuaGlobal
-
-    Private Sub New()
-    End Sub
 
     ''' <summary>
     ''' 初始化脚本核心
@@ -34,14 +31,6 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     End Sub
 
     ''' <summary>
-    ''' 获取脚本核心的唯一实例
-    ''' </summary>
-    Friend Shared Function GetInstance() As ScriptCore
-        If _self Is Nothing Then _self = New ScriptCore
-        Return _self
-    End Function
-
-    ''' <summary>
     ''' 获取脚本主机实例
     ''' </summary>
     Friend ReadOnly Property Vm As Lua
@@ -60,9 +49,9 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     End Property
 
     Friend Function RunFile(filePath As String) As Object Implements IScriptEngine.RunFile
-        Send("[LUA]SCRIPTFILE_STANDBY")
-        Dim result = _env.DoChunk(Combine(PathType.Script, filePath))
-        Send("[LUA]SCRIPTFILE_FINISH")
+        Message.Send("[LUA]SCRIPTFILE_STANDBY")
+        Dim result = _env.DoChunk(Path.Combine(PathType.Script, filePath))
+        Message.Send("[LUA]SCRIPTFILE_FINISH")
         Return result
     End Function
 
@@ -71,14 +60,14 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本文件执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Send("[LUA]ASYNC_SCRIPTFILE_STANDBY")
+        Message.Send("[LUA]ASYNC_SCRIPTFILE_STANDBY")
         tmpThread.Start()
     End Sub
 
     Friend Function RunString(script As String) As Object Implements IScriptEngine.RunString
-        Send("[LUA]SCRIPT_STANDBY")
+        Message.Send("[LUA]SCRIPT_STANDBY")
         Dim result = _env.DoChunk(script, "temp.lua")
-        Send("[LUA]SCRIPT_FINISH")
+        Message.Send("[LUA]SCRIPT_FINISH")
         Return result
     End Function
 
@@ -87,7 +76,7 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本字符串执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Send("[LUA]ASYNC_SCRIPT_STANDBY")
+        Message.Send("[LUA]ASYNC_SCRIPT_STANDBY")
         tmpThread.Start(content)
     End Sub
 
@@ -98,4 +87,21 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     Public Function [Get](name As String) As Object Implements IScriptEngine.Get
         Return _env(name)
     End Function
+
+    Public Sub Register(target As Field) Implements IScriptEngine.Register
+        Register(target, _env("core"))
+    End Sub
+
+    '注册子Field时，父Field中为这个子Field起的名字是无用的，注册名使用的是子Field的Name
+    Private Sub Register(target As Field, root As LuaTable)
+        If root(target.Name) Is Nothing Then root(target.Name) = New LuaTable
+        Dim table As LuaTable = root(target.Name)
+        For Each e In target.Content
+            If TypeOf e.Value Is Field Then
+                Register(e.Value, table)
+            Else
+                table(e.Key) = e.Value
+            End If
+        Next
+    End Sub
 End Class

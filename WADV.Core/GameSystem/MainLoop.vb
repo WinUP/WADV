@@ -12,7 +12,6 @@ Namespace GameSystem
         Private _frameCount As Integer
         Private _span As Integer
         Private ReadOnly _loopThread As Thread
-        Private ReadOnly _renderDelegate As New Action(Of ILoopReceiver)(Sub(tmploop As ILoopReceiver) tmploop.Render())
 
         ''' <summary>
         ''' 获得一个游戏循环实例
@@ -22,7 +21,7 @@ Namespace GameSystem
             _loopThread.IsBackground = True
             _loopThread.Name = "[系统]游戏循环线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            Config.MessageService.SendMessage("[SYSTEM]LOOP_INIT_FINISH")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_INIT_FINISH")
         End Sub
 
         ''' <summary>
@@ -74,9 +73,8 @@ Namespace GameSystem
             Dim loopContent As ILoopReceiver
             Dim timeNow As Long
             Dim sleepTime As Integer
-            Dim gameWindow = Config.BaseWindow
-            Dim gameDispatcher = gameWindow.Dispatcher
-            Config.MessageService.SendMessage("[SYSTEM]LOOP_START")
+            Dim gameWindow = Configuration.System.BaseWindow
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_START")
             While (Status)
                 timeNow = Now.Ticks
                 i = 0
@@ -89,13 +87,13 @@ Namespace GameSystem
                         LoopReceiverList.Delete(i)
                         _loopListCount -= 1
                     End If
-                    gameDispatcher.Invoke(_renderDelegate, loopContent)
+                    gameWindow.RunRenderDelegate(AddressOf loopContent.Render)
                 End While
                 sleepTime = (timeNow + _span - Now.Ticks) / 10000
                 If sleepTime > 0 Then Thread.Sleep(sleepTime)
                 _frameCount += 1
             End While
-            Config.MessageService.SendMessage("[SYSTEM]LOOP_ABORT")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_ABORT")
         End Sub
 
         ''' <summary>

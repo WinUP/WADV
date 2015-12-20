@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WADV.AchievementModule")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WADV.AchievementModule")> 
-<Assembly: AssemblyCopyright("Copyright ©  2014")> 
+<Assembly: AssemblyTitle("Achievement Module For WADV")>
+<Assembly: AssemblyDescription("Achievement Module For WADV")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("Achievement Module For WADV")>
+<Assembly: AssemblyCopyright("Copyright © WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

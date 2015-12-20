@@ -87,36 +87,49 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Component.vb" />
     <Compile Include="API\Game.vb" />
     <Compile Include="API\Loop.vb" />
     <Compile Include="API\Message.vb" />
     <Compile Include="API\Path.vb" />
     <Compile Include="API\Plugin.vb" />
-    <Compile Include="API\Resource.vb" />
     <Compile Include="API\Script.vb" />
     <Compile Include="API\Timer.vb" />
-    <Compile Include="API\Window.vb" />
     <Compile Include="Component\ComponentMessageReceiver.vb" />
     <Compile Include="Component\Component.vb" />
     <Compile Include="Component\ComponentList.vb" />
     <Compile Include="Component\ComponentLoopReceiver.vb" />
-    <Compile Include="Config.vb" />
+    <Compile Include="Configuration\Path.vb" />
+    <Compile Include="Configuration\Status.vb" />
+    <Compile Include="Configuration\System.vb" />
     <Compile Include="EmptyLoop.vb" />
     <Compile Include="Enumerations.vb" />
+    <Compile Include="Exception\CloseUnsupportedException.vb" />
     <Compile Include="Exception\CompileTargetFormatIllegalException.vb" />
+    <Compile Include="Exception\FullscreenUnsupportedException.vb" />
+    <Compile Include="Exception\IlleagleGoBackException.vb" />
+    <Compile Include="Exception\IlleagleGoForwardException.vb" />
+    <Compile Include="Exception\SpriteCrossSceneAddingIlleagleException.vb" />
     <Compile Include="Exception\FrameOutOfRangeException.vb" />
     <Compile Include="Exception\MessageDequeueFailedException.vb" />
-    <Compile Include="Exception\PluginMultiInitialiseException.vb" />
+    <Compile Include="Exception\MethodNotAllowedException.vb" />
+    <Compile Include="Exception\PluginMultiInitialisesException.vb" />
     <Compile Include="Exception\PluginsMultiInitialiseException.vb" />
     <Compile Include="Exception\PluginInitialiseFailedException.vb" />
+    <Compile Include="Exception\SceneNotFoundException.vb" />
+    <Compile Include="Exception\SpriteCannotFindException.vb" />
     <Compile Include="Exception\SystemMultiPreparedException.vb" />
     <Compile Include="Exception\TickOutOfRangeException.vb" />
-    <Compile Include="IScriptEngine.vb" />
+    <Compile Include="NavigationParameter.vb" />
+    <Compile Include="Point2.vb" />
+    <Compile Include="Rect2.vb" />
+    <Compile Include="Render\WindowBase.vb" />
+    <Compile Include="Render\Sprite.vb" />
+    <Compile Include="Render\SpriteList.vb" />
+    <Compile Include="Script\Field.vb" />
+    <Compile Include="Script\IScriptEngine.vb" />
     <Compile Include="GameSystem\MainLoop.vb" />
     <Compile Include="GameSystem\MainTimer.vb" />
     <Compile Include="GameSystem\MessageService.vb" />
-    <Compile Include="GameSystem\MainObjectList.vb" />
     <Compile Include="PathFunction.vb" />
     <Compile Include="PluginFunction.vb" />
     <Compile Include="PluginInterface\IGameDestructReceiver.vb" />
@@ -133,7 +146,7 @@
     <Compile Include="ReceiverList\MessageReceiverList.vb" />
     <Compile Include="ReceiverList\NavigateReceiverList.vb" />
     <Compile Include="ReceiverList\PluginLoadingReceiverList.vb" />
-    <Compile Include="UIOperation.vb" />
+    <Compile Include="Render\Scene.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -149,6 +162,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Vector2.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -169,6 +183,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

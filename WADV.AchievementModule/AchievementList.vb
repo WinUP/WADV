@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Collections.ObjectModel
+Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
 
 ''' <summary>
@@ -19,7 +20,6 @@ Friend NotInheritable Class AchievementList
             _list.Add(achievement.Name, achievement)
         End SyncLock
         achievement.Register()
-        Message.Send("[ACHIEVE]ACHIEVE_ADD")
     End Sub
 
     ''' <summary>
@@ -42,7 +42,6 @@ Friend NotInheritable Class AchievementList
         SyncLock (_list)
             _list.Remove(name)
         End SyncLock
-        Message.Send("[ACHIEVE]ACHIEVE_DELETE")
     End Sub
 
     ''' <summary>
@@ -59,12 +58,13 @@ Friend NotInheritable Class AchievementList
     End Property
 
     ''' <summary>
-    ''' 保存成就列表到文件
+    ''' 保存成就列表到文件<br></br>
+    ''' 将会发送消息 [ACHIEVE]ACHIEVE_SAVE
     ''' </summary>
     ''' <param name="fileName">要保存到的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Save(fileName As String)
-        Dim stream As New FileStream(Combine(PathType.UserFile, fileName), FileMode.Create)
+        Dim stream As New FileStream(Core.API.Path.Combine(PathType.UserFile, fileName), FileMode.Create)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
         SyncLock (_list)
             formatter.Serialize(stream, _list)
@@ -74,12 +74,13 @@ Friend NotInheritable Class AchievementList
     End Sub
 
     ''' <summary>
-    ''' 从文件中恢复成就列表
+    ''' 从文件中恢复成就列表<br></br>
+    ''' 将会发送消息 [ACHIEVE]ACHIEVE_LOAD
     ''' </summary>
     ''' <param name="fileName">要读取的文件</param>
     ''' <remarks></remarks>
     Friend Shared Sub Load(fileName As String)
-        Dim path = Combine(PathType.UserFile, fileName)
+        Dim path = Core.API.Path.Combine(PathType.UserFile, fileName)
         If Not My.Computer.FileSystem.FileExists(path) Then Return
         Dim stream As New FileStream(path, FileMode.Open)
         Dim formatter As New BinaryFormatter With {.Binder = New DeserializationBinder}
@@ -95,7 +96,7 @@ Friend NotInheritable Class AchievementList
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetList() As Achievement()
-        Return _list.Values.ToArray
+    Public Shared Function GetList() As ReadOnlyCollection(Of Achievement)
+        Return _list.Values.ToList.AsReadOnly
     End Function
 End Class

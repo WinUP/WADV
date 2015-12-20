@@ -6,44 +6,49 @@ Namespace API
     ''' <summary>
     ''' 消息API
     ''' </summary>
-    Public Module Message
+    Public Class Message
         ''' <summary>
-        ''' 添加一个接收器
+        ''' 添加一个接收器<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Function Listen(receiver As IMessageReceiver) As Boolean
+        Public Shared Function Listen(receiver As IMessageReceiver) As Boolean
             Return MessageReceiverList.Add(receiver)
         End Function
 
         ''' <summary>
-        ''' 删除一个接收器
-        ''' 同步方法|调用线程
+        ''' 删除一个接收器<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
-        Public Sub Remove(receiver As IMessageReceiver)
+        Public Shared Sub Remove(receiver As IMessageReceiver)
             MessageReceiverList.Delete(receiver)
         End Sub
 
         ''' <summary>
-        ''' 发送一个消息
-        ''' 同步方法|调用线程
+        ''' 发送一个消息<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Public Sub Send(message As String)
-            Config.MessageService.SendMessage(message)
+        Public Shared Sub Send(message As String)
+            Configuration.System.MessageService.SendMessage(message)
         End Sub
 
         ''' <summary>
-        ''' 等待下一个指定消息的出现
-        ''' 同步方法|调用线程
+        ''' 等待下一个指定消息的出现<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Public Sub Wait(message As String)
+        Public Shared Sub Wait(message As String)
             While True
-                SyncLock Config.MessageService.LastMessage
+                SyncLock Configuration.System.MessageService.LastMessage
                     For i As Integer = 0 To message.Length - 1
-                        If message(i) <> Config.MessageService.LastMessage(i) Then
-                            Monitor.Wait(Config.MessageService.LastMessage)
+                        If message(i) <> Configuration.System.MessageService.LastMessage(i) Then
+                            Monitor.Wait(Configuration.System.MessageService.LastMessage)
                             Continue While
                         End If
                     Next
@@ -53,39 +58,33 @@ Namespace API
         End Sub
 
         ''' <summary>
-        ''' 获取最近广播的一条信息
+        ''' 获取最近广播的一条信息<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Last() As String
-            Return New String(Config.MessageService.LastMessage).ToString.Trim(ChrW(0))
+        Public Shared Function Last() As String
+            Return New String(Configuration.System.MessageService.LastMessage).ToString.Trim(ChrW(0))
         End Function
 
         ''' <summary>
-        ''' 启动消息循环
-        ''' 同步方法|调用线程
+        ''' 获取消息循环的状态<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub Start()
-            Config.MessageService.Start()
-        End Sub
-
-        ''' <summary>
-        ''' 终止消息循环
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub [Stop]()
-            Config.MessageService.Stop()
-        End Sub
-
-        ''' <summary>
-        ''' 获取消息循环的状态
-        ''' </summary>
+        ''' <param name="value">是否启用消息循环</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Status() As Boolean
-            Return Config.MessageService.Status
+        Public Shared Function Status(Optional value As Object = Nothing) As Boolean
+            If value Is Nothing Then Return Configuration.System.MessageService.Status
+            Dim data = DirectCast(value, Boolean)
+            If data Then
+                Configuration.System.MessageService.Start()
+            Else
+                Configuration.System.MessageService.Stop()
+            End If
+            Return data
         End Function
-    End Module
+    End Class
 End Namespace

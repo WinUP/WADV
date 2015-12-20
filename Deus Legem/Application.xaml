@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	StartupUri="GameWindow.xaml"
 ShutdownMode="OnMainWindowClose">
-	<Application.Resources>
-	</Application.Resources>
+    <Application.Resources>
+    </Application.Resources>
 	
 </Application>

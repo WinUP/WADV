@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WADV.LuaSupport")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WADV.LuaSupport")> 
-<Assembly: AssemblyCopyright("Copyright ©  2015")> 
+<Assembly: AssemblyTitle("Lua Support For WADV")>
+<Assembly: AssemblyDescription("Lua Support For WADV")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("Lua Support For WADV")>
+<Assembly: AssemblyCopyright("Copyright © WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>

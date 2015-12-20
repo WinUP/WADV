@@ -4,12 +4,12 @@
     End Sub
 
     Public Overrides Sub Check()
-        If API.GetData("成就获得个数") = Integer.MaxValue Then '!注意：完工后把这里改成游戏成就总数-1
+        If Extension.Property.Get("成就获得个数") = Integer.MaxValue Then '!注意：完工后把这里改成游戏成就总数-1
             SetEarn()
         End If
     End Sub
 
     Protected Overrides Sub Register()
-        API.Register("成就获得个数", Me)
+        Extension.Property.Register("成就获得个数", Me)
     End Sub
 End Class

@@ -77,6 +77,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Sub Main</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -90,10 +93,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Application.xaml">
+    <None Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </None>
     <Compile Include="WaitingPage.xaml.vb">
       <DependentUpon>WaitingPage.xaml</DependentUpon>
     </Compile>
@@ -166,6 +169,10 @@
     <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
       <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
       <Name>WADV.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WADV.Renderer.WPF\WADV.WPF.Renderer.csproj">
+      <Project>{50768186-4659-477e-b2b6-d16cd20146bb}</Project>
+      <Name>WADV.WPF.Renderer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

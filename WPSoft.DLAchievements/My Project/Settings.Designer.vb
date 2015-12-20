@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.WPSoft.DLAchievements.My.MySettings
+        Friend ReadOnly Property Settings() As Global.WPSoft.DeusLegem.Achievements.My.MySettings
             Get
-                Return Global.WPSoft.DLAchievements.My.MySettings.Default
+                Return Global.WPSoft.DeusLegem.Achievements.My.MySettings.Default
             End Get
         End Property
     End Module

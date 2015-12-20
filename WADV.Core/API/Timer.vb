@@ -3,45 +3,42 @@
     ''' 计时器API
     ''' </summary>
     ''' <remarks></remarks>
-    Public Module Timer
-        ''' <summary>
-        ''' 启动计时器
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub Start()
-            Config.MainTimer.Start()
-        End Sub
+    Public Class Timer
 
         ''' <summary>
-        ''' 停止计时器
-        ''' 同步方法|调用线程
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub [Stop]()
-            Config.MainTimer.Stop()
-        End Sub
-
-        ''' <summary>
-        ''' 获取或设置计时器的计时间隔
+        ''' 获取或设置计时器的计时间隔<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL<br></br>
+        ''' 异常：<br></br>
+        '''  TickOutOfRangeException
         ''' </summary>
         ''' <param name="value">目标间隔(毫秒)</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Tick(Optional value As Integer = -1) As Integer
-            If value = -1 Then Return Config.MainTimer.Span
+        Public Shared Function Tick(Optional value As Integer = -1) As Integer
+            If value = -1 Then Return Configuration.System.MainTimer.Span
             If value < 1 Then Throw New Exception.TickOutOfRangeException
-            Config.MainTimer.Span = value
+            Configuration.System.MainTimer.Span = value
             Return value
         End Function
 
         ''' <summary>
-        ''' 获取计时器的状态
+        ''' 获取或设置计时器的状态<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
         ''' </summary>
+        ''' <param name="value">是否启用计时器</param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Status() As Boolean
-            Return Config.MainTimer.Status
+        Public Shared Function Status(Optional value As Object = Nothing) As Boolean
+            If value Is Nothing Then Return Configuration.System.MainTimer.Status
+            Dim data = DirectCast(value, Boolean)
+            If data Then
+                Configuration.System.MainTimer.Start()
+            Else
+                Configuration.System.MainTimer.Stop()
+            End If
+            Return value
         End Function
-    End Module
+    End Class
 End Namespace

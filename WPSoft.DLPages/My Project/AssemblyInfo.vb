@@ -11,11 +11,11 @@ Imports System.Windows
 
 ' 查看程序集特性的值
 
-<Assembly: AssemblyTitle("WPSoft.DLPages")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("WPSoft.DLPages")> 
-<Assembly: AssemblyCopyright("Copyright @  2015")> 
+<Assembly: AssemblyTitle("Deus Legem XAML Pages For WADV")>
+<Assembly: AssemblyDescription("Deus Legem XAML Pages For WADV")>
+<Assembly: AssemblyCompany("WinUP Software")>
+<Assembly: AssemblyProduct("Deus Legem XAML Pages For WADV")>
+<Assembly: AssemblyCopyright("Copyright @ WinUP Software 2015")>
 <Assembly: AssemblyTrademark("")> 
 <Assembly: ComVisible(false)>
 

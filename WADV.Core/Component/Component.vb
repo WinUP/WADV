@@ -1,4 +1,6 @@
-﻿Imports System.Windows
+﻿Imports System.Collections.ObjectModel
+Imports System.Windows
+Imports WADV.Core.Render
 
 Namespace Component
     ''' <summary>
@@ -6,7 +8,7 @@ Namespace Component
     ''' </summary>
     ''' <remarks></remarks>
     Public MustInherit Class Component : Implements IDisposable
-        Private ReadOnly _elementList As New List(Of FrameworkElement)
+        Private ReadOnly _elementList As New List(Of Sprite)
         Private _receiverType As ComponentReceiverType = ComponentReceiverType.None
 
         ''' <summary>
@@ -16,7 +18,7 @@ Namespace Component
         ''' <param name="isFromClear">这个操作是否由全部清除操作发起</param>
         ''' <returns>允许断开绑定则返回True，否则返回False</returns>
         ''' <remarks></remarks>
-        Protected Friend Overridable Function BeforeUnbinding(sourceElement As FrameworkElement, Optional isFromClear As Boolean = False) As Boolean
+        Protected Friend Overridable Function BeforeUnbinding(sourceElement As Sprite, Optional isFromClear As Boolean = False) As Boolean
             Return True
         End Function
 
@@ -26,7 +28,7 @@ Namespace Component
         ''' <param name="sourceElement">针对的元素</param>
         ''' <returns>允许继续绑定则返回True，否则返回False</returns>
         ''' <remarks></remarks>
-        Protected Friend Overridable Function BeforeBinding(sourceElement As FrameworkElement) As Boolean
+        Protected Friend Overridable Function BeforeBinding(sourceElement As Sprite) As Boolean
             Return True
         End Function
 
@@ -35,7 +37,7 @@ Namespace Component
         ''' </summary>
         ''' <param name="sourceElement">针对的元素</param>
         ''' <remarks></remarks>
-        Protected Friend Overridable Sub ForceUnbinding(sourceElement As FrameworkElement)
+        Protected Friend Overridable Sub ForceUnbinding(sourceElement As Sprite)
         End Sub
 
         ''' <summary>
@@ -76,9 +78,9 @@ Namespace Component
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public ReadOnly Property BindedElements As FrameworkElement()
+        Public ReadOnly Property BindedElements As ReadOnlyCollection(Of Sprite)
             Get
-                Return _elementList.ToArray
+                Return _elementList.AsReadOnly
             End Get
         End Property
 
@@ -145,7 +147,7 @@ Namespace Component
         ''' </summary>
         ''' <param name="element">要设置到的对象</param>
         ''' <remarks></remarks>
-        Friend Sub Bind(element As FrameworkElement)
+        Friend Sub Bind(element As Sprite)
             If Not _elementList.Contains(element) Then _elementList.Add(element)
         End Sub
 
@@ -154,7 +156,7 @@ Namespace Component
         ''' </summary>
         ''' <param name="element"></param>
         ''' <remarks></remarks>
-        Friend Sub Unbind(element As FrameworkElement)
+        Friend Sub Unbind(element As Sprite)
             If _elementList.Contains(element) Then _elementList.Remove(element)
         End Sub
     End Class

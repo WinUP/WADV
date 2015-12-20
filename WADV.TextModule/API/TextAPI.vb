@@ -18,7 +18,7 @@ Namespace API
             '查找特效
             If Not Initialiser.EffectList.ContainsKey(effectName) Then Exit Sub
             Dim effect As BaseEffect = Activator.CreateInstance(Initialiser.EffectList(effectName), New Object() {name})
-            ModuleConfig.Clicked = False
+            ModuleConfig.ClickedSkip = False
             '生成循环体
             Dim loopContent As New PluginInterface.LoopReceiver(effect)
             '开始循环

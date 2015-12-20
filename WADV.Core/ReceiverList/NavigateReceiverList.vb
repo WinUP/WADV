@@ -14,7 +14,7 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="e">要传递的事件</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Boardcast(e As NavigatingCancelEventArgs)
+        Friend Shared Sub Boardcast(e As NavigationParameter)
             List.ForEach(Sub(e1) e1.ReceiveNavigate(e))
         End Sub
     End Class

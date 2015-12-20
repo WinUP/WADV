@@ -2,7 +2,7 @@
 
 Class Initialise
     Private Sub Initialise_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        Dim image As New ImageBrush(New BitmapImage(CombineUri(PathType.Resource, "image\black_logo.png")))
+        Dim image As New ImageBrush(New BitmapImage(API.Path.CombineUri(PathType.Resource, "image\black_logo.png")))
         image.Stretch = Stretch.UniformToFill
         image.TileMode = TileMode.None
         image.Viewbox = New Rect(0, 0, 1, 1)
@@ -21,7 +21,7 @@ Class Initialise
 
     Private Sub DoInitialise()
         ChangeText("检查科学法则")
-        Dim access = IO.Directory.GetAccessControl(UserFile).GetAccessRules(True, True, GetType(System.Security.Principal.NTAccount)).OfType(Of FileSystemAccessRule)()
+        Dim access = IO.Directory.GetAccessControl(API.Path.UserFile).GetAccessRules(True, True, GetType(System.Security.Principal.NTAccount)).OfType(Of FileSystemAccessRule)()
 
 
         '!检查文件夹权限
@@ -30,10 +30,10 @@ Class Initialise
         ChangeText("启动承载系统")
         '!导入成就
         For Each tmpProperty In {"游戏运行次数", "CG显示次数"}
-            WADV.AchievementModule.API.AchievementProperty.Add(tmpProperty)
+            WADV.WPF.AchievementModule.Extension.Property.Add(tmpProperty)
         Next
         ChangeText("已就绪")
         System.Threading.Thread.Sleep(200)
-        Send("[GAME]INITIAL_DATA_READY")
+        Message.Send("[GAME]INITIAL_DATA_READY")
     End Sub
 End Class
