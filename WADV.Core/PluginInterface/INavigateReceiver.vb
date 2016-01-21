@@ -1,4 +1,4 @@
-﻿Imports System.Windows.Navigation
+﻿Imports WADV.Core.RAL
 
 Namespace PluginInterface
     ''' <summary>

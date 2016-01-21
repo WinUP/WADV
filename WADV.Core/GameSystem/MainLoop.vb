@@ -73,7 +73,7 @@ Namespace GameSystem
             Dim loopContent As ILoopReceiver
             Dim timeNow As Long
             Dim sleepTime As Integer
-            Dim gameWindow = Configuration.System.BaseWindow
+            Dim gameWindow = Configuration.System.MainWindow
             Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_START")
             While (Status)
                 timeNow = Now.Ticks

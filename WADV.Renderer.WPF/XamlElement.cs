@@ -4,7 +4,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using WADV.Core.Component;
+using WADV.Core.RAL;
+using WADV.Core.RAL.Tool;
 using WADV.Core.Render;
 
 namespace WADV.WPF.Renderer
@@ -14,7 +15,7 @@ namespace WADV.WPF.Renderer
     /// 这个组件会给予挂载的精灵一个Canvas，并在精灵层次发生变化或精灵离开场景时自动更新或销毁Canvas。<br></br>
     /// 这个组件仅允许挂载一个精灵。对一个以上的精灵的挂载会被拒绝。
     /// </summary>
-    public class XamlElement:Component
+    public class XamlElement:SpriteElement
     {
         /// <summary>
         /// 获取这个组件对应的FrameworkElement<br></br>

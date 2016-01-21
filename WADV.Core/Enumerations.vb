@@ -12,36 +12,6 @@ Public Enum PathType
 End Enum
 
 ''' <summary>
-''' 元素类型
-''' </summary>
-Public Enum ElementType
-    Border
-    Button
-    Canvas
-    CheckBox
-    ComboBox
-    Ellipse
-    Expander
-    Grid
-    GroupBox
-    Image
-    Label
-    ListBox
-    ListView
-    ProgressBar
-    RadioButton
-    Rectangle
-    RichTextBox
-    ScrollBar
-    Slider
-    TabControl
-    TextBlock
-    TextBox
-    ViewBox
-    Viewport3D
-End Enum
-
-''' <summary>
 ''' 组件绑定结果
 ''' </summary>
 ''' <remarks></remarks>
@@ -86,10 +56,9 @@ Public Enum UnbindingResult
 End Enum
 
 ''' <summary>
-''' 组件对于游戏系统的接收器类型
+''' 渲染节点对于游戏系统的接收器类型
 ''' </summary>
-''' <remarks></remarks>
-Public Enum ComponentReceiverType
+Public Enum ComponentListenerType
     ''' <summary>
     ''' 没有接收器
     ''' </summary>
@@ -99,14 +68,14 @@ Public Enum ComponentReceiverType
     ''' 有游戏循环接收器
     ''' </summary>
     ''' <remarks></remarks>
-    LoopOnly
+    LoopingOnly
     ''' <summary>
     ''' 有消息循环接收器
     ''' </summary>
     ''' <remarks></remarks>
-    MessageOnly
+    MessageServiceOnly
     ''' <summary>
-    ''' 两个循环都有接收器
+    ''' 两种循环都有接收器
     ''' </summary>
     ''' <remarks></remarks>
     Both

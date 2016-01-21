@@ -1,6 +1,6 @@
 ﻿Imports WADV.Core.PluginInterface
 
-Namespace Component
+Namespace RAL.Component
     Friend Class ComponentMessageReceiver : Implements IMessageReceiver
         Private Shared ReadOnly List As New List(Of Component)
         Private Shared ReadOnly RemoveList As New List(Of Component)
@@ -25,13 +25,17 @@ Namespace Component
         ''' <remarks></remarks>
         Friend Shared Sub Remove(target As Component)
             If List.Contains(target) Then
-                SyncLock (List)
-                    List.Remove(target)
+                SyncLock (RemoveList)
+                    If Not RemoveList.Contains(target) Then RemoveList.Add(target)
                 End SyncLock
             End If
         End Sub
 
         Public Sub ReceiveMessage(message As String) Implements IMessageReceiver.ReceiveMessage
+            SyncLock (RemoveList)
+                RemoveList.ForEach(Sub(e) If List.Contains(e) Then List.Remove(e))
+                RemoveList.Clear()
+            End SyncLock
             SyncLock (List)
                 List.ForEach(Sub(e) e.MessageOnReceiver(message))
             End SyncLock

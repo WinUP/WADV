@@ -2,6 +2,8 @@
 Imports System.Windows.Controls
 Imports System.Collections.Concurrent
 Imports System.Windows.Media.Animation
+Imports WADV.Core.RAL
+Imports WADV.Core.RAL.Tool
 Imports WADV.Core.Render
 
 Friend NotInheritable Class ShowList
@@ -36,7 +38,7 @@ Friend NotInheritable Class ShowList
 
     Private Shared Sub NewSprite()
         _scene = Window.SceneNow
-        _target = _scene.AddSprite("[WADV.WPF.AchievementModule]成就显示精灵")
+        _target = _scene.Add("[WADV.WPF.AchievementModule]成就显示精灵")
         Dim xamlElement = New Renderer.XamlElement(Config.Element)
         _target.Components.Add(xamlElement)
     End Sub

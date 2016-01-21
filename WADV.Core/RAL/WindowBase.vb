@@ -1,4 +1,6 @@
-﻿Namespace Render
+﻿Imports WADV.Core.GameSystem
+
+Namespace RAL
     Public MustInherit Class WindowBase
         Private _fullscreen As Boolean = False
         Private _canFullscreen As Boolean = True

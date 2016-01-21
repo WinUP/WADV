@@ -44,15 +44,7 @@ Windows上的轻量级2D游戏框架，为开发文字冒险游戏而优化。
 
 或者直接发issues，当然我也很欢迎pull request。
 
-##以后可能收费吗？
-
-绝无可能。
-
 ##感谢这些项目
 
 * [NeoLua](https://github.com/neolithos/neolua)
 * [NLua](https://github.com/NLua/NLua)
-
-##你的文档呢？
-
-正在撰写中，很快就会好的，大概。 ( -_- )

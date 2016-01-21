@@ -1,6 +1,6 @@
 ﻿Imports WADV.Core.PluginInterface
 
-Namespace Component
+Namespace RAL.Component
     Friend Class ComponentLoopReceiver : Implements ILoopReceiver
         Private Shared ReadOnly List As New List(Of Component)
         Private Shared ReadOnly RemoveList As New List(Of Component)

@@ -1,4 +1,5 @@
 ﻿Imports WADV.Core.GameSystem
+Imports WADV.Core.RAL
 
 Namespace Configuration
     ''' <summary>
@@ -8,12 +9,7 @@ Namespace Configuration
         ''' <summary>
         ''' 获取或设置游戏主窗口
         ''' </summary>
-        Friend Shared BaseWindow As Render.WindowBase
-
-        ''' <summary>
-        ''' 渲染插件提供的用于渲染精灵的组件的名称
-        ''' </summary>
-        Friend Shared RenderComponentNameForSprite As String
+        Friend Shared MainWindow As WindowBase
 
         ''' <summary>
         ''' 获取或设置脚本核心实例

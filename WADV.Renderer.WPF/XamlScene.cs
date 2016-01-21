@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Markup;
+using WADV.Core.RAL;
 
 namespace WADV.WPF.Renderer
 {
@@ -7,7 +8,7 @@ namespace WADV.WPF.Renderer
     /// WPF场景<br></br>
     /// 专用于向NavigationWindow提供场景
     /// </summary>
-    public class XamlScene : WADV.Core.Render.Scene
+    public class XamlScene : Scene
     {
         private readonly Page _page;
 

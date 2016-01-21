@@ -3,6 +3,7 @@ Imports Neo.IronLua
 Imports WADV.Core.Script
 Imports WADV.Core.Render
 Imports WADV.Core.PluginInterface
+Imports WADV.Core.RAL
 
 Namespace PluginInterface
     Friend NotInheritable Class PluginInitialise : Implements IPluginInitialise
@@ -51,8 +52,8 @@ Namespace PluginInterface
             target = New Field With {.Name = "game"}
             target.Content.Add("chorus01_PrepareSystem", New Action(AddressOf Game.Chorus01_PrepareSystem))
             target.Content.Add("chorus02_LoadPlugins", New Action(AddressOf Game.Chorus02_LoadPlugins))
-            target.Content.Add("chorus03_Start", New Action(Of WindowBase, Integer, Integer)(AddressOf Game.Chorus03_Start))
-            target.Content.Add("chorusFF_Stop", New Action(Of CancelEventArgs)(AddressOf Game.ChorusFF_Stop))
+            target.Content.Add("chorus03_Start", New Action(Of WindowBase, Integer, Integer)(AddressOf Game.StartGame))
+            target.Content.Add("chorusFF_Stop", New Action(Of CancelEventArgs)(AddressOf Game.StopGame))
             target.Content.Add("handle", New Action(Of Object, String, [Delegate])(AddressOf Game.Handle))
             target.Content.Add("unhandle", New Action(Of Object, String, [Delegate])(AddressOf Game.Unhandle))
             target.Content.Add("window", New Func(Of WindowBase)(AddressOf Game.Window))

@@ -1,7 +1,6 @@
-﻿Imports WADV.Core.API
-Imports WADV.Core.Render
+﻿Imports WADV.Core.RAL.Tool
 
-Namespace Component
+Namespace RAL.Component
     ''' <summary>
     ''' 组件列表类
     ''' </summary>
@@ -94,8 +93,7 @@ Namespace Component
             If targetList.Length = 0 Then Return UnbindingResult.CannotFind
             Dim target = targetList(0)
             If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
-            target.ListenLoop(False)
-            target.ListenMessage(False)
+            target.Listen(ComponentListenerType.None)
             target.Unbind(_element)
             _componentlist.Remove(target)
             Return UnbindingResult.Success
@@ -111,8 +109,7 @@ Namespace Component
             If targetList.Length = 0 Then Return UnbindingResult.CannotFind
             Dim target = targetList(0)
             If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
-            target.ListenLoop(False)
-            target.ListenMessage(False)
+            target.Listen(ComponentListenerType.None)
             target.Unbind(_element)
             _componentlist.Remove(target)
             Return UnbindingResult.Success
@@ -127,15 +124,14 @@ Namespace Component
             Dim targetList = GetAll(Of T)()
             If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
             Dim result(targetList.Length - 1) As UnbindingResult
-            Dim target As Component
+            Dim target As RAL.Component.Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
                     result(i) = UnbindingResult.Cancel
                     Continue For
                 End If
-                target.ListenLoop(False)
-                target.ListenMessage(False)
+                target.Listen(ComponentListenerType.None)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
@@ -152,15 +148,14 @@ Namespace Component
             Dim targetList = GetAll(type)
             If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
             Dim result(targetList.Length - 1) As UnbindingResult
-            Dim target As Component
+            Dim target As RAL.Component.Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
                     result(i) = UnbindingResult.Cancel
                     Continue For
                 End If
-                target.ListenLoop(False)
-                target.ListenMessage(False)
+                target.Listen(ComponentListenerType.None)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
                 result(i) = UnbindingResult.Success
@@ -179,8 +174,7 @@ Namespace Component
             While i < _componentlist.Count
                 target = _componentlist(i)
                 If target.BeforeUnbinding(_element, True) Then
-                    target.ListenLoop(False)
-                    target.ListenMessage(False)
+                    target.Listen(ComponentListenerType.None)
                     target.Unbind(_element)
                     _componentlist.Remove(target)
                 Else
@@ -189,12 +183,19 @@ Namespace Component
             End While
         End Sub
 
+        Friend Sub RaiseBindToScene(sprite As Sprite, target As Scene)
+            _componentlist.ForEach(Sub(e) e.BindToScene(sprite, target))
+        End Sub
+
+        Friend Sub RaiseUnbindFromScene(sprite As Sprite, target As Scene)
+            _componentlist.ForEach(Sub(e) e.UnbindFromScene(sprite, target))
+        End Sub
+
         Friend Sub Dispose() Implements IDisposable.Dispose
             Clear()
             For Each e In _componentlist
                 e.ForceUnbinding(_element)
-                e.ListenLoop(False)
-                e.ListenMessage(False)
+                e.Listen(ComponentListenerType.None)
             Next
             _componentlist.Clear()
         End Sub

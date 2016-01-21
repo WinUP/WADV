@@ -1,4 +1,6 @@
-﻿Namespace API
+﻿Imports WADV.Core.GameSystem
+
+Namespace API
     ''' <summary>
     ''' 路径API
     ''' </summary>

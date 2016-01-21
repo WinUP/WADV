@@ -5,13 +5,7 @@
     ''' </summary>
     ''' <remarks></remarks>
     Public Class PluginInitialiseFailedException : Inherits System.Exception
-        Private ReadOnly _pluginName As String
-
         Public ReadOnly Property PluginName As String
-            Get
-                Return _pluginName
-            End Get
-        End Property
 
         ''' <summary>
         ''' 声明一个新的异常
@@ -19,8 +13,8 @@
         ''' <param name="name">初始化失败的插件的名称</param>
         ''' <remarks></remarks>
         Public Sub New(name As String)
-            MyBase.New("你尝试加载的一个插件初始化失败。你可以通过此异常的PluginName属性查看插件名称。")
-            _pluginName = name
+            MyBase.New("尝试加载的一个插件因为初始化失败而未能加载。")
+            PluginName = name
         End Sub
     End Class
 End Namespace

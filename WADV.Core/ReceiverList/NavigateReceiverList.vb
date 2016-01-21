@@ -1,5 +1,6 @@
 ﻿Imports System.Windows.Navigation
 Imports WADV.Core.PluginInterface
+Imports WADV.Core.RAL
 
 Namespace ReceiverList
 

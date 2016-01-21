@@ -1,6 +1,7 @@
 ﻿Imports WADV.Core.Exception
 Imports WADV.Core.GameSystem
-Imports WADV.Core.Render
+Imports WADV.Core.RAL
+Imports WADV.Core.RAL.Component
 
 Namespace API
     ''' <summary>
@@ -8,65 +9,41 @@ Namespace API
     ''' </summary>
     ''' <remarks></remarks>
     Public Class Game
-        ''' <summary>
-        ''' 第一合奏：准备引擎核心启动数据<br></br>
-        ''' 属性：<br></br>
-        '''  同步 | NORMAL<br></br>
-        ''' 异常：<br></br>
-        '''  SystemMultiPreparedException
-        ''' </summary>
-        Public Shared Sub Chorus01_PrepareSystem()
-            If Configuration.Status.IsSystemPrepared Then Throw New SystemMultiPreparedException
-            Configuration.System.MessageService = New MessageService
-            Configuration.System.MainLoop = New MainLoop
-            Configuration.System.MainTimer = New MainTimer
-            Configuration.Status.IsSystemPrepared = True
-        End Sub
 
         ''' <summary>
-        ''' 第二合奏：加载Plugin目录下所有插件<br></br>
-        ''' 属性：<br></br>
-        '''  同步 | NORMAL<br></br>
-        ''' 异常：<br></br>
-        '''  PluginsMultiInitialiseException
-        ''' </summary>
-        Public Shared Sub Chorus02_LoadPlugins()
-            If Configuration.Status.IsPluginInitialised Then Throw New PluginsMultiInitialiseException
-            PluginFunction.InitialiseAllPlugins()
-        End Sub
-
-        ''' <summary>
-        ''' 第三合奏：启动游戏系统<br></br>
-        ''' 该函数在前两个合奏未完成时会自动完成它们<br></br>
+        ''' 启动游戏系统
         ''' 属性：<br></br>
         '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="baseWindow">游戏主窗口</param>
         ''' <param name="frameSpan">每帧间的时间间隔</param>
         ''' <param name="tick">计时器计时频率</param>
-        Public Shared Sub Chorus03_Start(baseWindow As WindowBase, Optional frameSpan As Integer = 40, Optional tick As Integer = 60000)
-            Configuration.System.BaseWindow = baseWindow
-            If Not Configuration.Status.IsSystemPrepared Then Chorus01_PrepareSystem()
+        Public Shared Sub StartGame(baseWindow As WindowBase, Optional frameSpan As Integer = 40, Optional tick As Integer = 60000)
+            If Configuration.Status.IsSystemRunning Then Throw New SystemMultiPreparedException
+            Configuration.System.MessageService = New MessageService
+            Configuration.System.MainLoop = New MainLoop
+            Configuration.System.MainTimer = New MainTimer
+            Configuration.System.MainWindow = baseWindow
             Configuration.System.MessageService.Start()
-            If Not Configuration.Status.IsPluginInitialised Then Chorus02_LoadPlugins()
             Configuration.System.MainTimer.Span = tick
             Configuration.System.MainTimer.Start()
             Configuration.System.MainLoop.Span = frameSpan
             Configuration.System.MainLoop.Start()
+            PluginFunction.InitialiseAllPlugins()
             ReceiverList.InitialiseReceiverList.InitialisingGame()
-            [Loop].Listen(New Component.ComponentLoopReceiver)
-            Message.Listen(New Component.ComponentMessageReceiver)
+            [Loop].Listen(New ComponentLoopReceiver)
+            Message.Listen(New ComponentMessageReceiver)
             Configuration.Status.IsSystemRunning = True
         End Sub
 
         ''' <summary>
-        ''' 最终合奏：停止游戏系统<br></br>
+        ''' 停止游戏系统<br></br>
         ''' 属性：<br></br>
         '''  同步 | NORMAL | GAME_CLOSE_CANCEL
         ''' </summary>
         ''' <param name="e">要传递给游戏解构接收器的数据</param>
         ''' <remarks></remarks>
-        Public Shared Sub ChorusFF_Stop(e As ComponentModel.CancelEventArgs)
+        Public Shared Sub StopGame(e As ComponentModel.CancelEventArgs)
             ReceiverList.DestructReceiverList.DestructingGame(e)
             If Not e.Cancel Then
                 Configuration.System.MainTimer.Stop()
@@ -115,7 +92,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function Window() As WindowBase
-            Return Configuration.System.BaseWindow
+            Return Configuration.System.MainWindow
         End Function
     End Class
 End Namespace

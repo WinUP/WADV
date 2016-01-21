@@ -4,6 +4,7 @@ Imports System.Text
 Imports System.CodeDom.Compiler
 Imports System.Windows
 Imports Microsoft.CSharp
+Imports WADV.Core.GameSystem
 
 Namespace API
     ''' <summary>
@@ -77,8 +78,7 @@ Namespace API
                 For Each tmpError As CompilerError In result.Errors
                     errorString.Append(Environment.NewLine & tmpError.ErrorText)
                 Next
-                MessageBox.Show(errorString.ToString, "编译" & filePath & "时没有通过", MessageBoxButton.OK, MessageBoxImage.Error)
-                Return Nothing
+                Throw New Exception.CompileFailedException(filePath)
             End If
             Message.Send("[SYSTEM]CODE_COMPILE")
             Return result.CompiledAssembly

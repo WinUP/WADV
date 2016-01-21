@@ -14,7 +14,7 @@ Public Class GameWindow
     ''' </summary>
     ''' <remarks></remarks>
     Private Shared Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
-        Game.ChorusFF_Stop(e)
+        Game.StopGame(e)
     End Sub
 
     ''' <summary>

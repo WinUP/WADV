@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using WADV.Core;
+using WADV.Core.RAL;
 using WADV.Core.Render;
 
 namespace WADV.WPF.Renderer
