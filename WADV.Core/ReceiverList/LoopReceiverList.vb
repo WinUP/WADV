@@ -6,63 +6,47 @@ Namespace ReceiverList
     ''' 循环接收器列表
     ''' </summary>
     ''' <remarks></remarks>
-    Friend NotInheritable Class LoopReceiverList
-        Private Shared ReadOnly List As New List(Of ILoopReceiver)
+    Friend NotInheritable Class LoopReceiverList : Inherits BaseList(Of ILoopReceiver)
 
         ''' <summary>
         ''' 添加一个循环体
         ''' </summary>
         ''' <param name="target">要添加的循环函数</param>
         ''' <remarks></remarks>
-        Friend Shared Function Add(target As ILoopReceiver) As Boolean
-            If Not Contains(target) Then
-                List.Add(target)
-                Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_ADD")
-                Return True
-            Else
-                Return False
-            End If
-        End Function
-
-        ''' <summary>
-        ''' 确定指定循环体是否已存在
-        ''' </summary>
-        ''' <param name="content">要检查的循环体</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Friend Shared Function Contains(content As ILoopReceiver) As Boolean
-            Return List.Contains(content)
-        End Function
-
-        ''' <summary>
-        ''' 获得一个循环体
-        ''' </summary>
-        ''' <param name="i">目标索引</param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Friend Shared Function [Get](i As Integer) As ILoopReceiver
-            Return List(i)
+        Friend Overrides Function Add(target As ILoopReceiver) As Boolean
+            Dim answer = MyBase.Add(target)
+            If answer Then Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_ADD", 1)
+            Return answer
         End Function
 
         ''' <summary>
         ''' 删除一个循环体
         ''' </summary>
-        ''' <param name="i">目标索引</param>
+        ''' <param name="index">目标索引</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Delete(i As Integer)
-            List.RemoveAt(i)
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE")
-        End Sub
-
-        ''' <summary>
-        ''' 获取已注册的循环体的数目
-        ''' </summary>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Friend Shared Function Count() As Integer
-            Return List.Count
+        Friend Overrides Function Delete(index As Integer) As Boolean
+            Dim answer = MyBase.Delete(index)
+            If answer Then Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE", 1)
+            Return answer
         End Function
 
-    End Class
+        ''' <summary>
+        ''' 删除一个循环体
+        ''' </summary>
+        ''' <param name="content">目标循环体</param>
+        ''' <returns></returns>
+        Friend Overrides Function Delete(content As ILoopReceiver) As Boolean
+            Dim answer = MyBase.Delete(content)
+            If answer Then Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_CONTENT_REMOVE", 1)
+            Return answer
+        End Function
 
+        ''' <summary>
+        ''' 应用所有删除和添加操作
+        ''' </summary>
+        Friend Sub Update()
+            UpdateRemove()
+            UpdateAdd()
+        End Sub
+    End Class
 End Namespace

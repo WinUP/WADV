@@ -2,7 +2,6 @@
 Imports System.Xml
 Imports System.Text
 Imports System.CodeDom.Compiler
-Imports System.Windows
 Imports Microsoft.CSharp
 Imports WADV.Core.GameSystem
 
@@ -32,7 +31,7 @@ Namespace API
         ''' <returns></returns>
         ''' <remarks></remarks>
         Public Shared Function Listen(receiver As PluginInterface.IPluginLoadReceiver) As Boolean
-            Return ReceiverList.PluginLoadReceiverList.Add(receiver)
+            Return Configuration.Receiver.PluginLoadingReceiver.Add(receiver)
         End Function
 
         ''' <summary>
@@ -80,7 +79,7 @@ Namespace API
                 Next
                 Throw New Exception.CompileFailedException(filePath)
             End If
-            Message.Send("[SYSTEM]CODE_COMPILE")
+            Message.Send("[SYSTEM]CODE_COMPILE", 1)
             Return result.CompiledAssembly
         End Function
 
@@ -99,9 +98,9 @@ Namespace API
             If Not My.Computer.FileSystem.FileExists(file) Then
                 Throw New FileNotFoundException("找不到要载入的动态链接库文件")
             End If
-            Message.Send("[SYSTEM]ASSEMBLE_LOAD_STANDBY")
+            Message.Send("[SYSTEM]ASSEMBLE_LOAD_STANDBY", 1)
             Dim target = Reflection.Assembly.LoadFrom(file)
-            Message.Send("[SYSTEM]ASSEMBLE_LOAD_FINISH")
+            Message.Send("[SYSTEM]ASSEMBLE_LOAD_FINISH", 1)
             Return target
         End Function
 

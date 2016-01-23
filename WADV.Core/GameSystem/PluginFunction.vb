@@ -37,23 +37,23 @@ Namespace GameSystem
         Friend Shared Sub AddPlugin(fileName As String)
             If PluginFileList.Contains(fileName) Then Throw New PluginMultiInitialisesException
             Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.GetFullPath(PathType.Plugin, fileName)).GetTypes
-            PluginLoadReceiverList.BeforeLoad(pluginTypes)
+            Configuration.Receiver.PluginLoadingReceiver.BeforeLoad(pluginTypes)
             For Each tmpTypeName In pluginTypes
                 If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IPluginInitialise") <> Nothing Then
                     If Not DirectCast(Activator.CreateInstance(tmpTypeName), IPluginInitialise).Initialising() Then Throw New PluginInitialiseFailedException(My.Computer.FileSystem.GetName(fileName))
                 End If
                 If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IGameInitialiserReceiver") <> Nothing Then
-                    InitialiseReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                    Configuration.Receiver.InitialiserReceiver.Add(Activator.CreateInstance(tmpTypeName))
                 End If
                 If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IGameDestructorReceiver") <> Nothing Then
-                    DestructReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                    Configuration.Receiver.DestructReceiver.Add(Activator.CreateInstance(tmpTypeName))
                 End If
                 If tmpTypeName.GetInterface("WADV.Core.PluginInterface.INavigationReceiver") <> Nothing Then
-                    NavigateReceiverList.Add(Activator.CreateInstance(tmpTypeName))
+                    Configuration.Receiver.NavigateReceiver.Add(Activator.CreateInstance(tmpTypeName))
                 End If
             Next
             PluginFileList.Add(fileName)
-            Configuration.System.MessageService.SendMessage("[SYSTEM]PLUGIN_ADD")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]PLUGIN_ADD", 1)
         End Sub
     End Class
 End Namespace

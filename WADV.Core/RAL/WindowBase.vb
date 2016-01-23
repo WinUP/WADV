@@ -53,9 +53,9 @@ Namespace RAL
                 If value = _fullscreen Then Exit Property
                 SetFullscreen_Implement(value)
                 If value Then
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_FULLSCREEN_ENTER")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_FULLSCREEN_ENTER", 1)
                 Else
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_FULLSCREEN_EXIT")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_FULLSCREEN_EXIT", 1)
                 End If
                 _fullscreen = value
             End Set
@@ -81,7 +81,7 @@ Namespace RAL
             Set(value As Vector2)
                 If value = _resolution Then Exit Property
                 SetResolution_Implement(value)
-                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_RESOLUTION_CHANGE")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_RESOLUTION_CHANGE", 1)
                 _resolution = value
             End Set
         End Property
@@ -127,7 +127,7 @@ Namespace RAL
         Public Sub Close()
             If Not CanClose Then Throw New Exception.CloseUnsupportedException
             Close_Implement()
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CLOSE")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CLOSE", 1)
         End Sub
 
         ''' <summary>
@@ -143,7 +143,7 @@ Namespace RAL
         ''' </summary>
         Public Sub Show()
             Show_Implement()
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_SHOW")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_SHOW", 1)
         End Sub
 
         ''' <summary>
@@ -165,7 +165,7 @@ Namespace RAL
             Set(value As String)
                 If value = _iconPath Then Exit Property
                 SetIconFromFile_Implement(PathFunction.GetFullPath(PathType.Skin, value))
-                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE", 1)
                 _iconPath = value
             End Set
         End Property
@@ -191,7 +191,7 @@ Namespace RAL
             Set(value As String)
                 If value = _cursorPath Then Exit Property
                 SetCursorFromFile_Implement(PathFunction.GetFullPath(PathType.Skin, value))
-                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE", 1)
                 _cursorPath = value
             End Set
         End Property
@@ -216,7 +216,7 @@ Namespace RAL
             Set(value As String)
                 If value = _title Then Exit Property
                 SetTitle_Implement(value)
-                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_TITLE_CHANGE")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_TITLE_CHANGE", 1)
                 _title = value
             End Set
         End Property
@@ -242,9 +242,9 @@ Namespace RAL
                 If value = _canResize Then Exit Property
                 SetCanResize_Implement(value)
                 If value Then
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CAN_RESIZE")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CAN_RESIZE", 1)
                 Else
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CANNOT_RESIZE")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CANNOT_RESIZE", 1)
                 End If
                 _canResize = value
             End Set
@@ -271,9 +271,9 @@ Namespace RAL
                 If value = _topmost Then Exit Property
                 SetTopmost_Implement(value)
                 If value Then
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_ENTER_TOPMOST")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_ENTER_TOPMOST", 1)
                 Else
-                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_EXIT_TOPMOST")
+                    Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_EXIT_TOPMOST", 1)
                 End If
                 _topmost = value
             End Set
@@ -295,12 +295,12 @@ Namespace RAL
         ''' <param name="param">转场参数</param>
         Public Sub [Go](target As Scene, ParamArray param As Object())
             Dim e As New NavigationParameter(SceneNow, target) With {.Canceled = False, .ExtraData = param}
-            ReceiverList.NavigateReceiverList.Boardcast(e)
+            Configuration.Receiver.NavigateReceiver.Boardcast(e)
             If e.Canceled Then
-                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATION_CANCEL")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATION_CANCEL", 1)
                 Exit Sub
             End If
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATION_STANDBY")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVIGATION_STANDBY", 1)
             Go_Implement(e)
         End Sub
 
@@ -345,7 +345,7 @@ Namespace RAL
         Public Sub GoBack()
             If Not CanGoBack() Then Throw New Exception.IlleagleGoBackException
             GoBack_Implement()
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_GOBACK")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_GOBACK", 1)
         End Sub
 
         ''' <summary>
@@ -370,7 +370,7 @@ Namespace RAL
         Public Sub GoForward()
             If Not CanGoForward() Then Throw New Exception.IlleagleGoForwardException
             GoForward_Implemet()
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_GOFORWARD")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_GOFORWARD", 1)
         End Sub
 
         ''' <summary>
@@ -402,7 +402,7 @@ Namespace RAL
         ''' <param name="path">资源文件路径(Resource目录下)</param>
         Public Sub LoadResource(name As String, path As String)
             LoadResource_Implement(name, PathFunction.GetFullPath(PathType.Resource, path))
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_LOAD_RESOURCE")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_LOAD_RESOURCE", 1)
         End Sub
 
         ''' <summary>
@@ -421,7 +421,7 @@ Namespace RAL
         ''' <param name="target">资源对象</param>
         Public Sub LoadResource(name As String, target As Object)
             LoadResource_Implement(name, target)
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_LOAD_RESOURCE")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_LOAD_RESOURCE", 1)
         End Sub
 
         ''' <summary>
@@ -440,7 +440,7 @@ Namespace RAL
         ''' <returns></returns>
         Public Function RemoveResource(name As String) As Object
             Dim target = RemoveResource_Implement(name)
-            If target IsNot Nothing Then Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_REMOVE_RESOURCE")
+            If target IsNot Nothing Then Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_REMOVE_RESOURCE", 1)
             Return target
         End Function
 
@@ -489,7 +489,7 @@ Namespace RAL
         '''  同步 | UI
         ''' </summary>
         Protected Sub NavigateFinished()
-            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVITATION_FINISH")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_NAVITATION_FINISH", 1)
         End Sub
     End Class
 End Namespace

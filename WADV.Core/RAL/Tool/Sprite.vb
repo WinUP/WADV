@@ -46,7 +46,6 @@ Namespace RAL.Tool
         ''' <returns></returns>
         Public MustOverride Property Visibility As Boolean
 
-
         '!触发顺序为：BeforeChangeParent->更改父精灵->AfterChangeParent
         '!BeforeChangeParent仅触发自身，AfterChangeParent将会链式传递到所有子精灵
         ''' <summary>

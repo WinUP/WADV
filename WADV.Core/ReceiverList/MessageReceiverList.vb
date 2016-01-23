@@ -13,9 +13,11 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="message">要传递的消息</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Broadcast(ByRef message As String)
-            For Each receiver In List
-                receiver.ReceiveMessage(message)
+        Friend Sub Broadcast(message As GameSystem.Message)
+            UpdateRemove()
+            UpdateAdd()
+            For Each receiver In List.Where(Function(e) e.ReceiverMask And message.Type <> 0)
+                receiver.ReceiveMessage(message.Content)
             Next
         End Sub
     End Class

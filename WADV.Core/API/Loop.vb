@@ -1,6 +1,5 @@
 ﻿Imports WADV.Core.Exception
 Imports WADV.Core.PluginInterface
-Imports WADV.Core.ReceiverList
 
 Namespace API
     ''' <summary>
@@ -20,7 +19,7 @@ Namespace API
             If value = -1 Then Return Configuration.System.MainLoop.Span
             If value < 1 Then Throw New FrameOutOfRangeException
             Configuration.System.MainLoop.Span = value
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_SPAN_CHANGE")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_SPAN_CHANGE", 1)
             Return value
         End Function
 
@@ -32,7 +31,7 @@ Namespace API
         ''' <param name="loopContent">循环体</param>
         ''' <remarks></remarks>
         Public Shared Function Listen(loopContent As ILoopReceiver) As Boolean
-            Return LoopReceiverList.Add(loopContent)
+            Return Configuration.Receiver.LoopReceiver.Add(loopContent)
         End Function
 
         ''' <summary>
@@ -45,7 +44,7 @@ Namespace API
         Public Shared Sub WaitLoop(loopContent As ILoopReceiver)
             While True
                 Message.Wait("[SYSTEM]LOOP_CONTENT_REMOVE")
-                If Not LoopReceiverList.Contains(loopContent) Then Exit While
+                If Not Configuration.Receiver.LoopReceiver.Contains(loopContent) Then Exit While
             End While
         End Sub
 

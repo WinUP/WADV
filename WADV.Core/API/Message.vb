@@ -1,6 +1,5 @@
 ﻿Imports System.Threading
 Imports WADV.Core.PluginInterface
-Imports WADV.Core.ReceiverList
 
 Namespace API
     ''' <summary>
@@ -14,7 +13,7 @@ Namespace API
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
         Public Shared Function Listen(receiver As IMessageReceiver) As Boolean
-            Return MessageReceiverList.Add(receiver)
+            Return Configuration.Receiver.MessageReceiver.Add(receiver)
         End Function
 
         ''' <summary>
@@ -24,7 +23,7 @@ Namespace API
         ''' </summary>
         ''' <param name="receiver">接收器实体</param>
         Public Shared Sub Remove(receiver As IMessageReceiver)
-            MessageReceiverList.Delete(receiver)
+            Configuration.Receiver.MessageReceiver.Delete(receiver)
         End Sub
 
         ''' <summary>
@@ -33,8 +32,9 @@ Namespace API
         '''  同步 | NORMAL
         ''' </summary>
         ''' <param name="message">消息内容</param>
-        Public Shared Sub Send(message As String)
-            Configuration.System.MessageService.SendMessage(message)
+        ''' <param name="type">消息类型（请将需要接收的类型的二进制位置为1，其余置为0）</param>
+        Public Shared Sub Send(message As String, type As Integer)
+            Configuration.System.MessageService.SendMessage(message, type)
         End Sub
 
         ''' <summary>

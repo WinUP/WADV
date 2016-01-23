@@ -5,7 +5,7 @@ Namespace Configuration
     ''' <summary>
     ''' 游戏系统数据存储模块
     ''' </summary>
-    Friend Class System
+    Friend NotInheritable Class System
         ''' <summary>
         ''' 获取或设置游戏主窗口
         ''' </summary>

@@ -1,5 +1,5 @@
 ﻿Namespace Configuration
-    Friend Class Path
+    Friend NotInheritable Class Path
         ''' <summary>
         ''' 获取或设置插件路径
         ''' </summary>
@@ -24,6 +24,11 @@
         ''' 获取或设置用户文件路径
         ''' </summary>
         Friend Shared UserFilePath As String
+
+        ''' <summary>
+        ''' 获取或设置系统错误日志文件路径
+        ''' </summary>
+        Friend Shared ErrorLogFilePath As String
 
         ''' <summary>
         ''' 获取游戏主目录

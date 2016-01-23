@@ -36,7 +36,7 @@ Namespace RAL
         ''' <returns></returns>
         Public Function Add(target As Sprite, parent As Sprite)
             If ChildList.ContainsKey(target.Name) Then Throw New Exception.SpriteNameAlreadyExistedException
-            If Not ChildList.ContainsValue(parent) Then Throw New Exception.SpriteCannotBeFoundException
+            If Not ChildList.ContainsValue(parent) Then Throw New Exception.SpriteCannotFoundException
             ChildList.Add(target.Name, target)
             target.RaiseBindToScene(Me)
             parent.AddChildren(target)
@@ -52,7 +52,7 @@ Namespace RAL
         ''' <returns></returns>
         Public Function Add(target As Sprite, parentName As String)
             If ChildList.ContainsKey(target.Name) Then Throw New Exception.SpriteNameAlreadyExistedException
-            If Not ChildList.ContainsKey(parentName) Then Throw New Exception.SpriteCannotBeFoundException
+            If Not ChildList.ContainsKey(parentName) Then Throw New Exception.SpriteCannotFoundException
             ChildList.Add(target.Name, target)
             target.RaiseBindToScene(Me)
             ChildList(parentName).AddChildren(target)
@@ -85,7 +85,7 @@ Namespace RAL
         ''' <param name="target">要删除的精灵的名称</param>
         Public Sub RemoveSprite(target As String)
             Dim sprite = Find(target)
-            If sprite Is Nothing Then Throw New Exception.SpriteCannotBeFoundException
+            If sprite Is Nothing Then Throw New Exception.SpriteCannotFoundException
             If sprite.Parent IsNot Nothing Then sprite.Parent.RemoveChildren(sprite)
             sprite.RaiseUnbindFromScene(Me)
             ChildList.Remove(target)
@@ -96,7 +96,7 @@ Namespace RAL
         ''' </summary>
         ''' <param name="target">要删除的精灵</param>
         Public Sub RemoveSprite(target As Sprite)
-            If Not ChildList.ContainsKey(target.Name) Then Throw New Exception.SpriteCannotBeFoundException
+            If Not ChildList.ContainsKey(target.Name) Then Throw New Exception.SpriteCannotFoundException
             If target.Parent IsNot Nothing Then target.Parent.RemoveChildren(target)
             target.RaiseUnbindFromScene(Me)
             ChildList.Remove(target.Name)

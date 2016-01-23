@@ -1,6 +1,7 @@
 ﻿Imports System.Threading
 Imports Neo.IronLua
 Imports WADV.Core
+Imports WADV.Core.GameSystem
 Imports WADV.Core.Script
 
 ''' <summary>

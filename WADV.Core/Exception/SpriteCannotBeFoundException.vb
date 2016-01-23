@@ -3,13 +3,9 @@
     ''' 表示无法找到指定精灵的异常
     ''' </summary>
     ''' <remarks></remarks>
-    Public Class SpriteCannotBeFoundException : Inherits System.Exception
-        ''' <summary>
-        ''' 声明一个新的异常
-        ''' </summary>
-        ''' <remarks></remarks>
+    <Serializable> Public Class SpriteCannotFoundException : Inherits FrameworkException
         Public Sub New()
-            MyBase.New("你提供的名称或对象无法定位到这个场景中的精灵。你确定它在这个场景中吗？")
+            MyBase.New("当前场景中找不到指定名称的精灵。", "SpriteCannotFound")
         End Sub
     End Class
 End Namespace

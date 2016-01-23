@@ -21,7 +21,7 @@ Namespace GameSystem
             _loopThread.IsBackground = True
             _loopThread.Name = "[系统]游戏循环线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_INIT_FINISH")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_INIT_FINISH", 1)
         End Sub
 
         ''' <summary>
@@ -69,31 +69,27 @@ Namespace GameSystem
         '''   不过不管它下次是否会被移除，这次循环的渲染部分依然会正常执行
         ''' </remarks>
         Private Sub LoopingContent()
-            Dim i As Integer
             Dim loopContent As ILoopReceiver
             Dim timeNow As Long
             Dim sleepTime As Integer
             Dim gameWindow = Configuration.System.MainWindow
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_START")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_START", 1)
             While (Status)
                 timeNow = Now.Ticks
-                i = 0
-                _loopListCount = LoopReceiverList.Count
-                While i < _loopListCount
-                    loopContent = LoopReceiverList.Get(i)
-                    If loopContent.Logic(_frameCount) Then
-                        i += 1
-                    Else
-                        LoopReceiverList.Delete(i)
-                        _loopListCount -= 1
+                _loopListCount = Configuration.Receiver.LoopReceiver.Count
+                For i = 0 To _loopListCount
+                    loopContent = Configuration.Receiver.LoopReceiver(i)
+                    If Not loopContent.Logic(_frameCount) Then
+                        Configuration.Receiver.LoopReceiver.Delete(i)
                     End If
                     gameWindow.RunRenderDelegate(AddressOf loopContent.Render)
-                End While
+                Next
+                Configuration.Receiver.LoopReceiver.Update()
                 sleepTime = (timeNow + _span - Now.Ticks) / 10000
                 If sleepTime > 0 Then Thread.Sleep(sleepTime)
                 _frameCount += 1
             End While
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_ABORT")
+            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_ABORT", 1)
         End Sub
 
         ''' <summary>

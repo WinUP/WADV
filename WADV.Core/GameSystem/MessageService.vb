@@ -8,7 +8,7 @@ Namespace GameSystem
     ''' </summary>
     Friend NotInheritable Class MessageService
         Private ReadOnly _receiver As Thread
-        Private ReadOnly _list As New ConcurrentQueue(Of String)
+        Private ReadOnly _list As New ConcurrentQueue(Of Message)
         Friend ReadOnly LastMessage(49) As Char
 
         ''' <summary>
@@ -22,10 +22,10 @@ Namespace GameSystem
         ''' <summary>
         ''' 发送一条消息
         ''' </summary>
-        ''' <param name="message">消息内容</param>
-        Friend Sub SendMessage(message As String)
+        ''' <param name="content">消息内容</param>
+        Friend Sub SendMessage(content As String, type As Integer)
             Monitor.Enter(_list)
-            _list.Enqueue(message)
+            _list.Enqueue(New Message With {.Content = content, .Type = type})
             Monitor.Pulse(_list)
             Monitor.Exit(_list)
         End Sub
@@ -44,7 +44,7 @@ Namespace GameSystem
         ''' 消息循环主函数
         ''' </summary>
         Private Sub MessageContent()
-            Dim message As String = Nothing
+            Dim message As Message = Nothing
             SyncLock (_list)
                 While _Status
                     While Not _list.IsEmpty
@@ -52,12 +52,12 @@ Namespace GameSystem
 #If DEBUG Then
                         Debug.WriteLine(Date.Now.ToString($"HH:mm:ss,fff {message}"))
 #End If
-                        MessageReceiverList.Broadcast(message)
+                        Configuration.Receiver.MessageReceiver.Broadcast(message)
                         SyncLock LastMessage
-                            For i = 0 To message.Length - 1
-                                LastMessage(i) = message(i)
+                            For i = 0 To message.Content.Length - 1
+                                LastMessage(i) = message.Content(i)
                             Next
-                            For i = message.Length To 49
+                            For i = message.Content.Length To 49
                                 LastMessage(i) = Nothing
                             Next
                             Monitor.PulseAll(LastMessage)

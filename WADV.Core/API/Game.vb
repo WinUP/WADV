@@ -1,7 +1,6 @@
-﻿Imports WADV.Core.Exception
+﻿Imports WADV.Core.RAL
+Imports WADV.Core.Exception
 Imports WADV.Core.GameSystem
-Imports WADV.Core.RAL
-Imports WADV.Core.RAL.Component
 
 Namespace API
     ''' <summary>
@@ -20,6 +19,12 @@ Namespace API
         ''' <param name="tick">计时器计时频率</param>
         Public Shared Sub StartGame(baseWindow As WindowBase, Optional frameSpan As Integer = 40, Optional tick As Integer = 60000)
             If Configuration.Status.IsSystemRunning Then Throw New SystemMultiPreparedException
+            Configuration.Receiver.InitialiserReceiver = New ReceiverList.InitialiseReceiverList
+            Configuration.Receiver.PluginLoadingReceiver = New ReceiverList.PluginLoadReceiverList
+            Configuration.Receiver.MessageReceiver = New ReceiverList.MessageReceiverList
+            Configuration.Receiver.LoopReceiver = New ReceiverList.LoopReceiverList
+            Configuration.Receiver.NavigateReceiver = New ReceiverList.NavigateReceiverList
+            Configuration.Receiver.DestructReceiver = New ReceiverList.DestructReceiverList
             Configuration.System.MessageService = New MessageService
             Configuration.System.MainLoop = New MainLoop
             Configuration.System.MainTimer = New MainTimer
@@ -30,9 +35,7 @@ Namespace API
             Configuration.System.MainLoop.Span = frameSpan
             Configuration.System.MainLoop.Start()
             PluginFunction.InitialiseAllPlugins()
-            ReceiverList.InitialiseReceiverList.InitialisingGame()
-            [Loop].Listen(New ComponentLoopReceiver)
-            Message.Listen(New ComponentMessageReceiver)
+            Configuration.Receiver.InitialiserReceiver.InitialisingGame()
             Configuration.Status.IsSystemRunning = True
         End Sub
 
@@ -44,14 +47,14 @@ Namespace API
         ''' <param name="e">要传递给游戏解构接收器的数据</param>
         ''' <remarks></remarks>
         Public Shared Sub StopGame(e As ComponentModel.CancelEventArgs)
-            ReceiverList.DestructReceiverList.DestructingGame(e)
+            Configuration.Receiver.DestructReceiver.DestructingGame(e)
             If Not e.Cancel Then
                 Configuration.System.MainTimer.Stop()
                 Configuration.System.MainLoop.Stop()
                 Configuration.System.MessageService.Stop()
                 Configuration.Status.IsSystemRunning = False
             Else
-                Configuration.System.MessageService.SendMessage("[SYSTEM]GAME_CLOSE_CANCEL")
+                Configuration.System.MessageService.SendMessage("[SYSTEM]GAME_CLOSE_CANCEL", 1)
             End If
         End Sub
 

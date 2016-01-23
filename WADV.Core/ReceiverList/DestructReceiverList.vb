@@ -13,7 +13,9 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="e">要传递的事件</param>
         ''' <remarks></remarks>
-        Friend Shared Sub DestructingGame(e As CancelEventArgs)
+        Friend Sub DestructingGame(e As CancelEventArgs)
+            UpdateRemove()
+            UpdateAdd()
             For Each receiver In List
                 receiver.DestructGame(e)
             Next

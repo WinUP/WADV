@@ -1,5 +1,4 @@
-﻿Imports System.Windows.Navigation
-Imports WADV.Core.PluginInterface
+﻿Imports WADV.Core.PluginInterface
 Imports WADV.Core.RAL
 
 Namespace ReceiverList
@@ -15,7 +14,9 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="e">要传递的事件</param>
         ''' <remarks></remarks>
-        Friend Shared Sub Boardcast(e As NavigationParameter)
+        Friend Sub Boardcast(e As NavigationParameter)
+            UpdateRemove()
+            UpdateAdd()
             List.ForEach(Sub(e1) e1.ReceiveNavigate(e))
         End Sub
     End Class

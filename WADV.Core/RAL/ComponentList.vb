@@ -1,6 +1,6 @@
 ﻿Imports WADV.Core.RAL.Tool
 
-Namespace RAL.Component
+Namespace RAL
     ''' <summary>
     ''' 组件列表类
     ''' </summary>
@@ -124,7 +124,7 @@ Namespace RAL.Component
             Dim targetList = GetAll(Of T)()
             If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
             Dim result(targetList.Length - 1) As UnbindingResult
-            Dim target As RAL.Component.Component
+            Dim target As Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
@@ -148,7 +148,7 @@ Namespace RAL.Component
             Dim targetList = GetAll(type)
             If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
             Dim result(targetList.Length - 1) As UnbindingResult
-            Dim target As RAL.Component.Component
+            Dim target As Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
@@ -191,7 +191,7 @@ Namespace RAL.Component
             _componentlist.ForEach(Sub(e) e.UnbindFromScene(sprite, target))
         End Sub
 
-        Friend Sub Dispose() Implements IDisposable.Dispose
+        Public Sub Dispose() Implements IDisposable.Dispose
             Clear()
             For Each e In _componentlist
                 e.ForceUnbinding(_element)

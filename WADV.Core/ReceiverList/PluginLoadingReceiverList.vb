@@ -11,7 +11,9 @@ Namespace ReceiverList
         ''' </summary>
         ''' <param name="types">插件包含的所有类型</param>
         ''' <remarks></remarks>
-        Friend Shared Sub BeforeLoad(types As Type())
+        Friend Sub BeforeLoad(types As Type())
+            UpdateRemove()
+            UpdateAdd()
             For Each receiver In List
                 receiver.BeforeLoad(types)
             Next

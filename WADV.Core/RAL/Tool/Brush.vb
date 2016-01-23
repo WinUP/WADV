@@ -2,8 +2,8 @@
     ''' <summary>
     ''' RAL辅助工具 - 画笔组件
     ''' </summary>
-    Public MustInherit Class Brush : Inherits Component.Component
-        Private ReadOnly _drawingList As New List(Of Sprite)
+    Public MustInherit Class Brush : Inherits Component
+        Private ReadOnly _drawingList As New Concurrent.ConcurrentBag(Of Sprite)
 
         Public Sub New(type As DrawingType, ParamArray param As Double())
             DrawingType = type
@@ -22,37 +22,57 @@
         ''' <returns></returns>
         Public Property DrawingParamater As Double()
 
+        Protected Friend Overrides Function BeforeBinding(sprite As Sprite) As Boolean
+            If Not _drawingList.Contains(sprite) Then _drawingList.Add(sprite)
+            Return True
+        End Function
+
+        Protected Friend Overrides Function BeforeUnbinding(sprite As Sprite, Optional isFromClear As Boolean = False) As Boolean
+            If _drawingList.Contains(sprite) Then _drawingList.TryTake(sprite)
+            Return True
+        End Function
+
         Protected Friend Overrides Sub BindToScene(sprite As Sprite, scene As Scene)
-            SyncLock (_drawingList)
-                _drawingList.Add(sprite)
-            End SyncLock
+            If Not _drawingList.Contains(sprite) Then _drawingList.Add(sprite)
         End Sub
 
         Protected Friend Overrides Sub UnbindFromScene(sprite As Sprite, scene As Scene)
-            SyncLock (_drawingList)
-                _drawingList.Remove(sprite)
+            If _drawingList.Contains(sprite) Then _drawingList.TryTake(sprite)
+        End Sub
+
+        Protected Friend Overrides Function LoopOnLogic(frame As Integer) As Boolean
+            For Each e In _drawingList
+                SyncLock _DrawingParamater
+                    SyncLock (e)
+                        UpdateDrawInfo(e)
+                    End SyncLock
+                End SyncLock
+            Next
+            Return True
+        End Function
+
+        Protected Friend Overrides Sub LoopOnRender()
+            SyncLock _DrawingParamater
+                For Each e In _drawingList
+                    SyncLock (e)
+                        Draw(e)
+                    End SyncLock
+                Next
             End SyncLock
         End Sub
 
-        Protected Friend Overrides Sub LoopOnRender()
-            For Each e In _drawingList
-                SyncLock _drawingParamater
+        Protected Friend Overrides Sub MessageOnReceiver(message As String)
+            SyncLock _DrawingParamater
+                For Each e In _drawingList
                     SyncLock (e)
+                        UpdateDrawInfo(e)
                         Draw(e)
                     End SyncLock
-                End SyncLock
-            Next
+                Next
+            End SyncLock
         End Sub
 
-        Protected Friend Overrides Sub MessageOnReceiver(message As String)
-            For Each e In _drawingList
-                SyncLock _drawingParamater
-                    SyncLock (e)
-                        Draw(e)
-                    End SyncLock
-                End SyncLock
-            Next
-        End Sub
+        Public MustOverride Sub UpdateDrawInfo(target As Sprite)
 
         Public MustOverride Sub Draw(target As Sprite)
     End Class

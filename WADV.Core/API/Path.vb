@@ -72,6 +72,19 @@ Namespace API
         End Function
 
         ''' <summary>
+        ''' 获取或设置系统错误日志文件的存放路径<br></br>
+        ''' 属性：<br></br>
+        '''  同步 | NORMAL
+        ''' </summary>
+        ''' <returns>系统错误日志文件的存放路径，不需要设置的话不要传递字符</returns>
+        ''' <remarks></remarks>
+        Public Shared Function ErrorLogFile(Optional path As String = "") As String
+            If path = "" Then Return Configuration.Path.ErrorLogFilePath
+            Configuration.Path.ErrorLogFilePath = path
+            Return path
+        End Function
+
+        ''' <summary>
         ''' 获取程序主存储目录<br></br>
         ''' 属性：<br></br>
         '''  同步 | NORMAL

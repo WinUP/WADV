@@ -12,7 +12,9 @@ Namespace ReceiverList
         ''' 传递事件到所有已注册的游戏启动接收器
         ''' </summary>
         ''' <remarks></remarks>
-        Friend Shared Sub InitialisingGame()
+        Friend Sub InitialisingGame()
+            UpdateRemove()
+            UpdateAdd()
             For Each receiver In List
                 receiver.InitialiseGame()
             Next

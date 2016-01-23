@@ -1,12 +1,13 @@
 ﻿Imports System.Collections.ObjectModel
 Imports WADV.Core.RAL.Tool
+Imports WADV.Core.PluginInterface
 
-Namespace RAL.Component
+Namespace RAL
     ''' <summary>
     ''' 组件基础类
     ''' </summary>
     ''' <remarks></remarks>
-    Public MustInherit Class Component : Implements IDisposable
+    Public MustInherit Class Component : Implements IDisposable, ILoopReceiver, IMessageReceiver
         Private ReadOnly _elementList As New List(Of Sprite)
 
         ''' <summary>
@@ -60,7 +61,7 @@ Namespace RAL.Component
         ''' <param name="frame">当前的帧计数</param>
         ''' <returns>是否在下次循环时继续执行这段代码</returns>
         ''' <remarks>只有当ReceiverType为LoopOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Function LoopOnLogic(frame As Integer) As Boolean
+        Protected Friend Overridable Function LoopOnLogic(frame As Integer) As Boolean Implements PluginInterface.ILoopReceiver.Logic
             Return False
         End Function
 
@@ -68,7 +69,7 @@ Namespace RAL.Component
         ''' 当游戏循环执行界面更新时的操作
         ''' </summary>
         ''' <remarks>只有当ReceiverType为LoopOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Sub LoopOnRender()
+        Protected Friend Overridable Sub LoopOnRender() Implements PluginInterface.ILoopReceiver.Render
         End Sub
 
         ''' <summary>
@@ -76,14 +77,25 @@ Namespace RAL.Component
         ''' </summary>
         ''' <param name="message">接收到的消息</param>
         ''' <remarks>只有当ReceiverType为MessageServiceOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Sub MessageOnReceiver(message As String)
+        Protected Friend Overridable Sub MessageOnReceiver(message As String) Implements PluginInterface.IMessageReceiver.ReceiveMessage
         End Sub
+
+        ''' <summary>
+        ''' 组件要从消息循环接收的消息类型（如果组件没有重写此方法，则该值为1）
+        ''' </summary>
+        ''' <returns></returns>
+        Protected Friend Overridable ReadOnly Property ReceiverMask As Integer Implements PluginInterface.IMessageReceiver.ReceiverMask
+            Get
+                Return 1
+            End Get
+        End Property
+
 
         ''' <summary>
         ''' 当组件的资源被释放时执行的操作
         ''' </summary>
         ''' <remarks></remarks>
-        Protected Friend Overridable Sub Dispose() Implements IDisposable.Dispose
+        Public Overridable Sub Dispose() Implements IDisposable.Dispose
         End Sub
 
         ''' <summary>
@@ -116,32 +128,32 @@ Namespace RAL.Component
                 Case ComponentListenerType.Both
                     If ListenerType <> ComponentListenerType.Both Then
                         If ListenerType <> ComponentListenerType.LoopingOnly Then
-                            ComponentLoopReceiver.Add(Me)
+                            Configuration.Receiver.LoopReceiver.Add(Me)
                         End If
                         If ListenerType <> ComponentListenerType.MessageServiceOnly Then
-                            ComponentMessageReceiver.Add(Me)
+                            Configuration.Receiver.MessageReceiver.Add(Me)
                         End If
                     End If
                 Case ComponentListenerType.LoopingOnly
                     If ListenerType = ComponentListenerType.Both OrElse ListenerType = ComponentListenerType.MessageServiceOnly Then
-                        ComponentMessageReceiver.Remove(Me)
+                        Configuration.Receiver.MessageReceiver.Delete(Me)
                     End If
                     If ListenerType = ComponentListenerType.None Then
-                        ComponentLoopReceiver.Add(Me)
+                        Configuration.Receiver.LoopReceiver.Add(Me)
                     End If
                 Case ComponentListenerType.MessageServiceOnly
                     If ListenerType = ComponentListenerType.Both OrElse ListenerType = ComponentListenerType.LoopingOnly Then
-                        ComponentLoopReceiver.Remove(Me)
+                        Configuration.Receiver.LoopReceiver.Delete(Me)
                     End If
                     If ListenerType = ComponentListenerType.None Then
-                        ComponentMessageReceiver.Add(Me)
+                        Configuration.Receiver.MessageReceiver.Add(Me)
                     End If
                 Case ComponentListenerType.None
                     If ListenerType = ComponentListenerType.Both OrElse ListenerType = ComponentListenerType.LoopingOnly Then
-                        ComponentLoopReceiver.Remove(Me)
+                        Configuration.Receiver.LoopReceiver.Delete(Me)
                     End If
                     If ListenerType = ComponentListenerType.Both OrElse ListenerType = ComponentListenerType.MessageServiceOnly Then
-                        ComponentMessageReceiver.Remove(Me)
+                        Configuration.Receiver.MessageReceiver.Delete(Me)
                     End If
             End Select
             _ListenerType = target
