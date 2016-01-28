@@ -1,10 +1,15 @@
 #WinUP Adventure Game Engine
 
 Light weight 2D game engine on windows, and optimized for adventure games.
+
 Windows上的轻量级2D游戏框架，为开发文字冒险游戏而优化。
+
 This message driven engine has an abstraction layer to change its render engine anytime, but render engine is still being developed.
+
 这是一个消息驱动的游戏引擎，且具有为任何时间更换渲染引擎而提供的独立抽象层，但关键的渲染引擎还在开发中。
+
 Functions of this engine is not completed yet, it still has many commits in the future.
+
 引擎功能仍未开发完毕，未来仍会有大量新代码加入。
 
 ##功能 / Functions
