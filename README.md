@@ -1,50 +1,31 @@
 #WinUP Adventure Game Engine
 
+Light weight 2D game engine on windows, and optimized for adventure games.
 Windows上的轻量级2D游戏框架，为开发文字冒险游戏而优化。
+This message driven engine has an abstraction layer to change its render engine anytime, but render engine is still being developed.
+这是一个消息驱动的游戏引擎，且具有为任何时间更换渲染引擎而提供的独立抽象层，但关键的渲染引擎还在开发中。
+Functions of this engine is not completed yet, it still has many commits in the future.
+引擎功能仍未开发完毕，未来仍会有大量新代码加入。
 
-当然，它也可以被用于其他游戏类型，比如策略战棋或角色扮演，但它只能用于2D游戏。
+##功能 / Functions
 
-##它有哪些功能？
+* 可限制帧率的游戏主循环 / Game loop with max fps limitation.
+* 轻量的消息循环 / Message loop
+* 计时器 / Timer
+* 可随时替换的渲染引擎（基于渲染抽象层） / Render engine which can be changed anytime(based on Rendering Abstraction Layer)
+* 插件化结构 / Plugins
+* 基于脚本的游戏逻辑 / Game logic in scripts
+* 资源管理API / Resource management API
 
-* 基于最高帧率限制的游戏主循环
-* 轻量的消息循环
-* 计时器和渲染API
-* 以模块划分的结构
-* 基于脚本的游戏逻辑
-* 资源管理API
-* 基于WPF NavigationWindow的页切换
-* 完善的LUA支持（包括使用LUA制作插件）
+##它已经有了哪些模块？ / Modules which aleardy have
 
-##它已经有了哪些模块？
-
-* 成就模块
-* 用于文字冒险游戏的CG显示模块
-* 用于文字冒险游戏的选择支模块
-* HUD模块
-* 音视频模块
-* 精灵模块
-* 用于文字冒险游戏的对话显示模块
-* 基本CG特效
-* 基本选择支特效
-* 游戏页面示例
-* 成就示例
-* 基本精灵特效
-* 基本对话文本特效
-
-##它还会加入新的模块吗？
-
-我想会的，因为功能还没有开发完。
-
-##任何问题？
-
-请发邮件到我的邮箱，你有两个邮箱可选
-
-* [每周必看的邮箱](mailto:winupsoftware@qq.com)
-* [每月必看的邮箱](mailto:sunny9363@sohu.com)
-
-或者直接发issues，当然我也很欢迎pull request。
-
-##感谢这些项目
-
-* [NeoLua](https://github.com/neolithos/neolua)
-* [NLua](https://github.com/NLua/NLua)
+* 成就模块 / Achievement
+* 用于文字冒险游戏的CG显示模块 / CG module for AVG
+* 用于文字冒险游戏的选择支模块 / Choice module for AVG
+* 音视频模块 / Media module
+* 用于文字冒险游戏的对话显示模块 / Text module for AVG
+* 基本CG特效 / Shader effects(required WPF)
+* 基本选择支特效 / Choice effects for choice module
+* 游戏页面示例 / Sample game scenes
+* 成就示例 / Sample achievements
+* 基本对话文本特效 / Text effects for text module
