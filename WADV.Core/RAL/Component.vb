@@ -81,12 +81,12 @@ Namespace RAL
         End Sub
 
         ''' <summary>
-        ''' 组件要从消息循环接收的消息类型（如果组件没有重写此方法，则该值为1）
+        ''' 组件要从消息循环接收的消息类型（如果组件没有重写此方法，则该值为10B）
         ''' </summary>
         ''' <returns></returns>
         Protected Friend Overridable ReadOnly Property ReceiverMask As Integer Implements PluginInterface.IMessageReceiver.ReceiverMask
             Get
-                Return 1
+                Return 2
             End Get
         End Property
 

@@ -20,7 +20,8 @@ Namespace GameSystem
         Friend ReadOnly Property Status As Boolean = False
 
         ''' <summary>
-        ''' 发送一条消息
+        ''' 发送一条消息<br></br>
+        ''' 消息类型采按位比较，系统消息为1B，内置组件消息为10B，其余消息系统未规定，可自由选择
         ''' </summary>
         ''' <param name="content">消息内容</param>
         Friend Sub SendMessage(content As String, type As Integer)
