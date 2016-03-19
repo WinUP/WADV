@@ -32,12 +32,7 @@
         ''' <remarks></remarks>
         Public Shared Function Status(Optional value As Object = Nothing) As Boolean
             If value Is Nothing Then Return Configuration.System.MainTimer.Status
-            Dim data = DirectCast(value, Boolean)
-            If data Then
-                Configuration.System.MainTimer.Start()
-            Else
-                Configuration.System.MainTimer.Stop()
-            End If
+            Configuration.System.MainTimer.Status = DirectCast(value, Boolean)
             Return value
         End Function
     End Class

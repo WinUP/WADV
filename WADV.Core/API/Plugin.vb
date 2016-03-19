@@ -3,6 +3,7 @@ Imports System.Xml
 Imports System.Text
 Imports System.CodeDom.Compiler
 Imports Microsoft.CSharp
+Imports WADV.Core.Enumeration
 Imports WADV.Core.GameSystem
 
 Namespace API
@@ -19,7 +20,7 @@ Namespace API
         ''' <param name="filePath">插件文件路径(Plugin目录下)</param>
         ''' <remarks></remarks>
         Public Shared Sub Add(filePath As String)
-            PluginFunction.AddPlugin(filePath)
+            PluginFunction.LoadPlugin(filePath)
         End Sub
 
         ''' <summary>
@@ -47,7 +48,7 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Compile(filePath As String, Optional options As String = "") As Reflection.Assembly
             Dim codeProvider As CodeDomProvider
-            Dim codeFile = New FileInfo(PathFunction.GetFullPath(PathType.Resource, filePath))
+            Dim codeFile = New FileInfo(PathFunction.CombineToString(PathType.Resource, filePath))
             If codeFile.Extension.ToLower = ".vb" Then
                 codeProvider = New VBCodeProvider
             ElseIf codeFile.Extension.ToLower = ".cs" Then
@@ -94,7 +95,7 @@ Namespace API
         ''' <returns>编译得到的程序集</returns>
         ''' <remarks></remarks>
         Public Shared Function Load(filePath As String) As Reflection.Assembly
-            Dim file = PathFunction.GetFullPath(PathType.Game, filePath)
+            Dim file = PathFunction.CombineToString(PathType.Game, filePath)
             If Not My.Computer.FileSystem.FileExists(file) Then
                 Throw New FileNotFoundException("找不到要载入的动态链接库文件")
             End If

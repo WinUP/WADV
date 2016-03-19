@@ -1,7 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports Neo.IronLua
+Imports WADV.Core.Enumeration
 Imports WADV.Core.Script
-Imports WADV.Core.Render
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.RAL
 
@@ -24,7 +24,7 @@ Namespace PluginInterface
             target.Content.Add("status", New Func(Of Object, Boolean)(AddressOf Message.Status))
             target.Content.Add("listen", New Action(Of IMessageReceiver)(AddressOf Message.Listen))
             target.Content.Add("remove", New Action(Of IMessageReceiver)(AddressOf Message.Remove))
-            target.Content.Add("send", New Action(Of String)(AddressOf Message.Send))
+            target.Content.Add("send", New Action(Of String, Integer)(AddressOf Message.Send))
             target.Content.Add("wait", New Action(Of String)(AddressOf Message.Wait))
             target.Content.Add("last", New Func(Of String)(AddressOf Message.Last))
             Script.RegisterField(target)
@@ -35,8 +35,8 @@ Namespace PluginInterface
             target.Content.Add("script", New Func(Of String, String)(AddressOf Path.Script))
             target.Content.Add("userfile", New Func(Of String, String)(AddressOf Path.UserFile))
             target.Content.Add("game", New Func(Of String)(AddressOf Path.Game))
-            target.Content.Add("combine", New Func(Of Core.PathType, String, String)(AddressOf Path.Combine))
-            target.Content.Add("combineUri", New Func(Of Core.PathType, String, Uri)(AddressOf Path.CombineUri))
+            target.Content.Add("combine", New Func(Of PathType, String, String)(AddressOf Path.Combine))
+            target.Content.Add("combineUri", New Func(Of PathType, String, Uri)(AddressOf Path.CombineUri))
             Script.RegisterField(target)
             target = New Field With {.Name = "plugin"}
             target.Content.Add("add", New Action(Of String)(AddressOf Plugin.Add))
@@ -50,10 +50,8 @@ Namespace PluginInterface
             target.Content.Add("status", New Func(Of Object, Boolean)(AddressOf Timer.Status))
             Script.RegisterField(target)
             target = New Field With {.Name = "game"}
-            target.Content.Add("chorus01_PrepareSystem", New Action(AddressOf Game.Chorus01_PrepareSystem))
-            target.Content.Add("chorus02_LoadPlugins", New Action(AddressOf Game.Chorus02_LoadPlugins))
-            target.Content.Add("chorus03_Start", New Action(Of WindowBase, Integer, Integer)(AddressOf Game.StartGame))
-            target.Content.Add("chorusFF_Stop", New Action(Of CancelEventArgs)(AddressOf Game.StopGame))
+            target.Content.Add("Start", New Action(Of WindowBase, Integer, Integer)(AddressOf Game.Fire))
+            target.Content.Add("Stop", New Action(Of CancelEventArgs)(AddressOf Game.Cut))
             target.Content.Add("handle", New Action(Of Object, String, [Delegate])(AddressOf Game.Handle))
             target.Content.Add("unhandle", New Action(Of Object, String, [Delegate])(AddressOf Game.Unhandle))
             target.Content.Add("window", New Func(Of WindowBase)(AddressOf Game.Window))
@@ -62,7 +60,7 @@ Namespace PluginInterface
             target.Content.Add("version", "1.1")
             target.Content.Add("luaEngine", LuaGlobal.VersionString)
             Script.RegisterField(target)
-            Message.Send("[LUA]SCRIPT_INIT_FINISH")
+            Message.Send("[LUA]SCRIPT_INIT_FINISH", 1)
             Return True
         End Function
     End Class

@@ -1,4 +1,5 @@
-﻿Imports WADV.Core.RAL.Tool
+﻿Imports WADV.Core.Enumeration
+Imports WADV.Core.RAL.Tool
 
 Namespace RAL
     ''' <summary>
@@ -32,12 +33,12 @@ Namespace RAL
         ''' </summary>
         ''' <param name="target">要添加的组件</param>
         ''' <remarks></remarks>
-        Public Function Add(target As Component) As BindingResult
-            If _componentlist.Contains(target) Then Return BindingResult.NoNeed
-            If Not target.BeforeBinding(_element) Then Return BindingResult.Cancel
+        Public Function Add(target As Component) As ComponentBindingResult
+            If _componentlist.Contains(target) Then Return ComponentBindingResult.NoNeed
+            If Not target.BeforeBinding(_element) Then Return ComponentBindingResult.Cancel
             target.Bind(_element)
             _componentlist.Add(target)
-            Return BindingResult.Success
+            Return ComponentBindingResult.Success
         End Function
 
         ''' <summary>
@@ -88,15 +89,15 @@ Namespace RAL
         ''' </summary>
         ''' <typeparam name="T">要删除的组件的类型</typeparam>
         ''' <remarks></remarks>
-        Public Function Remove(Of T As Component)() As UnbindingResult
+        Public Function Remove(Of T As Component)() As ComponentUnbindingResult
             Dim targetList = GetAll(Of T)()
-            If targetList.Length = 0 Then Return UnbindingResult.CannotFind
+            If targetList.Length = 0 Then Return ComponentUnbindingResult.CannotFind
             Dim target = targetList(0)
-            If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
+            If Not target.BeforeUnbinding(_element) Then Return ComponentUnbindingResult.Cancel
             target.Listen(ComponentListenerType.None)
             target.Unbind(_element)
             _componentlist.Remove(target)
-            Return UnbindingResult.Success
+            Return ComponentUnbindingResult.Success
         End Function
 
         ''' <summary>
@@ -104,15 +105,15 @@ Namespace RAL
         ''' </summary>
         ''' <param name="type">要删除的组件的类型名称</param>
         ''' <remarks></remarks>
-        Public Function Remove(type As String) As UnbindingResult
+        Public Function Remove(type As String) As ComponentUnbindingResult
             Dim targetList = GetAll(type)
-            If targetList.Length = 0 Then Return UnbindingResult.CannotFind
+            If targetList.Length = 0 Then Return ComponentUnbindingResult.CannotFind
             Dim target = targetList(0)
-            If Not target.BeforeUnbinding(_element) Then Return UnbindingResult.Cancel
+            If Not target.BeforeUnbinding(_element) Then Return ComponentUnbindingResult.Cancel
             target.Listen(ComponentListenerType.None)
             target.Unbind(_element)
             _componentlist.Remove(target)
-            Return UnbindingResult.Success
+            Return ComponentUnbindingResult.Success
         End Function
 
         ''' <summary>
@@ -120,21 +121,21 @@ Namespace RAL
         ''' </summary>
         ''' <typeparam name="T">要删除的组件的类型</typeparam>
         ''' <remarks></remarks>
-        Public Function RemoveAll(Of T As Component)() As UnbindingResult()
+        Public Function RemoveAll(Of T As Component)() As ComponentUnbindingResult()
             Dim targetList = GetAll(Of T)()
-            If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
-            Dim result(targetList.Length - 1) As UnbindingResult
+            If targetList.Length = 0 Then Return {ComponentUnbindingResult.CannotFind}
+            Dim result(targetList.Length - 1) As ComponentUnbindingResult
             Dim target As Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
-                    result(i) = UnbindingResult.Cancel
+                    result(i) = ComponentUnbindingResult.Cancel
                     Continue For
                 End If
                 target.Listen(ComponentListenerType.None)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
-                result(i) = UnbindingResult.Success
+                result(i) = ComponentUnbindingResult.Success
             Next
             Return result
         End Function
@@ -144,21 +145,21 @@ Namespace RAL
         ''' </summary>
         ''' <param name="type">要删除的组件的类型名称</param>
         ''' <remarks></remarks>
-        Public Function RemoveAll(type As String) As UnbindingResult()
+        Public Function RemoveAll(type As String) As ComponentUnbindingResult()
             Dim targetList = GetAll(type)
-            If targetList.Length = 0 Then Return {UnbindingResult.CannotFind}
-            Dim result(targetList.Length - 1) As UnbindingResult
+            If targetList.Length = 0 Then Return {ComponentUnbindingResult.CannotFind}
+            Dim result(targetList.Length - 1) As ComponentUnbindingResult
             Dim target As Component
             For i = 0 To result.Length - 1
                 target = targetList(i)
                 If Not target.BeforeUnbinding(_element) Then
-                    result(i) = UnbindingResult.Cancel
+                    result(i) = ComponentUnbindingResult.Cancel
                     Continue For
                 End If
                 target.Listen(ComponentListenerType.None)
                 target.Unbind(_element)
                 _componentlist.Remove(target)
-                result(i) = UnbindingResult.Success
+                result(i) = ComponentUnbindingResult.Success
             Next
             Return result
         End Function

@@ -1,6 +1,7 @@
 ﻿Imports System.Threading
 Imports Neo.IronLua
 Imports WADV.Core
+Imports WADV.Core.Enumeration
 Imports WADV.Core.GameSystem
 Imports WADV.Core.Script
 
@@ -50,9 +51,9 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
     End Property
 
     Friend Function RunFile(filePath As String) As Object Implements IScriptEngine.RunFile
-        Message.Send("[LUA]SCRIPTFILE_STANDBY")
+        Message.Send("[LUA]SCRIPTFILE_STANDBY", 1)
         Dim result = _env.DoChunk(Path.Combine(PathType.Script, filePath))
-        Message.Send("[LUA]SCRIPTFILE_FINISH")
+        Message.Send("[LUA]SCRIPTFILE_FINISH", 1)
         Return result
     End Function
 
@@ -61,14 +62,14 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本文件执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Message.Send("[LUA]ASYNC_SCRIPTFILE_STANDBY")
+        Message.Send("[LUA]ASYNC_SCRIPTFILE_STANDBY", 1)
         tmpThread.Start()
     End Sub
 
     Friend Function RunString(script As String) As Object Implements IScriptEngine.RunString
-        Message.Send("[LUA]SCRIPT_STANDBY")
+        Message.Send("[LUA]SCRIPT_STANDBY", 1)
         Dim result = _env.DoChunk(script, "temp.lua")
-        Message.Send("[LUA]SCRIPT_FINISH")
+        Message.Send("[LUA]SCRIPT_FINISH", 1)
         Return result
     End Function
 
@@ -77,7 +78,7 @@ Friend NotInheritable Class ScriptCore : Implements IScriptEngine
         tmpThread.Name = "[系统]脚本字符串执行线程"
         tmpThread.IsBackground = True
         tmpThread.Priority = ThreadPriority.Normal
-        Message.Send("[LUA]ASYNC_SCRIPT_STANDBY")
+        Message.Send("[LUA]ASYNC_SCRIPT_STANDBY", 1)
         tmpThread.Start(content)
     End Sub
 

@@ -1,5 +1,6 @@
 ﻿Imports WADV.Core.Exception
 Imports WADV.Core.PluginInterface
+Imports WADV.Core.Utilities
 
 Namespace API
     ''' <summary>
@@ -68,7 +69,7 @@ Namespace API
         ''' </summary>
         ''' <returns></returns>
         Public Shared Function TotalFrame() As Integer
-            Return Configuration.System.MainLoop.CurrentFrame
+            Return Configuration.System.MainLoop.Frames
         End Function
 
         ''' <summary>
@@ -81,13 +82,8 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Status(Optional value As Object = Nothing) As Boolean
             If value Is Nothing Then Return Configuration.System.MainLoop.Status
-            Dim data = DirectCast(value, Boolean)
-            If data Then
-                Configuration.System.MainLoop.Start()
-            Else
-                Configuration.System.MainLoop.Stop()
-            End If
-            Return data
+            Configuration.System.MainLoop.Status = DirectCast(value, Boolean)
+            Return value
         End Function
 
         ''' <summary>

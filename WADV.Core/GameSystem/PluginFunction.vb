@@ -1,5 +1,6 @@
 ﻿Imports System.Windows
 Imports System.Xml
+Imports WADV.Core.Enumeration
 Imports WADV.Core.Exception
 Imports WADV.Core.PluginInterface
 Imports WADV.Core.ReceiverList
@@ -19,10 +20,10 @@ Namespace GameSystem
         ''' <remarks></remarks>
         Friend Shared Sub InitialiseAllPlugins()
             Dim pluginConfig As New XmlDocument
-            pluginConfig.Load(PathFunction.GetFullPath(PathType.Plugin, "plugin.xml"))
+            pluginConfig.Load(PathFunction.CombineToString(PathType.Plugin, "plugin.xml"))
             For Each pluginName In From fileName As XmlNode In pluginConfig.SelectNodes("/plugin/sequence/item") Select fileName.InnerXml
                 Try
-                    AddPlugin($"{pluginName}\{pluginName}.dll")
+                    LoadPlugin($"{pluginName}\{pluginName}.dll")
                 Catch ex As System.Exception
                     Throw New PluginInitialiseFailedException(pluginName)
                 End Try
@@ -34,9 +35,9 @@ Namespace GameSystem
         ''' </summary>
         ''' <param name="fileName">插件路径(从Plugin目录开始)</param>
         ''' <remarks></remarks>
-        Friend Shared Sub AddPlugin(fileName As String)
+        Friend Shared Sub LoadPlugin(fileName As String)
             If PluginFileList.Contains(fileName) Then Throw New PluginMultiInitialisesException
-            Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.GetFullPath(PathType.Plugin, fileName)).GetTypes
+            Dim pluginTypes = Reflection.Assembly.LoadFrom(PathFunction.CombineToString(PathType.Plugin, fileName)).GetTypes
             Configuration.Receiver.PluginLoadingReceiver.BeforeLoad(pluginTypes)
             For Each tmpTypeName In pluginTypes
                 If tmpTypeName.GetInterface("WADV.Core.PluginInterface.IPluginInitialise") <> Nothing Then

@@ -3,6 +3,7 @@ Imports System.Windows.Media.Animation
 Imports WADV
 Imports WADV.Core
 Imports WADV.Core.API
+Imports WADV.Core.Enumeration
 Imports WADV.WPF.Renderer
 
 Public Class GameWindow
@@ -14,7 +15,7 @@ Public Class GameWindow
     ''' </summary>
     ''' <remarks></remarks>
     Private Shared Sub GameWindow_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles Me.Closing
-        Game.StopGame(e)
+        Game.Cut(e)
     End Sub
 
     ''' <summary>
@@ -31,9 +32,7 @@ Public Class GameWindow
         Path.Skin(IO.Path.Combine(Path.Game, My.Settings.SkinURL))
         Path.UserFile(IO.Path.Combine(Path.Game, My.Settings.UserFileURL))
         '启动游戏核心
-        Game.Chorus01_PrepareSystem()
-        Game.Chorus02_LoadPlugins()
-        Game.Chorus03_Start(New WindowDelegate(Me), 40, 3600000)
+        Game.StartGame(New WindowDelegate(Me), 40, 3600000)
         Extension.Plug()
         '判断是否是第一次启动
         If My.Computer.FileSystem.FileExists(Path.Combine(PathType.UserFile, "first_run")) Then

@@ -41,7 +41,7 @@
         Dim soundContent = AudioPlayerList.GetPlayer(id)
         If soundContent IsNot Nothing Then
             soundContent.Pause()
-            Message.Send("[AUDIO]SOUND_PAUSE")
+            Message.Send("[AUDIO]SOUND_PAUSE", 4)
         End If
     End Sub
 
@@ -54,7 +54,7 @@
         Dim soundContent = AudioPlayerList.GetPlayer(id)
         If soundContent IsNot Nothing Then
             soundContent.Play()
-            Message.Send("[AUDIO]SOUND_RESUME")
+            Message.Send("[AUDIO]SOUND_RESUME", 4)
         End If
     End Sub
 
@@ -69,7 +69,7 @@
         If value.Equals(-1.0) Then Return soundContent.Volume
         If soundContent IsNot Nothing Then
             soundContent.Volume = value
-            Message.Send("[AUDIO]SOUND_VOLUME_CHANGE")
+            Message.Send("[AUDIO]SOUND_VOLUME_CHANGE", 4)
         End If
         Return value
     End Function

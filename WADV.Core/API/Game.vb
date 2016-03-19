@@ -17,7 +17,7 @@ Namespace API
         ''' <param name="baseWindow">游戏主窗口</param>
         ''' <param name="frameSpan">每帧间的时间间隔</param>
         ''' <param name="tick">计时器计时频率</param>
-        Public Shared Sub StartGame(baseWindow As WindowBase, Optional frameSpan As Integer = 40, Optional tick As Integer = 60000)
+        Public Shared Sub Fire(baseWindow As WindowBase, Optional frameSpan As Integer = 40, Optional tick As Integer = 60000)
             If Configuration.Status.IsSystemRunning Then Throw New SystemMultiPreparedException
             Configuration.Receiver.InitialiserReceiver = New ReceiverList.InitialiseReceiverList
             Configuration.Receiver.PluginLoadingReceiver = New ReceiverList.PluginLoadReceiverList
@@ -25,15 +25,15 @@ Namespace API
             Configuration.Receiver.LoopReceiver = New ReceiverList.LoopReceiverList
             Configuration.Receiver.NavigateReceiver = New ReceiverList.NavigateReceiverList
             Configuration.Receiver.DestructReceiver = New ReceiverList.DestructReceiverList
-            Configuration.System.MessageService = New MessageService
-            Configuration.System.MainLoop = New MainLoop
-            Configuration.System.MainTimer = New MainTimer
+            Configuration.System.MessageService = MessageService.GetInstance
+            Configuration.System.MainLoop = MainLoop.GetInstance
+            Configuration.System.MainTimer = MainTimer.GetInstance
             Configuration.System.MainWindow = baseWindow
-            Configuration.System.MessageService.Start()
             Configuration.System.MainTimer.Span = tick
-            Configuration.System.MainTimer.Start()
             Configuration.System.MainLoop.Span = frameSpan
-            Configuration.System.MainLoop.Start()
+            Configuration.System.MessageService.Status = True
+            Configuration.System.MainTimer.Status = True
+            Configuration.System.MainLoop.Status = True
             PluginFunction.InitialiseAllPlugins()
             Configuration.Receiver.InitialiserReceiver.InitialisingGame()
             Configuration.Status.IsSystemRunning = True
@@ -46,15 +46,15 @@ Namespace API
         ''' </summary>
         ''' <param name="e">要传递给游戏解构接收器的数据</param>
         ''' <remarks></remarks>
-        Public Shared Sub StopGame(e As ComponentModel.CancelEventArgs)
+        Public Shared Sub Cut(e As ComponentModel.CancelEventArgs)
             Configuration.Receiver.DestructReceiver.DestructingGame(e)
             If Not e.Cancel Then
-                Configuration.System.MainTimer.Stop()
-                Configuration.System.MainLoop.Stop()
-                Configuration.System.MessageService.Stop()
+                Configuration.System.MainTimer.Status = False
+                Configuration.System.MainLoop.Status = False
+                Configuration.System.MessageService.Status = False
                 Configuration.Status.IsSystemRunning = False
             Else
-                Configuration.System.MessageService.SendMessage("[SYSTEM]GAME_CLOSE_CANCEL", 1)
+                Configuration.System.MessageService.SendMessage("[SYSTEM]GAME_CUT_CANCELED", 1)
             End If
         End Sub
 

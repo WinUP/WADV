@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
+Imports WADV.Core.Enumeration
 
 ''' <summary>
 ''' 属性存储列表

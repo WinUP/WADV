@@ -1,5 +1,6 @@
 ﻿Imports System.Windows.Controls
 Imports System.Windows.Media.Animation
+Imports WADV.Core.Enumeration
 
 Namespace Extension
     Public Class Plugin

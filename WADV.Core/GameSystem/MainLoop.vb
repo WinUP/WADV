@@ -1,6 +1,5 @@
 ﻿Imports System.Threading
 Imports WADV.Core.PluginInterface
-Imports WADV.Core.ReceiverList
 
 Namespace GameSystem
     ''' <summary>
@@ -9,28 +8,47 @@ Namespace GameSystem
     ''' <remarks></remarks>
     Friend NotInheritable Class MainLoop
         Private _loopListCount As Integer
+        Private _status As Boolean = False
         Private _frameCount As Integer
         Private _span As Integer
         Private ReadOnly _loopThread As Thread
+        Private Shared _instance As MainLoop
+
+        ''' <summary>
+        ''' 获取游戏循环的唯一实例
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Shared Function GetInstance() As MainLoop
+            If _instance Is Nothing Then _instance = New MainLoop
+            Return _instance
+        End Function
 
         ''' <summary>
         ''' 获得一个游戏循环实例
         ''' </summary>
-        Friend Sub New()
+        Private Sub New()
             _loopThread = New Thread(AddressOf LoopingContent)
             _loopThread.IsBackground = True
             _loopThread.Name = "[系统]游戏循环线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_INIT_FINISH", 1)
         End Sub
 
         ''' <summary>
-        ''' 获取逻辑循环的状态
+        ''' 获取或设置逻辑循环的状态
         ''' </summary>
         ''' <value>新的状态</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend ReadOnly Property Status As Boolean = False
+        Friend Property Status As Boolean
+            Get
+                Return _status
+            End Get
+            Set(value As Boolean)
+                If value = _status Then Exit Property
+                _status = value
+                If value Then _loopThread.Start()
+            End Set
+        End Property
 
         ''' <summary>
         ''' 获取或设置两次逻辑循环间的时间间隔(毫秒)
@@ -55,7 +73,7 @@ Namespace GameSystem
         ''' 获取当前的帧计数
         ''' </summary>
         ''' <returns></returns>
-        Friend ReadOnly Property CurrentFrame As Integer
+        Friend ReadOnly Property Frames As Integer
             Get
                 Return _frameCount
             End Get
@@ -90,24 +108,6 @@ Namespace GameSystem
                 _frameCount += 1
             End While
             Configuration.System.MessageService.SendMessage("[SYSTEM]LOOP_ABORT", 1)
-        End Sub
-
-        ''' <summary>
-        ''' 启动游戏循环（如果游戏循环正在运行则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub Start()
-            If Status Then Exit Sub
-            _Status = True
-            _loopThread.Start()
-        End Sub
-
-        ''' <summary>
-        ''' 终止游戏循环（如果游戏循环本身并没有启动则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub [Stop]()
-            _Status = False
         End Sub
     End Class
 End Namespace

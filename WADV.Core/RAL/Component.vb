@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports WADV.Core.Enumeration
 Imports WADV.Core.RAL.Tool
 Imports WADV.Core.PluginInterface
 
@@ -61,7 +62,7 @@ Namespace RAL
         ''' <param name="frame">当前的帧计数</param>
         ''' <returns>是否在下次循环时继续执行这段代码</returns>
         ''' <remarks>只有当ReceiverType为LoopOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Function LoopOnLogic(frame As Integer) As Boolean Implements PluginInterface.ILoopReceiver.Logic
+        Protected Friend Overridable Function LoopOnLogic(frame As Integer) As Boolean Implements ILoopReceiver.Logic
             Return False
         End Function
 
@@ -69,7 +70,7 @@ Namespace RAL
         ''' 当游戏循环执行界面更新时的操作
         ''' </summary>
         ''' <remarks>只有当ReceiverType为LoopOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Sub LoopOnRender() Implements PluginInterface.ILoopReceiver.Render
+        Protected Friend Overridable Sub LoopOnRender() Implements ILoopReceiver.Render
         End Sub
 
         ''' <summary>
@@ -77,19 +78,18 @@ Namespace RAL
         ''' </summary>
         ''' <param name="message">接收到的消息</param>
         ''' <remarks>只有当ReceiverType为MessageServiceOnly或Both时该函数才会执行</remarks>
-        Protected Friend Overridable Sub MessageOnReceiver(message As String) Implements PluginInterface.IMessageReceiver.ReceiveMessage
+        Protected Friend Overridable Sub MessageOnReceiver(message As String) Implements IMessageReceiver.ReceiveMessage
         End Sub
 
         ''' <summary>
         ''' 组件要从消息循环接收的消息类型（如果组件没有重写此方法，则该值为10B）
         ''' </summary>
         ''' <returns></returns>
-        Protected Friend Overridable ReadOnly Property ReceiverMask As Integer Implements PluginInterface.IMessageReceiver.ReceiverMask
+        Protected Friend Overridable ReadOnly Property ReceiverMask As Integer Implements IMessageReceiver.ReceiverMask
             Get
                 Return 2
             End Get
         End Property
-
 
         ''' <summary>
         ''' 当组件的资源被释放时执行的操作

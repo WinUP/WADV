@@ -32,6 +32,10 @@
         ''' </summary>
         Visual
         ''' <summary>
+        ''' 视频
+        ''' </summary>
+        Video
+        ''' <summary>
         ''' 自定义类型
         ''' </summary>
         Customized

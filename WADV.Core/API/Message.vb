@@ -69,7 +69,7 @@ Namespace API
         End Function
 
         ''' <summary>
-        ''' 获取消息循环的状态<br></br>
+        ''' 获取或设置消息服务的状态<br></br>
         ''' 属性：<br></br>
         '''  同步 | NORMAL
         ''' </summary>
@@ -78,13 +78,8 @@ Namespace API
         ''' <remarks></remarks>
         Public Shared Function Status(Optional value As Object = Nothing) As Boolean
             If value Is Nothing Then Return Configuration.System.MessageService.Status
-            Dim data = DirectCast(value, Boolean)
-            If data Then
-                Configuration.System.MessageService.Start()
-            Else
-                Configuration.System.MessageService.Stop()
-            End If
-            Return data
+            Configuration.System.MessageService.Status = DirectCast(value, Boolean)
+            Return value
         End Function
     End Class
 End Namespace

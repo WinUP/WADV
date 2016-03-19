@@ -14,7 +14,6 @@
             SyncLock _addList
                 If Not Contains(target) Then
                     _addList.Add(target)
-
                     Return True
                 Else
                     Return False

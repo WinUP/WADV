@@ -3,19 +3,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
+using WADV.Core;
+using WADV.Core.API;
 using WADV.Core.RAL;
 using WADV.Core.RAL.Tool;
-using WADV.Core.Render;
 
 namespace WADV.WPF.Renderer
 {
+
+
     /// <summary>
     /// WPF渲染组件。<br></br>
     /// 这个组件会给予挂载的精灵一个Canvas，并在精灵层次发生变化或精灵离开场景时自动更新或销毁Canvas。<br></br>
     /// 这个组件仅允许挂载一个精灵。对一个以上的精灵的挂载会被拒绝。
     /// </summary>
-    public class XamlElement:SpriteElement
+    public class XamlElement:Sprite 
     {
         /// <summary>
         /// 获取这个组件对应的FrameworkElement<br></br>
@@ -27,30 +29,47 @@ namespace WADV.WPF.Renderer
         /// 获得新的XamlElement<br></br>
         /// 相当于new XamlElement("Canvas")
         /// </summary>
-        public XamlElement()
+        public XamlElement(string name, string elementType) : base(name)
         {
-            Element = null;
+            Element = (FrameworkElement) Plugin.Create(elementType);
         }
 
         /// <summary>
         /// 将置顶元素封装为XamlElement
         /// </summary>
         /// <param name="element">要使用的元素</param>
-        public XamlElement(FrameworkElement element)
+        public XamlElement(string name, FrameworkElement element) : base(name)
         {
             Element = element;
         }
 
-        /// <summary>
-        /// 根据元素名称生成XamlElement
-        /// </summary>
-        /// <param name="elementTypeName">元素名称，必须在System.Windows.Controls名称空间下</param>
-        public XamlElement(string elementTypeName)
+        public override Rect2 DisplayArea
         {
-            Element = (FrameworkElement)Activator.CreateInstance(Type.GetType("System.Windows.Controls." + elementTypeName, true, false));
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
-        
-        protected override bool BeforeBinding(Sprite sourceElement)
+
+        public override bool Visibility
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        protected bool Sprite_BindToScene(Sprite sourceElement)
         {
             if (PluginTools.Window == null) throw new Exception.NullWindowException();
             if (BindedElements.Count > 0) return false; //当存在已挂载的精灵时拒绝新的挂载
@@ -81,7 +100,7 @@ namespace WADV.WPF.Renderer
             return true;
         }
 
-        protected override bool BeforeUnbinding(Sprite sourceElement, bool isFromClear = false)
+        protected bool Sprite_UnbindFromScene(Sprite sourceElement, bool isFromClear = false)
         {
             PluginTools.Window.Run(new Action(() => ((Panel) Element.Parent)?.Children.Remove(Element)), true);
             var sprite = BindedElements[0];

@@ -1,6 +1,5 @@
 ﻿Imports System.Threading
 Imports System.Collections.Concurrent
-Imports WADV.Core.ReceiverList
 
 Namespace GameSystem
     ''' <summary>
@@ -9,7 +8,28 @@ Namespace GameSystem
     Friend NotInheritable Class MessageService
         Private ReadOnly _receiver As Thread
         Private ReadOnly _list As New ConcurrentQueue(Of Message)
+        Private _status As Boolean = False
+        Private Shared _instance As MessageService
         Friend ReadOnly LastMessage(49) As Char
+
+        ''' <summary>
+        ''' 获取消息服务的唯一实例
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Shared Function GetInstance() As MessageService
+            If _instance Is Nothing Then _instance = New MessageService
+            Return _instance
+        End Function
+
+        ''' <summary>
+        ''' 获得一个消息循环实例
+        ''' </summary>
+        Private Sub New()
+            _receiver = New Thread(AddressOf MessageContent)
+            _receiver.Name = "[系统]消息循环线程"
+            _receiver.Priority = ThreadPriority.AboveNormal
+            _receiver.IsBackground = True
+        End Sub
 
         ''' <summary>
         ''' 获取消息循环的状态
@@ -17,7 +37,16 @@ Namespace GameSystem
         ''' <value></value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend ReadOnly Property Status As Boolean = False
+        Friend Property Status As Boolean
+            Get
+                Return _status
+            End Get
+            Set(value As Boolean)
+                If value = _status Then Exit Property
+                _status = value
+                If value Then _receiver.Start()
+            End Set
+        End Property
 
         ''' <summary>
         ''' 发送一条消息<br></br>
@@ -29,16 +58,6 @@ Namespace GameSystem
             _list.Enqueue(New Message With {.Content = content, .Type = type})
             Monitor.Pulse(_list)
             Monitor.Exit(_list)
-        End Sub
-
-        ''' <summary>
-        ''' 获得一个消息循环实例
-        ''' </summary>
-        Friend Sub New()
-            _receiver = New Thread(AddressOf MessageContent)
-            _receiver.Name = "[系统]消息循环线程"
-            _receiver.Priority = ThreadPriority.AboveNormal
-            _receiver.IsBackground = True
         End Sub
 
         ''' <summary>
@@ -68,24 +87,5 @@ Namespace GameSystem
                 End While
             End SyncLock
         End Sub
-
-        ''' <summary>
-        ''' 启动消息循环（如果消息循环正在运行则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub Start()
-            If Status Then Exit Sub
-            _Status = True
-            _receiver.Start()
-        End Sub
-
-        ''' <summary>
-        ''' 终止消息循环（如果消息循环本身并没有启动则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub [Stop]()
-            _Status = False
-        End Sub
     End Class
 End Namespace
-

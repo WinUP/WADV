@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Markup;
+using WADV.Core.Enumeration;
 using WADV.Core.RAL;
 
 namespace WADV.WPF.Renderer
@@ -20,7 +21,7 @@ namespace WADV.WPF.Renderer
         /// <param name="path">包含场景的XAML文件的路径(Resource目录下)</param>
         public XamlScene(string name, string path) : base(name)
         {
-            _page = (Page) XamlReader.Parse(Core.API.Path.Combine(Core.PathType.Resource, path));
+            _page = (Page) XamlReader.Parse(Core.API.Path.Combine(PathType.Resource, path));
         }
 
         /// <summary>

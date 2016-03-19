@@ -1,4 +1,5 @@
-﻿Imports WADV.WPF.Renderer
+﻿Imports WADV.Core.Enumeration
+Imports WADV.WPF.Renderer
 
 Class Menu
     Private Sub Button_Click(sender As Object, e As RoutedEventArgs)

@@ -2,6 +2,7 @@
 Imports System.Windows.Markup
 Imports FarseerPhysics.Dynamics
 Imports FarseerPhysics.Dynamics.Contacts
+Imports WADV.Core.Enumeration
 
 Namespace API
     Public Module Sprite

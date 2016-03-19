@@ -1,4 +1,5 @@
-﻿Imports WADV.Core.GameSystem
+﻿Imports WADV.Core.Enumeration
+Imports WADV.Core.GameSystem
 
 Namespace API
     ''' <summary>
@@ -105,7 +106,7 @@ Namespace API
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
         Public Shared Function Combine(pathType As PathType, Optional filePath As String = "") As String
-            Return PathFunction.GetFullPath(pathType, filePath)
+            Return PathFunction.CombineToString(pathType, filePath)
         End Function
 
         ''' <summary>
@@ -118,7 +119,7 @@ Namespace API
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
         Public Shared Function CombineUri(pathType As PathType, Optional filePath As String = "") As Uri
-            Return PathFunction.GetFullUri(pathType, filePath)
+            Return PathFunction.CombineToUri(pathType, filePath)
         End Function
     End Class
 End Namespace

@@ -36,6 +36,5 @@
             Canceled = False
             ExtraData = Nothing
         End Sub
-
     End Class
 End Namespace

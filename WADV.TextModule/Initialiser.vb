@@ -1,4 +1,6 @@
-﻿Friend NotInheritable Class Initialiser
+﻿Imports WADV.Core.Enumeration
+
+Friend NotInheritable Class Initialiser
     ''' <summary>
     ''' 待实例化的文字效果列表
     ''' </summary>

@@ -1,4 +1,5 @@
 ﻿Imports System.Security.AccessControl
+Imports WADV.Core.Enumeration
 
 Class Initialise
     Private Sub Initialise_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded

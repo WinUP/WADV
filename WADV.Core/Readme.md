@@ -1,30 +1,27 @@
 #WADV核心框架开发指南
 
-这篇文档将会讲述WADV引擎核心所提供的功能，以及二次开发的注意事项。
+这份文档将会讲述WADV引擎核心所提供的功能，以及二次开发的注意事项。
 
 ##00. 开始之前
 
-如果你要进行模块开发，有一点是需要注意的，即**只有 `WADV.Core.API` 名称空间内提供的函数才是对外公开的**，其余的函数你无法在你的模块内调用。
+如果你要进行模块开发，有一点是需要注意的，即**只有 `WADV.Core.API` 名称空间内提供的函数才是对外公开的**，其余的函数，除非对子类可访问，否则你无法在你的模块内调用。
 
 这些是引擎提供的功能及它们所在的名称空间：
 
 > * 游戏消息循环
-    * `WADV.Core.API.MessageAPI`
+    * `WADV.Core.API.Message`
 > * 游戏主循环
-    * `WADV.Core.API.LoopAPI`
+    * `WADV.Core.API.Loop`
 > * 计时器
-    * `WADV.Core.API.TimerAPI`
-> * 资源管理
-    * `WADV.Core.API.PathAPI`
-    * `WADV.Core.API.ResourceAPI`
-> * 基础渲染
-    * `WADV.Core.API.WindowAPI`
-> * LUA支持
-    * `WADV.Core.API.ScriptAPI`
-> * 引擎初始化与关闭
-    * `WADV.Core.API.GameAPI`
+    * `WADV.Core.API.Timer`
+> * 路径管理
+    * `WADV.Core.API.Path`
+> * 脚本支持
+    * `WADV.Core.API.Script`
+> * 游戏系统本身
+    * `WADV.Core.API.Game`
 > * 模块支持
-    * `WADV.Core.API.PluginAPI`
+    * `WADV.Core.API.Plugin`
 
 ##01. 游戏消息循环
 
@@ -49,7 +46,7 @@ End Interface
 
 ###公开API
 
-这些API均位于 `WADV.Core.API.MessageAPI`名称空间下。代码中已经含有完整的注释，因此这里便不再赘述。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/MessageAPI.vb)。
+这些API均位于 `WADV.Core.API.MessageAPI`名称空间下。代码中已经含有完整的注释，因此这里便不再赘述。详情请参阅[代码](https://github.com/WinUP/WADV/blob/master/WADV.Core/API/Message.vb)。
 
 顺便一提，以“Sync”结尾的API为同步API，以“Async”结尾的API为异步API。所有有返回值的API，除非特别注明，否则都是同步API。
 

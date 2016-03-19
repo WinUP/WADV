@@ -1,4 +1,5 @@
 ﻿Imports System.Reflection
+Imports WADV.Core.Enumeration
 
 Friend NotInheritable Class Initialiser
     ''' <summary>

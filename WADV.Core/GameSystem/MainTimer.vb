@@ -6,16 +6,26 @@ Namespace GameSystem
     ''' </summary>
     Friend NotInheritable Class MainTimer
         Private ReadOnly _loopThread As Thread
+        Private _status As Boolean = False
+        Private Shared _instance As MainTimer
+
+        ''' <summary>
+        ''' 获取计时器的唯一实例
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Shared Function GetInstance() As MainTimer
+            If _instance Is Nothing Then _instance = New MainTimer
+            Return _instance
+        End Function
 
         ''' <summary>
         ''' 获得一个计时器实例
         ''' </summary>
-        Friend Sub New()
+        Private Sub New()
             _loopThread = New Thread(AddressOf TimerContent)
             _loopThread.IsBackground = True
             _loopThread.Name = "[系统]游戏计时线程"
             _loopThread.Priority = ThreadPriority.AboveNormal
-            Configuration.System.MessageService.SendMessage("[SYSTEM]TIMER_INIT_FINISH", 1)
         End Sub
 
         ''' <summary>
@@ -24,7 +34,16 @@ Namespace GameSystem
         ''' <value>新的状态</value>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Friend ReadOnly Property Status As Boolean = False
+        Friend Property Status As Boolean
+            Get
+                Return _status
+            End Get
+            Set(value As Boolean)
+                If value = _status Then Exit Property
+                _status = value
+                If value Then _loopThread.Start()
+            End Set
+        End Property
 
         ''' <summary>
         ''' 获取或设置计时器两次计时之间的间隔(毫秒)
@@ -35,31 +54,11 @@ Namespace GameSystem
         Friend Property Span As Integer
 
         ''' <summary>
-        ''' 启动计时器（如果计时器正在运行则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub Start()
-            If Status Then Exit Sub
-            _Status = True
-            _loopThread.Start()
-        End Sub
-
-        ''' <summary>
-        ''' 停止计时器（如果计时器本身并没有启动则不进行任何操作）
-        ''' </summary>
-        ''' <remarks></remarks>
-        Friend Sub [Stop]()
-            If Not Status Then Exit Sub
-            _Status = False
-            _loopThread.Abort()
-        End Sub
-
-        ''' <summary>
         ''' 计时器主函数
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub TimerContent()
-            While (Status)
+            While (_status)
                 Configuration.System.MessageService.SendMessage("[SYSTEM]TIMER_TICK", 1)
                 Thread.Sleep(Span)
             End While

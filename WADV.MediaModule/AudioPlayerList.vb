@@ -19,7 +19,7 @@ Friend NotInheritable Class AudioPlayerList
         Dim tmpPlayer As New AudioPlayer(fileName, cycle, count, _nextId)
         SoundList.Add(_nextId, tmpPlayer)
         _nextId += 1
-        Message.Send("[AUDIO]SOUND_ADD")
+        Message.Send("[AUDIO]SOUND_ADD", 4)
         Return tmpPlayer
     End Function
 
@@ -38,7 +38,7 @@ Friend NotInheritable Class AudioPlayerList
             Debug.WriteLine("--ERROR: " & ex.Message)
         End Try
         SoundList.Remove(id)
-        Message.Send("[AUDIO]SOUND_REMOVE")
+        Message.Send("[AUDIO]SOUND_REMOVE", 4)
     End Sub
 
     ''' <summary>
@@ -63,12 +63,12 @@ Friend NotInheritable Class AudioPlayerList
             If player.Duration - player.Position <= 0.001 Then
                 If (Not player.Cycle) OrElse (player.Cycle AndAlso player.CycleCount = 0) Then
                     DeletePlayer(player.ID)
-                    Message.Send("[AUDIO]SOUND_END")
+                    Message.Send("[AUDIO]SOUND_END", 4)
                 Else
                     player.Position = 0.0
                     player.Play()
                     If player.CycleCount > 0 Then player.CycleCount -= 1
-                    Message.Send("[AUDIO]SOUND_CYCLE")
+                    Message.Send("[AUDIO]SOUND_CYCLE", 4)
                 End If
             End If
         Next

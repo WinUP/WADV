@@ -92,6 +92,7 @@
     <Compile Include="API\Script.vb" />
     <Compile Include="API\Timer.vb" />
     <Compile Include="Configuration\Receiver.vb" />
+    <Compile Include="Enumeration\PathType.vb" />
     <Compile Include="Exception\CompileFailedException.vb" />
     <Compile Include="Exception\FrameworkException.vb" />
     <Compile Include="Exception\SpriteNameAlreadyExistedException.vb" />
@@ -102,7 +103,7 @@
     <Compile Include="Configuration\Path.vb" />
     <Compile Include="Configuration\Status.vb" />
     <Compile Include="Configuration\System.vb" />
-    <Compile Include="EmptyLoop.vb" />
+    <Compile Include="Utilities\EmptyLoop.vb" />
     <Compile Include="Enumerations.vb" />
     <Compile Include="Exception\CloseUnsupportedException.vb" />
     <Compile Include="Exception\CompileTargetFormatIllegalException.vb" />

@@ -1,4 +1,6 @@
-﻿Namespace GameSystem
+﻿Imports WADV.Core.Enumeration
+
+Namespace GameSystem
     ''' <summary>
     ''' 路径辅助类
     ''' </summary>
@@ -10,8 +12,8 @@
         ''' <param name="type">路径类型</param>
         ''' <param name="filePath">从类型后开始的文件路径</param>
         ''' <returns>文件的绝对路径</returns>
-        Friend Shared Function GetFullPath(type As PathType, Optional filePath As String = "") As String
-            Dim typePath As String = ""
+        Friend Shared Function CombineToString(type As PathType, Optional filePath As String = "") As String
+            Dim typePath = ""
             Select Case type
                 Case PathType.Plugin
                     typePath = Configuration.Path.PluginPath
@@ -34,8 +36,8 @@
         ''' <param name="filePath">从类型开始后的文件路径</param>
         ''' <returns>文件的绝对路径</returns>
         ''' <remarks></remarks>
-        Friend Shared Function GetFullUri(type As PathType, Optional filePath As String = "") As Uri
-            Return New Uri(GetFullPath(type, filePath))
+        Friend Shared Function CombineToUri(type As PathType, Optional filePath As String = "") As Uri
+            Return New Uri(CombineToString(type, filePath))
         End Function
     End Class
 End Namespace

@@ -1,4 +1,6 @@
-﻿Namespace API
+﻿Imports WADV.Core.Enumeration
+
+Namespace API
 
     ''' <summary>
     ''' 界面API
@@ -17,9 +19,9 @@
             Initialiser.LoadEffect()
             Dim content = Window.Search(Of Windows.Controls.Panel)(contentName)
             If content Is Nothing Then Return
-            UI.Content(content)
+            Ui.Content(content)
             Style(styleFile)
-            UI.Margin(margin)
+            Ui.Margin(margin)
             ZIndex(index)
             Message.Send("[CHOICE]INIT_FINISH")
         End Sub

@@ -1,4 +1,5 @@
-﻿Imports WADV.Core.GameSystem
+﻿Imports WADV.Core.Enumeration
+Imports WADV.Core.GameSystem
 
 Namespace RAL
     Public MustInherit Class WindowBase
@@ -164,7 +165,7 @@ Namespace RAL
             End Get
             Set(value As String)
                 If value = _iconPath Then Exit Property
-                SetIconFromFile_Implement(PathFunction.GetFullPath(PathType.Skin, value))
+                SetIconFromFile_Implement(PathFunction.CombineToString(PathType.Skin, value))
                 Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_ICON_CHANGE", 1)
                 _iconPath = value
             End Set
@@ -190,7 +191,7 @@ Namespace RAL
             End Get
             Set(value As String)
                 If value = _cursorPath Then Exit Property
-                SetCursorFromFile_Implement(PathFunction.GetFullPath(PathType.Skin, value))
+                SetCursorFromFile_Implement(PathFunction.CombineToString(PathType.Skin, value))
                 Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_CURSOR_CHANGE", 1)
                 _cursorPath = value
             End Set
@@ -401,7 +402,7 @@ Namespace RAL
         ''' <param name="name">资源的名称</param>
         ''' <param name="path">资源文件路径(Resource目录下)</param>
         Public Sub LoadResource(name As String, path As String)
-            LoadResource_Implement(name, PathFunction.GetFullPath(PathType.Resource, path))
+            LoadResource_Implement(name, PathFunction.CombineToString(PathType.Resource, path))
             Configuration.System.MessageService.SendMessage("[SYSTEM]WINDOW_LOAD_RESOURCE", 1)
         End Sub
 

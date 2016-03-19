@@ -1,5 +1,4 @@
 ﻿Imports System.Collections.ObjectModel
-Imports WADV.Core.RAL.Component
 
 Namespace RAL.Tool
     ''' <summary>

@@ -11,8 +11,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using WADV.Core;
+using WADV.Core.Enumeration;
 using WADV.Core.RAL;
-using WADV.Core.Render;
 
 namespace WADV.WPF.Renderer
 {
@@ -140,7 +140,7 @@ namespace WADV.WPF.Renderer
             var stream = new FileStream(Core.API.Path.Combine(PathType.UserFile, path), FileMode.Create);
             image.Save(stream);
             stream.Close();
-            Core.API.Message.Send("[RENDER]WINDOW_IMAGE_SAVE");
+            Core.API.Message.Send("[RENDER]WINDOW_IMAGE_SAVE", 1);
         }
 
         protected override void SetCanFullscreen_Implement(bool value)

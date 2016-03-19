@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Runtime.Serialization.Formatters.Binary
+Imports WADV.Core.Enumeration
 
 ''' <summary>
 ''' 成就存储类

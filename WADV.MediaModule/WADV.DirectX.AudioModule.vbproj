@@ -78,21 +78,10 @@
       <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.AudioVideoPlayback.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Neo.Lua, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.0.3\lib\net45\Neo.Lua.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Neo.Lua.Desktop, Version=5.3.0.0, Culture=neutral, PublicKeyToken=fdb0cd4fe8a6e3b2, processorArchitecture=MSIL">
-      <HintPath>..\packages\NeoLua.1.0.3\lib\net45\Neo.Lua.Desktop.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -146,17 +135,11 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WADV.Core\WADV.Core.vbproj">
       <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
       <Name>WADV.Core</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\WADV.LuaSupport\WADV.LuaSupport.vbproj">
-      <Project>{ce3761f5-1c5e-4b0d-a46c-e11682e67c1c}</Project>
-      <Name>WADV.LuaSupport</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

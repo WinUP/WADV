@@ -1,6 +1,7 @@
 ﻿Imports Neo.IronLua
 Imports WADV.Core.API.Script
 Imports WADV.Core.API.Path
+Imports WADV.Core.Enumeration
 
 Public Class Extension
     ''' <summary>
@@ -12,7 +13,7 @@ Public Class Extension
     Public Shared Function Compile(targetFile As String, [option] As LuaCompileOptions) As LuaChunk
         Dim core = TryCast(VM(), ScriptCore)
         If core Is Nothing Then Return Nothing
-        Return core.Vm.CompileChunk(Combine(WADV.Core.PathType.Script, targetFile), [option])
+        Return core.Vm.CompileChunk(Combine(PathType.Script, targetFile), [option])
     End Function
 
     ''' <summary>

@@ -1,5 +1,6 @@
 ﻿Imports WADV.Core
 Imports WADV.Core.API
+Imports WADV.Core.Enumeration
 
 Namespace ParticleModel
     Friend NotInheritable Class ParticleModelList

@@ -1,4 +1,5 @@
 ﻿Imports Microsoft.DirectX.AudioVideoPlayback
+Imports WADV.Core.Enumeration
 
 ''' <summary>
 ''' 声音播放器
