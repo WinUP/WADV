@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C0B62E00-90C8-44A7-8134-EF91AD01B50F}</ProjectGuid>
+    <ProjectGuid>{00602172-D242-4646-93BD-E47109A43976}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>WADV.Core</RootNamespace>
-    <AssemblyName>WADV.Core</AssemblyName>
+    <RootNamespace>WPSoft.TextEffectPack</RootNamespace>
+    <AssemblyName>WPSoft.TextEffectPack</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -18,8 +18,8 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\Release\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <OutputPath>..\..\Release\resource\TextEffect\</OutputPath>
+    <DocumentationFile>WPSoft.TextEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
@@ -29,8 +29,8 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <OutputPath>..\Deus Legem\bin\resource\TextEffect\</OutputPath>
+    <DocumentationFile>WPSoft.TextEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -50,8 +50,8 @@
     <DebugSymbols>true</DebugSymbols>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\Release\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <OutputPath>..\..\Release\resource\TextEffect\</OutputPath>
+    <DocumentationFile>WPSoft.TextEffectPack.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -60,7 +60,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DocumentationFile>WADV.Core.xml</DocumentationFile>
+    <DocumentationFile>WPSoft.TextEffectPack.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -69,89 +69,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xaml" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
     <Import Include="System.Diagnostics" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Game.vb" />
-    <Compile Include="API\Loop.vb" />
-    <Compile Include="API\Message.vb" />
-    <Compile Include="API\Path.vb" />
-    <Compile Include="API\Plugin.vb" />
-    <Compile Include="API\Script.vb" />
-    <Compile Include="API\Timer.vb" />
-    <Compile Include="Configuration\Receiver.vb" />
-    <Compile Include="Enumeration\ComponentBindingResult.vb" />
-    <Compile Include="Enumeration\ComponentListenerType.vb" />
-    <Compile Include="Enumeration\PathType.vb" />
-    <Compile Include="Enumeration\ComponentUnbindingResult.vb" />
-    <Compile Include="Exception\CompileFailedException.vb" />
-    <Compile Include="Exception\FrameworkException.vb" />
-    <Compile Include="Exception\PositionOutOfRangeException.vb" />
-    <Compile Include="Exception\SpriteNameAlreadyExistedException.vb" />
-    <Compile Include="Exception\VolumeOutOfRangeException.vb" />
-    <Compile Include="GameSystem\Message.vb" />
-    <Compile Include="RAL\Tool\Animator.vb" />
-    <Compile Include="RAL\Component.vb" />
-    <Compile Include="RAL\ComponentList.vb" />
-    <Compile Include="Configuration\Path.vb" />
-    <Compile Include="Configuration\Status.vb" />
-    <Compile Include="Configuration\System.vb" />
-    <Compile Include="RAL\Tool\AudioPlayer.vb" />
-    <Compile Include="Utilities\EmptyLoop.vb" />
-    <Compile Include="Exception\CloseUnsupportedException.vb" />
-    <Compile Include="Exception\CompileTargetFormatIllegalException.vb" />
-    <Compile Include="Exception\FullscreenUnsupportedException.vb" />
-    <Compile Include="Exception\IlleagleGoBackException.vb" />
-    <Compile Include="Exception\IlleagleGoForwardException.vb" />
-    <Compile Include="Exception\FrameOutOfRangeException.vb" />
-    <Compile Include="Exception\MessageDequeueFailedException.vb" />
-    <Compile Include="Exception\PluginMultiInitialisesException.vb" />
-    <Compile Include="Exception\PluginInitialiseFailedException.vb" />
-    <Compile Include="Exception\SpriteCannotBeFoundException.vb" />
-    <Compile Include="Exception\SystemMultiPreparedException.vb" />
-    <Compile Include="Exception\TickOutOfRangeException.vb" />
-    <Compile Include="RAL\NavigationParameter.vb" />
-    <Compile Include="Point2.vb" />
-    <Compile Include="RAL\RenderNode.vb" />
-    <Compile Include="RAL\Tool\Brush.vb" />
-    <Compile Include="RAL\Tool\DrawingType.vb" />
-    <Compile Include="Rect2.vb" />
-    <Compile Include="RAL\WindowBase.vb" />
-    <Compile Include="RAL\Tool\Sprite.vb" />
-    <Compile Include="Script\Field.vb" />
-    <Compile Include="Script\IScriptEngine.vb" />
-    <Compile Include="GameSystem\MainLoop.vb" />
-    <Compile Include="GameSystem\MainTimer.vb" />
-    <Compile Include="GameSystem\MessageService.vb" />
-    <Compile Include="GameSystem\PathFunction.vb" />
-    <Compile Include="GameSystem\PluginFunction.vb" />
-    <Compile Include="PluginInterface\IGameDestructReceiver.vb" />
-    <Compile Include="PluginInterface\IGameInitialiseReceiver.vb" />
-    <Compile Include="PluginInterface\IPluginInitialise.vb" />
-    <Compile Include="PluginInterface\ILoopReceiver.vb" />
-    <Compile Include="PluginInterface\IMessageReceiver.vb" />
-    <Compile Include="PluginInterface\INavigateReceiver.vb" />
-    <Compile Include="PluginInterface\IPluginLoadReceiver.vb" />
-    <Compile Include="ReceiverList\BaseList.vb" />
-    <Compile Include="ReceiverList\DestructReceiverList.vb" />
-    <Compile Include="ReceiverList\InitialiserReceiverList.vb" />
-    <Compile Include="ReceiverList\LoopReceiverList.vb" />
-    <Compile Include="ReceiverList\MessageReceiverList.vb" />
-    <Compile Include="ReceiverList\NavigateReceiverList.vb" />
-    <Compile Include="ReceiverList\PluginLoadingReceiverList.vb" />
-    <Compile Include="RAL\Tool\Scene.vb" />
+    <Compile Include="CodeEffect.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -167,7 +103,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Vector2.vb" />
+    <Compile Include="PerWordEffect.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -188,7 +124,13 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework Plugins\WADV.WPF.TextModule\WADV.WPF.TextModule.vbproj">
+      <Project>{67f83b68-5996-4af6-b596-fda9befd9a4c}</Project>
+      <Name>WADV.WPF.TextModule</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

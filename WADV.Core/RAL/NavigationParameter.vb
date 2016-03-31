@@ -1,4 +1,6 @@
-﻿Namespace RAL
+﻿Imports WADV.Core.RAL.Tool
+
+Namespace RAL
 
     ''' <summary>
     ''' 表示游戏转场请求

@@ -1,5 +1,6 @@
 ﻿Imports WADV.Core.Enumeration
 Imports WADV.Core.GameSystem
+Imports WADV.Core.RAL.Tool
 
 Namespace RAL
     Public MustInherit Class WindowBase

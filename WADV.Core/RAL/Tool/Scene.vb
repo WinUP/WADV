@@ -1,6 +1,6 @@
-﻿Imports WADV.Core.RAL.Tool
+﻿
 
-Namespace RAL
+Namespace RAL.Tool
 
     ''' <summary>
     ''' 游戏场景信息描述类
