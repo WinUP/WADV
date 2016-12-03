@@ -42,7 +42,10 @@
         ''' <param name="name">变量名</param>
         ''' <returns></returns>
         Function [Get](name As String) As Object
-
+        ''' <summary>
+        ''' 注册脚本引用域
+        ''' </summary>
+        ''' <param name="target">要注册的脚本引用域</param>
         Sub Register(target As Field)
 
         ''' <summary>

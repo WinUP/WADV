@@ -1,6 +1,6 @@
 ﻿Namespace RAL
     ''' <summary>
-    ''' 表示一个渲染节点<br></br>
+    ''' 渲染节点<br></br>
     ''' RenderNode是RAL中所有可直接渲染的结构在渲染抽象层中的最终基类，表示层级渲染结构中的一个可渲染元素
     ''' </summary>
     ''' <typeparam name="T">这个节点的子节点的类型</typeparam>

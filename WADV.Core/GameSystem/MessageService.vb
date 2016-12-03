@@ -6,10 +6,10 @@ Namespace GameSystem
     ''' 消息循环
     ''' </summary>
     Friend NotInheritable Class MessageService
+        Private Shared ReadOnly Instance As MessageService = New MessageService
         Private ReadOnly _receiver As Thread
         Private ReadOnly _list As New ConcurrentQueue(Of Message)
         Private _status As Boolean = False
-        Private Shared _instance As MessageService
         Friend ReadOnly LastMessage(49) As Char
 
         ''' <summary>
@@ -17,8 +17,7 @@ Namespace GameSystem
         ''' </summary>
         ''' <returns></returns>
         Friend Shared Function GetInstance() As MessageService
-            If _instance Is Nothing Then _instance = New MessageService
-            Return _instance
+            Return Instance
         End Function
 
         ''' <summary>

@@ -48,6 +48,7 @@
         Public MustOverride Sub Finish()
 
         Public Overridable Sub Dispose() Implements IDisposable.Dispose
+            Finish()
         End Sub
     End Class
 End Namespace

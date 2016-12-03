@@ -7,15 +7,14 @@ Namespace GameSystem
     Friend NotInheritable Class MainTimer
         Private ReadOnly _loopThread As Thread
         Private _status As Boolean = False
-        Private Shared _instance As MainTimer
+        Private Shared ReadOnly Instance As MainTimer = New MainTimer
 
         ''' <summary>
         ''' 获取计时器的唯一实例
         ''' </summary>
         ''' <returns></returns>
         Friend Shared Function GetInstance() As MainTimer
-            If _instance Is Nothing Then _instance = New MainTimer
-            Return _instance
+            Return Instance
         End Function
 
         ''' <summary>

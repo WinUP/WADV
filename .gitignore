@@ -14,8 +14,6 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
-WPSoft.DLPages/
-WPSoft.DLAchievements/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/

@@ -12,15 +12,14 @@ Namespace GameSystem
         Private _frameCount As Integer
         Private _span As Integer
         Private ReadOnly _loopThread As Thread
-        Private Shared _instance As MainLoop
+        Private Shared ReadOnly Instance As MainLoop = New MainLoop
 
         ''' <summary>
         ''' 获取游戏循环的唯一实例
         ''' </summary>
         ''' <returns></returns>
         Friend Shared Function GetInstance() As MainLoop
-            If _instance Is Nothing Then _instance = New MainLoop
-            Return _instance
+            Return Instance
         End Function
 
         ''' <summary>

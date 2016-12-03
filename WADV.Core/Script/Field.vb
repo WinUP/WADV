@@ -8,5 +8,10 @@
             Name = ""
             Content = New Dictionary(Of String, Object)
         End Sub
+
+        Public Sub New(name As String)
+            Me.Name = name
+            Content = New Dictionary(Of String, Object)
+        End Sub
     End Class
 End Namespace
