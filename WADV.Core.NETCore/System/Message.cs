@@ -4,7 +4,7 @@
     {
         public string Content;
 
-        public string Type;
+        public int Mask;
 
         public object Parameter;
 

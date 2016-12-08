@@ -1,11 +1,23 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace WADV.Core.NETCore.Receiver
 {
-    internal sealed class ReceiverList<T> where T : ILooper, IMessageReceiver
+    /// <summary>
+    /// List of a type of receivers
+    /// </summary>
+    /// <typeparam name="T">Receiver type</typeparam>
+    /// <typeparam name="TU">Paramater type</typeparam>
+    internal sealed class ReceiverList<T, TU>
     {
-        internal delegate bool Mapper(ReceiverNode<T> root, T receiver);
+        /// <summary>
+        /// Procedure of process each node when mappin the tree
+        /// </summary>
+        /// <param name="list">Tree itself</param>
+        /// <param name="receiver">Receiver which is on mapping</param>
+        /// <returns>Should this receiver still avaliable in next loop</returns>
+        internal delegate bool Mapper(ReceiverList<T, TU> list, T receiver, TU parameter);
 
         private readonly ReceiverNode<T> _root = new ReceiverNode<T>();
         private readonly Dictionary<ReceiverNode<T>, ReceiverNode<T>> _needToAdd = new Dictionary<ReceiverNode<T>, ReceiverNode<T>>();
@@ -21,6 +33,9 @@ namespace WADV.Core.NETCore.Receiver
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Tree node status
+        /// </summary>
         private enum NodeStatus
         {
             /// <summary>
@@ -46,6 +61,9 @@ namespace WADV.Core.NETCore.Receiver
 
         }
 
+        /// <summary>
+        /// Get the count of this list
+        /// </summary>
         internal int Count
         {
             get
@@ -56,7 +74,11 @@ namespace WADV.Core.NETCore.Receiver
                 }
             }
         }
-
+        /// <summary>
+        /// Indicate that if target receiver is belongs to this list
+        /// </summary>
+        /// <param name="target">Receiver which want to be indicated</param>
+        /// <returns></returns>
         internal bool Contains(T target)
         {
             lock (_index)
@@ -73,7 +95,11 @@ namespace WADV.Core.NETCore.Receiver
                 return key.Key != null;
             }
         }
-
+        /// <summary>
+        /// Add a new receiver to root
+        /// </summary>
+        /// <param name="target">Receiver which should be added</param>
+        /// <returns></returns>
         internal bool AddToRoot(T target)
         {
             lock (_needToAdd)
@@ -91,8 +117,14 @@ namespace WADV.Core.NETCore.Receiver
                 return true;
             }
         }
-
-        internal bool Add(T target, T parent)
+        /// <summary>
+        /// Add a new receiver as a child of another receiver
+        /// </summary>
+        /// <param name="target">Receiver which should be added</param>
+        /// <param name="parent">Receiver which should be acted as parent</param>
+        /// <param name="sequence">Run sequence of the new receiver</param>
+        /// <returns></returns>
+        internal bool Add(T target, T parent, int sequence = 0)
         {
             lock (_needToAdd)
             {
@@ -105,13 +137,17 @@ namespace WADV.Core.NETCore.Receiver
                     _needToAdd[itemNode.Key] = parentNode.Key;
                     return true;
                 }
-                var result = new ReceiverNode<T>(target);
+                var result = new ReceiverNode<T>(target) { RunSequence = sequence };
                 _needToAdd.Add(result, parentNode.Key);
                 lock (_index) _index.Add(result, 2); //100010
                 return true;
             }
         }
-
+        /// <summary>
+        /// Delete a receiver
+        /// </summary>
+        /// <param name="target">Receiver which should be deleted</param>
+        /// <returns></returns>
         internal bool Delete(T target)
         {
             lock (_needToRemove)
@@ -124,7 +160,12 @@ namespace WADV.Core.NETCore.Receiver
                 return true;
             }
         }
-
+        /// <summary>
+        /// Change sequence of a receiver
+        /// </summary>
+        /// <param name="target">Receiver which should be changed</param>
+        /// <param name="newSequence">New sequence</param>
+        /// <returns></returns>
         internal bool SetSequence(T target, int newSequence)
         {
             lock (_needToChangeSequence)
@@ -142,6 +183,12 @@ namespace WADV.Core.NETCore.Receiver
             }
         }
 
+        /// <summary>
+        /// Change parent of a receiver
+        /// </summary>
+        /// <param name="target">Receiver which its parent should be changed</param>
+        /// <param name="newParent">New parent</param>
+        /// <returns></returns>
         internal bool SetParent(T target, T newParent)
         {
             lock (_needToChangeParent)
@@ -161,6 +208,11 @@ namespace WADV.Core.NETCore.Receiver
             }
         }
 
+        /// <summary>
+        /// Change parent to root of a receiver
+        /// </summary>
+        /// <param name="target">Receiver which its parent should be changed</param>
+        /// <returns></returns>
         internal bool SetParentToRoot(T target)
         {
             lock (_needToChangeParent)
@@ -176,6 +228,12 @@ namespace WADV.Core.NETCore.Receiver
                 lock (_index) _index[itemNode.Key] |= 16; //010000
                 return true;
             }
+        }
+
+        internal void Clear()
+        {
+            _root.Children.Clear();
+            GC.Collect();
         }
 
         private static void Link(ReceiverNode<T> parent, ReceiverNode<T> child)
@@ -195,7 +253,10 @@ namespace WADV.Core.NETCore.Receiver
             child.Parent = parent;
         }
 
-        internal void Map()
+        /// <summary>
+        /// Map the list
+        /// </summary>
+        internal TU Map(TU parameter)
         {
             lock (_index)
             {
@@ -240,13 +301,14 @@ namespace WADV.Core.NETCore.Receiver
                                         _index.Remove(e);
                                     }
                                     _needToRemove.Clear();
-                                    if (_root.Children.Count == 0) return;
+                                    if (_root.Children.Count == 0) return parameter;
                                     var walkStack = new Stack<LinkedListNode<ReceiverNode<T>>>();
                                     var listPointer = _root.Children.First;
                                     walkStack.Push(new LinkedListNode<ReceiverNode<T>>(_root));
                                     while (walkStack.Count > 0)
                                     {
-                                        _mapper(_root, listPointer.Value.Receiver);
+                                        if (!_mapper(this, listPointer.Value.Receiver, parameter))
+                                            _needToRemove.Add(listPointer.Value);
                                         if (listPointer.Value.Children.Count > 0)
                                         {
                                             walkStack.Push(listPointer);
@@ -261,7 +323,7 @@ namespace WADV.Core.NETCore.Receiver
                                                         if (listPointer.Next == null) continue;
                                                         break;
                                                     }
-                                                    if (walkStack.Count == 0) return;
+                                                    if (walkStack.Count == 0) return parameter;
                                                 }
                                                 listPointer = listPointer.Next;
                                             }
@@ -288,7 +350,7 @@ namespace WADV.Core.NETCore.Receiver
                                             }
                                             if (listPointer.Value.Enabled) break;
                                         }
-                                        if (walkStack.Count == 0) return;
+                                        if (walkStack.Count == 0) return parameter;
                                     }
                                 }
                             }
@@ -296,6 +358,7 @@ namespace WADV.Core.NETCore.Receiver
                     }
                 }
             }
+            return parameter;
         }
     }
 }
