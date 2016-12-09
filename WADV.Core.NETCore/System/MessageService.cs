@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using WADV.Core.NETCore.Exception;
 
 namespace WADV.Core.NETCore.System
 {
@@ -13,66 +11,79 @@ namespace WADV.Core.NETCore.System
         private static readonly MessageService SingleInstance = new MessageService();
         private readonly Thread _messageLooper;
         private readonly ConcurrentQueue<Message> _messages;
+        private readonly char[] _lastMessage;
         private bool _status;
 
         private MessageService()
         {
             _status = false;
             _messages = new ConcurrentQueue<Message>();
+            _lastMessage = new char[64];
             _messageLooper = new Thread(MessageLooperContent)
             {
-                Name = "[SYSTEM] Message Service",
+                Name = "[SYSTEM] Message",
                 IsBackground = true
             };
         }
 
-        public static MessageService Instance()
+        internal static MessageService Instance()
         {
             return SingleInstance;
         }
 
+        internal bool Status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                if (value == _status) return;
+                _status = value;
+                if (_status) _messageLooper.Start();
+            }
+        }
+
+        internal void Send(Message message)
+        {
+            Monitor.Enter(_messages);
+            _messages.Enqueue(message);
+            Monitor.Pulse(_messages);
+            Monitor.Exit(_messages);
+        }
+
         private void MessageLooperContent()
         {
-            Message message;
             lock (_messages)
             {
                 while (_status)
                 {
-                    if (!_messages.TryDequeue(out message))
+                    while (!_messages.IsEmpty)
                     {
-                        
-                    }
+                        Message message;
+                        if (!_messages.TryDequeue(out message))
+                        {
+                            throw new MessageDequeueFailedException();
+                        }
 #if DEBUG
-                    Debug.WriteLine(DateTime.Now.ToString($"HH:mm:ss,fff {message}"));
+                        Debug.WriteLine(DateTime.Now.ToString($"HH:mm:ss,fff {message}"));
 #endif
-
+                        Configuration.Receivers.MessageReceivers.Map(message);
+                        lock (_lastMessage)
+                        {
+                            int i;
+                            for (i = 0; i < message.Content.Length; i++)
+                            {
+                                _lastMessage[i] = message.Content[i];
+                            }
+                            _lastMessage[i] = '\0';
+                            Monitor.PulseAll(_lastMessage);
+                        }
+                    }
+                    Monitor.Wait(_messages);
                 }
             }
-
-
-
-//            Dim message As Message = Nothing
-//            SyncLock(_list)
-//                While _Status
-//                    While Not _list.IsEmpty
-//                        If Not _list.TryDequeue(message) Then Throw New Exception.MessageDequeueFailedException
-//#If DEBUG Then
-//                        Debug.WriteLine(Date.Now.ToString($"HH:mm:ss,fff {message}"))
-//#End If
-//                        Configuration.Receiver.MessageReceiver.Broadcast(message)
-//                        SyncLock LastMessage
-//                            For i = 0 To message.Content.Length - 1
-//                                LastMessage(i) = message.Content(i)
-//                            Next
-//                            For i = message.Content.Length To 49
-//                                LastMessage(i) = Nothing
-//                            Next
-//                            Monitor.PulseAll(LastMessage)
-//                        End SyncLock
-//                    End While
-//                    Monitor.Wait(_list)
-//                End While
-//            End SyncLock
         }
     }
 }

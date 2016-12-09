@@ -8,7 +8,7 @@ namespace WADV.Core.NETCore.Receiver
     public interface IMessager
     {
         /// <summary>
-        /// Process a messae. All changes of the message will be saved
+        /// Process a messaeg. All changes of the message will be saved
         /// </summary>
         /// <param name="message">message object</param>
         /// <returns>Should this receiver still avaliable in next loop</returns>

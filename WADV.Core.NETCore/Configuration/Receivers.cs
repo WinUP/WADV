@@ -9,7 +9,7 @@ namespace WADV.Core.NETCore.Configuration
     internal class Receivers
     {
         internal static ReceiverList<IMessager, Message> MessageReceivers;
-        internal static ReceiverList<ILooper, int> LoopReceivers;
+        internal static ReceiverList<IUpdater, int> UpdateReceivers;
         internal static ReceiverList<IRenderer, int> RenderReceivers;
         internal static ReceiverList<INavigator, NavigationParameter> NavigateReceivers;
         internal static ReceiverList<IModuleLoader, Type[]> ModuleLoadReceivers;
@@ -20,9 +20,9 @@ namespace WADV.Core.NETCore.Configuration
         {
             return (parameter.Mask & receiver.Mask) == 0 || receiver.Receive(parameter);
         }
-        private static bool LoopMapper(ReceiverList<ILooper, int> list, ILooper receiver, int parameter)
+        private static bool UpdateMapper(ReceiverList<IUpdater, int> list, IUpdater receiver, int parameter)
         {
-            return receiver.Loop(parameter);
+            return receiver.Update(parameter);
         }
         private static bool RenderMapper(ReceiverList<IRenderer, int> list, IRenderer receiver, int parameter)
         {
@@ -48,14 +48,14 @@ namespace WADV.Core.NETCore.Configuration
         internal static void Prepare()
         {
             MessageReceivers?.Clear();
-            LoopReceivers?.Clear();
+            UpdateReceivers?.Clear();
             RenderReceivers?.Clear();
             NavigateReceivers?.Clear();
             ModuleLoadReceivers?.Clear();
             GameInitializeReceivers?.Clear();
             GameDestructReceivers?.Clear();
             MessageReceivers = new ReceiverList<IMessager, Message>(MessageMapper);
-            LoopReceivers = new ReceiverList<ILooper, int>(LoopMapper);
+            UpdateReceivers = new ReceiverList<IUpdater, int>(UpdateMapper);
             RenderReceivers = new ReceiverList<IRenderer, int>(RenderMapper);
             NavigateReceivers = new ReceiverList<INavigator, NavigationParameter>(NavigateMapper);
             ModuleLoadReceivers = new ReceiverList<IModuleLoader, Type[]>(ModuleLoadMapper);
