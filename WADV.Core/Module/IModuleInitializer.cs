@@ -1,4 +1,4 @@
-﻿namespace WADV.Core.NETCore.Module {
+﻿namespace WADV.Core.Module {
     /// <summary>
     /// Module initializer
     /// </summary>

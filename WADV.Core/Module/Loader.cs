@@ -7,7 +7,7 @@ using System.Runtime.Loader;
 using WADV.Core.API;
 using WADV.Core.Attribute;
 using WADV.Core.Exception;
-using WADV.Core.NETCore.Module;
+using WADV.Core.File;
 using WADV.Core.Receiver;
 using WADV.Core.System;
 using WADV.Core.Utility;
@@ -23,7 +23,7 @@ namespace WADV.Core.Module {
         internal static void LoadModule(string name) {
             var location = Location.Combine(Location.Type.Module, $"{name}/{name}.dll");
             if (LoadedList.Contains(location)) return;
-            if (!File.Exists(location)) {
+            if (!global::System.IO.File.Exists(location)) {
                 throw GameException.New(ExceptionType.FileCannotFound)
                     .Value("Path", location)
                     .At("Module.Loader")
@@ -86,6 +86,14 @@ namespace WADV.Core.Module {
                 if (info.GetInterface("WADV.Core.Receiver.IUpdater") != null) {
                     Configuration.Receivers.UpdateReceivers.AddToRoot(
                         (IUpdater) Activator.CreateInstance(type));
+                }
+                if (info.GetInterface("WADV.Core.File.IProtocol") != null) {
+                    FileManager.Instance().AddProtocol(
+                        (IProtocol) Activator.CreateInstance(type));
+                }
+                if (info.GetInterface("WADV.Core.File.IFileReader") != null) {
+                    FileManager.Instance().AddFileReader(
+                        (IFileReader)Activator.CreateInstance(type));
                 }
             }
             LoadedList.Add(location);

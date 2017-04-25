@@ -2,9 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using WADV.Core.RAL;
 
-namespace WADV.Core.RAL {
-    public abstract class Resource<T> : Component, ICollection<T> {
+namespace WADV.Core.File {
+    public abstract class Resource : ICollection {
+        
+    }
+
+
+    public abstract class Resource<T> : Resource {
 
         public IEnumerator<T> GetEnumerator() {
             throw new NotImplementedException();

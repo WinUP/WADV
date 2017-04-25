@@ -8,12 +8,12 @@ namespace WADV.Core.Configuration {
         /// <summary>
         /// Message's mask for system messages
         /// </summary>
-        internal static int SystemMessageMask { get; set; } = 1;
+        internal static int SystemMessageMask { get; set; } = 0B0000000000000000000000000000001;
 
         /// <summary>
         /// Message's mask for windows messages
         /// </summary>
-        internal static int WindowMessageMask { get; set; } = 2;
+        internal static int WindowMessageMask { get; set; } = 0B0000000000000000000000000000010;
 
         /// <summary>
         /// Game's main window
@@ -23,6 +23,6 @@ namespace WADV.Core.Configuration {
         /// <summary>
         /// Should throw error when any plugin's initialization is failed
         /// </summary>
-        internal static bool ThrowPluginInitializeFailed { get; set; }
+        internal static bool ThrowPluginInitializeFailed { get; set; } = false;
     }
 }

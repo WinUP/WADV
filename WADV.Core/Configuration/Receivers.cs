@@ -33,26 +33,22 @@ namespace WADV.Core.Configuration {
             return abort;
         }
 
-        private static bool NavigateMapper(ReceiverList<INavigator, NavigationParameter> list, INavigator receiver,
-            NavigationParameter parameter) {
+        private static bool NavigateMapper(ReceiverList<INavigator, NavigationParameter> list, INavigator receiver, NavigationParameter parameter) {
             if (!receiver.Navigate(parameter, out var abort)) list.Delete(receiver);
             return abort;
         }
 
-        private static bool ModuleLoadMapper(ReceiverList<IModuleLoader, ReferenceValue<Type[]>> list, IModuleLoader receiver,
-            ReferenceValue<Type[]> parameter) {
+        private static bool ModuleLoadMapper(ReceiverList<IModuleLoader, ReferenceValue<Type[]>> list, IModuleLoader receiver, ReferenceValue<Type[]> parameter) {
             if (!receiver.Initialize(parameter, out var abort)) list.Delete(receiver);
             return abort;
         }
 
-        private static bool GameInitializeMapper(ReceiverList<IGameInitializer, int> list, IGameInitializer receiver,
-            int parameter) {
+        private static bool GameInitializeMapper(ReceiverList<IGameInitializer, int> list, IGameInitializer receiver, int parameter) {
             if (!receiver.Initialize(out var abort)) list.Delete(receiver);
             return abort;
         }
 
-        private static bool GameDestructMapper(ReceiverList<IGameDestructor, CancelEventArgs> list,
-            IGameDestructor receiver, CancelEventArgs parameter) {
+        private static bool GameDestructMapper(ReceiverList<IGameDestructor, CancelEventArgs> list, IGameDestructor receiver, CancelEventArgs parameter) {
             if (!receiver.Destruct(parameter, out var abort)) list.Delete(receiver);
             return abort;
         }
