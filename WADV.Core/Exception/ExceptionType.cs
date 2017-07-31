@@ -7,5 +7,6 @@
         public static string PluginInitializeFailed => "PluginInitializeFailed";
         public static string FullScreenNotAllowed => "FullScreenNotAllowed";
         public static string CloseNotAllowed => "FullScreenNotAllowed";
+        public static string TryInverstUninvertibleMatrix => "TryInverseUninvertibleMatrix";
     }
 }

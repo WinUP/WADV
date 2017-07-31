@@ -22,14 +22,6 @@ namespace WADV.Core.File {
         /// <summary>
         /// Read file as resource
         /// </summary>
-        /// <param name="file">File stream</param>
-        /// <param name="innerPath">Inner path in this file</param>
-        /// <returns></returns>
-        Resource ReadAsResource(Stream file, string innerPath);
-
-        /// <summary>
-        /// Read file as resource
-        /// </summary>
         /// <typeparam name="T">Resource type</typeparam>
         /// <param name="file">File stream</param>
         /// <param name="innerPath">Inner path in this file</param>

@@ -166,10 +166,6 @@
     <AppDesigner Include="My Project\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WADV.Core\WADV.Core.vbproj">
-      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
-      <Name>WADV.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Render Plugins\WADV.WPF.Renderer\WADV.WPF.Renderer.csproj">
       <Project>{50768186-4659-477e-b2b6-d16cd20146bb}</Project>
       <Name>WADV.WPF.Renderer</Name>

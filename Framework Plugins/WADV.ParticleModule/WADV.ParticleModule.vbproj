@@ -141,12 +141,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WADV.Core\WADV.Core.vbproj">
-      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
-      <Name>WADV.Core</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\Script Plugins\WADV.LuaSupport\WADV.LuaSupport.vbproj">
       <Project>{ce3761f5-1c5e-4b0d-a46c-e11682e67c1c}</Project>
       <Name>WADV.LuaSupport</Name>

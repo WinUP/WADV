@@ -54,16 +54,6 @@ namespace WADV.Core.File {
         /// <summary>
         /// Read file as resource
         /// </summary>
-        /// <param name="path">File path</param>
-        /// <returns></returns>
-        internal Resource ReadAsResource(string path) {
-            var reader = FindFile(path);
-            return reader.reader.ReadAsResource(reader.file, reader.innerPath);
-        }
-
-        /// <summary>
-        /// Read file as resource
-        /// </summary>
         /// <typeparam name="T">Resource type</typeparam>
         /// <param name="path">File path</param>
         /// <returns></returns>

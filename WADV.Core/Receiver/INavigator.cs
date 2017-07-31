@@ -11,6 +11,6 @@ namespace WADV.Core.Receiver {
         /// <param name="e">Parameters for this navigation</param>
         /// <param name="abort">Should stop current loop after run this receiver</param>
         /// <returns>Should this receiver still avaliable in next loop</returns>
-        bool Navigate(NavigationParameter e, out bool abort);
+        bool Navigate(NavigationParameter2D e, out bool abort);
     }
 }

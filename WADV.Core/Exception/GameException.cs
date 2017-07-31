@@ -65,7 +65,7 @@ namespace WADV.Core.Exception {
         /// </summary>
         public GameException Save() {
             if (!string.IsNullOrEmpty(Configuration.Location.Log))
-                File.AppendAllText(Path.Combine(Configuration.Location.Log, $"error_{DateTime.Now:yyyy_MM_dd}.log"),
+                global::System.IO.File.AppendAllText(Path.Combine(Configuration.Location.Log, $"error_{DateTime.Now:yyyy_MM_dd}.log"),
                     $"[{DateTime.Now:HH:mm:ss}] {Type}@{Source}: {Message}\n{string.Join("\n", Data.Select(e => e.Key + " => " + e.Value))}",
                     Encoding.UTF8);
             return this;

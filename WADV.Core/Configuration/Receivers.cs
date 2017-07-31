@@ -12,7 +12,7 @@ namespace WADV.Core.Configuration {
         internal static ReceiverList<IMessager, Message> MessageReceivers;
         internal static ReceiverList<IUpdater, int> UpdateReceivers;
         internal static ReceiverList<IRenderer, int> RenderReceivers;
-        internal static ReceiverList<INavigator, NavigationParameter> NavigateReceivers;
+        internal static ReceiverList<INavigator, NavigationParameter2D> NavigateReceivers;
         internal static ReceiverList<IModuleLoader, ReferenceValue<Type[]>> ModuleLoadReceivers;
         internal static ReceiverList<IGameInitializer, int> GameInitializeReceivers;
         internal static ReceiverList<IGameDestructor, CancelEventArgs> GameDestructReceivers;
@@ -33,7 +33,7 @@ namespace WADV.Core.Configuration {
             return abort;
         }
 
-        private static bool NavigateMapper(ReceiverList<INavigator, NavigationParameter> list, INavigator receiver, NavigationParameter parameter) {
+        private static bool NavigateMapper(ReceiverList<INavigator, NavigationParameter2D> list, INavigator receiver, NavigationParameter2D parameter) {
             if (!receiver.Navigate(parameter, out var abort)) list.Delete(receiver);
             return abort;
         }
@@ -64,7 +64,7 @@ namespace WADV.Core.Configuration {
             MessageReceivers = new ReceiverList<IMessager, Message>(MessageMapper);
             UpdateReceivers = new ReceiverList<IUpdater, int>(UpdateMapper);
             RenderReceivers = new ReceiverList<IRenderer, int>(RenderMapper);
-            NavigateReceivers = new ReceiverList<INavigator, NavigationParameter>(NavigateMapper);
+            NavigateReceivers = new ReceiverList<INavigator, NavigationParameter2D>(NavigateMapper);
             ModuleLoadReceivers = new ReceiverList<IModuleLoader, ReferenceValue<Type[]>>(ModuleLoadMapper);
             GameInitializeReceivers = new ReceiverList<IGameInitializer, int>(GameInitializeMapper);
             GameDestructReceivers = new ReceiverList<IGameDestructor, CancelEventArgs>(GameDestructMapper);

@@ -78,13 +78,6 @@
     <Compile Include="XamlElement.cs" />
     <Compile Include="XamlScene.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\WADV.Core\WADV.Core.vbproj">
-      <Project>{c0b62e00-90c8-44a7-8134-ef91ad01b50f}</Project>
-      <Name>WADV.Core</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
